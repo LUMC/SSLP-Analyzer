@@ -17,6 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from SSLP_App.views import(
+    home_view,
+    data_editor_view,
+    feed_view,
+)
+
+from accounts.views import (
+    login_and_register_view,
+    logout_view,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home_view, name='homepage'),
+    path('data-editor/', data_editor_view, name="data_editor_view"),
+    path('feed/', feed_view, name="feed_view"),
+    path("login/", login_and_register_view, name="login_and_register_view"),
+    path("registreer/", login_and_register_view, name="login_and_register_view"),
+    path("logout/", logout_view, name="logout_view"),
 ]

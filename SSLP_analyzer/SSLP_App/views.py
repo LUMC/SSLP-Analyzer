@@ -1,3 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
+def home_view(request):
+    return render(request, 'temp.html')
+
+def data_editor_view(request):
+    return render(request, 'temp.html')
+
+def feed_view(request):
+    return render(request, 'temp.html')
+
+
