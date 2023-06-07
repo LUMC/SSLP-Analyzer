@@ -1,5 +1,4 @@
 asgiref==3.6.0
-certifi @ file:///C:/ci_311/certifi_1676421629969/work/certifi
 Django==4.2
 django-dotenv==1.4.2
 django-widget-tweaks==1.4.12
