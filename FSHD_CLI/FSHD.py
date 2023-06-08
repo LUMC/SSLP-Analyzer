@@ -6,20 +6,22 @@ import sys
 import json
 
 
-# with open('haplotypes.json', 'w') as f:
-#     json.dump(haplotypes, f, indent=4)
+
 def get_ethnicity(ethnicity):
+    """Fetches the ethnicity data from the supplied 
+    ethnicity. And returns this as a dcitonary.
+    :param ethnicity: Full ethnicity name
+    :return: haplotype dictonary for specified ethnicity
+    """
     with open(f"ethnicity/{ethnicity}.json","r") as file:
         haplo_dict = json.load(file)
+        print(f"Using haplotypes from file: ethnicity/{ethnicity}.json")
     return haplo_dict
-
-get_ethnicity("European")
 
 def predict(p_selection, p_region, input_type):
     """
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
-    # regionnr = {'European':0, 'African':1, 'Asian':2}[p_region]
     
     ethnicity_haplotypes = get_ethnicity(p_region)
     
@@ -85,6 +87,15 @@ def print_header():
     print(f"{'chr4_A':<10}{'chr4_B':<10}{'chr10_A':<10}{'chr10_B':<10}{'Probability(%)':<15}{'Permutation':<15}{'Incidence(%)':<15}")
 
 def result_table(result, totaalkans, amount, separator, write=False, filename=None):
+    """_summary_
+
+    :param result: _description_
+    :param totaalkans: _description_
+    :param amount: _description_
+    :param separator: _description_
+    :param write: _description_, defaults to False
+    :param filename: _description_, defaults to None
+    """
     if write:
         header = ['chr4_A', 'chr4_B', 'chr10_A', 'chr10_B', 'Probability(%)', 'Permutation', 'Incidence(%)']
         with open(filename, 'w') as outfile:
@@ -102,7 +113,7 @@ def result_table(result, totaalkans, amount, separator, write=False, filename=No
             print_table(row)
 
 
-def haplo():
+def haplo(): # Currently broken
     unique_haplotypes = set()
     for haplotype in haplotypes:
         for haplotype_name in ([set(haplotype.keys()) for haplotype in haplotype]):
@@ -134,6 +145,13 @@ def run(args):
         
 
 def get_abbrivations():
+    """Fetches the abbrivations from abbrivations.json
+    Returns this data as different objects
+    :return: 
+    abbr_dict: dict: Dictonary which maps abbriviations to full names
+    options: list: List which contains all abrivations and full names
+    option_string: str: String which says what abbrivations are possible and what they stand
+    """
     with open("abbreviations.json","r") as file:
         abbr_dict = json.load(file)
         options = list(abbr_dict.keys()) + list(abbr_dict.values())
@@ -175,14 +193,13 @@ def main():
         if len(args.selection) !=  4:
             parser.error(f"You must have a input of 4 SSLP's. The length of your input is {len(args.selection)} SSLP's.")
     
-    global haplotypes
     args.ethnicity = ethnicity_full.get(args.ethnicity, args.ethnicity)
 
     if args.input:
         with open(args.input, 'r') as f:
             haplotypes = json.load(f)
         
-    if args.haplotypes:
+    if args.haplotypes: # Currently broken
         haplotype_options = haplo()
         print(f"List of all possible haplotypes: {haplotype_options}.", end="")
         sys.exit()
