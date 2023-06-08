@@ -11,7 +11,7 @@ import json
 def get_ethnicity(ethnicity):
     with open(f"ethnicity/{ethnicity}.json","r") as file:
         haplo_dict = json.load(file)
-    print(haplo_dict)
+    return haplo_dict
 
 get_ethnicity("European")
 
@@ -19,33 +19,34 @@ def predict(p_selection, p_region, input_type):
     """
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
-    regionnr = {'European':0, 'African':1, 'Asian':2}[p_region]
+    # regionnr = {'European':0, 'African':1, 'Asian':2}[p_region]
     
+    ethnicity_haplotypes = get_ethnicity(p_region)
     
     
     reeksvier, reekstien, kansenreeks = [],[],[]
     totaalkans = 0
     for nr in set(p_selection):
-        if input_type is not None:
-            nr = str(nr)
-        for i in range(2):
+        nr = str(nr)
+        for chr in ethnicity_haplotypes:
+            # print(chr)
             try:
-                if i == 0:
-                    reeksvier += haplotypes[regionnr][i][nr]
-                else:
-                    reekstien += haplotypes[regionnr][i][nr]
+                if chr == "chr4":
+                    reeksvier += ethnicity_haplotypes[chr][nr]
+                elif chr == "chr10":
+                    reekstien += ethnicity_haplotypes[chr][nr]
             except LookupError as e:
                 pass
 
 
     #-> alle mogelijkheden genereren
     for i,j,k,l in product(reeksvier, reeksvier, reekstien, reekstien):
-        nummers = [int(i.split('|')[0][1:4]), int(j.split('|')[0][1:4]), int(k.split('|')[0][1:4]), int(l.split('|')[0][1:4])]
+        nummers = [int(i["haplotype"][1:4]), int(j["haplotype"][1:4]), int(k["haplotype"][1:4]), int(l["haplotype"][1:4])]
         if sorted(nummers) == p_selection: #checken of ze wel uniek zijn (of de nummers kloppen met het voorbeeld)                   
-            kans = (float(i.split('|')[1]) * float(j.split('|')[1]) * float(k.split('|')[1]) * float(l.split('|')[1]))/1000000
-            berekening = i.split('|')[1] + ' * ' + j.split('|')[1] + ' * ' + k.split('|')[1] + ' * ' + l.split('|')[1] 
-            genotype = ['4' + i.split('|')[0], '4' + j.split('|')[0], '10' + k.split('|')[0], '10' + l.split('|')[0]]
-            p = int(i.split('|')[2]) + int(j.split('|')[2]) + int(k.split('|')[2]) + int(l.split('|')[2]) 
+            kans = (float(i["%"]) * float(j["%"]) * float(k["%"]) * float(l["%"]))/1000000
+            berekening = i["%"] + ' * ' + j["%"] + ' * ' + k["%"] + ' * ' + l["%"] 
+            genotype = ['4' + i["haplotype"], '4' + j["haplotype"], '10' + k["haplotype"], '10' + l["haplotype"]]
+            p = int(i["permissive"]) + int(j["permissive"]) + int(k["permissive"]) + int(l["permissive"]) 
             kansenreeks.append([kans, genotype, berekening, p])
             totaalkans += kans
     #-> einde alle mogelijkheden genereren
