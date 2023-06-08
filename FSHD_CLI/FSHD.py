@@ -113,13 +113,12 @@ def result_table(result, totaalkans, amount, separator, write=False, filename=No
             print_table(row)
 
 
-def haplo(): # Currently broken
-    unique_haplotypes = set()
-    for haplotype in haplotypes:
-        for haplotype_name in ([set(haplotype.keys()) for haplotype in haplotype]):
-            unique_haplotypes.update(haplotype_name)
-    haplotype_string = ", ".join(map(str, sorted(unique_haplotypes)))
-    return haplotype_string
+def haplo(args):
+    with open(f"ethnicity/{args.ethnicity}.json") as filename:
+        haplotypes = json.load(filename)
+    haplotype_nums = list(haplotypes["chr4"].keys()) + list(haplotypes["chr10"])
+    unique_haplotypes = sorted(list(set(haplotype_nums)))
+    return (", ".join(unique_haplotypes))
 
 def run(args):
     p_selection = sorted(args.selection)
@@ -198,9 +197,9 @@ def main():
     if args.input:
         with open(args.input, 'r') as f:
             haplotypes = json.load(f)
-        
-    if args.haplotypes: # Currently broken
-        haplotype_options = haplo()
+    
+    if args.haplotypes and args.ethnicity:
+        haplotype_options = haplo(args)
         print(f"List of all possible haplotypes: {haplotype_options}.", end="")
         sys.exit()
 
