@@ -4,42 +4,16 @@ from argparse import RawTextHelpFormatter
 from itertools import product
 import sys
 import json
-haplotypes = [
-            [
-                {
-                    159:['A159|0.1|1'], 161:['A161|39.2|1', 'B161|0.7|0'], 163:['A163|0.9|1', 'B163|32.9|0'],
-                    166:['A166|4.4|0', 'A166H|3.9|1', 'B166|1|0'], 168:['A168|0.3|1', 'B168|13.2|0'],
-                    170:['A170|0.2|1', 'B170|0.5|0'], 172:['A172|0.2|1', 'B172|0.2|0'], 162:['B162|1.8|0'],
-                    174:['B174|0.2|0']
-                    },
-                {
-                    162:['A162|0.2|0'], 164:['A164|4.4|0'], 166:['A166|86.1|0', 'A166H|0.6|1'],
-                    176:['A176T|2.5|0'], 180:['A180T|0.5|0'], 161:['B161T|4.6|0']
-                    }
-            ],
-            [
-                {
-                    157:['A157|1.7|1'], 159:['A159|17.5|1'], 161:['A161|24.2|1', 'B161|0.8|0'], 163:['B163|8.3|0'],
-                    166:['A166|3.3|0', 'A166H|19.2|1', 'B166|0.8|0', 'C166H|14.2|1'], 172:['B172|5.8|0']
-                    },
-             {
-                 162:['A162|9.2|0'], 164:['A164|3.3|0'], 166:['A166|77.5|0', 'A166H|3.3|1'],
-                 176:['A176T|0.8|0'], 180:['A180T|1.7|0']
-                 }
-             ],
-            [
-                {
-                    161:['A161|34.3|1'], 163:['A163|0.6|1', 'B163|57.3|0'],
-                    166:['A166|0.6|0', 'A166H|2.8|1', 'B166|0.6|0'], 170:['B170|0.6|0']
-                    },
-             {
-                 161:['B161T|8.4|0'], 164:['A164|25.8|0'], 166:['A166|53.9|0', 'A166H|11.8|1']
-                 }
-             ]
-            ]
+
 
 # with open('haplotypes.json', 'w') as f:
 #     json.dump(haplotypes, f, indent=4)
+def get_ethnicity(ethnicity):
+    with open(f"ethnicity/{ethnicity}.json","r") as file:
+        haplo_dict = json.load(file)
+    print(haplo_dict)
+
+get_ethnicity("European")
 
 def predict(p_selection, p_region, input_type):
     """
@@ -137,9 +111,9 @@ def haplo():
 
 def run(args):
     p_selection = sorted(args.selection)
-    p_region = args.region
+    p_ethnicity = args.ethnicity
     separator = {'t': '\t', ',': ',', '|': '|', ';': ';', ' ': ' '}.get(args.separator)
-    result, totaalkans = predict(p_selection, p_region, args.input)
+    result, totaalkans = predict(p_selection, p_ethnicity, args.input)
     if result != 1 and totaalkans != 1:
         tot_perm = [100*i[0]/totaalkans for i in result if i[2] > 0]
         output = args.output is not None
@@ -154,8 +128,21 @@ def run(args):
         else:
             print(f"Total Likelihood: {sum(tot_perm):.1f}")
     else:
-        print(f"No results found for this selection {' '.join(str(i) for i in p_selection)} in this region {p_region}!\n"
+        print(f"No results found for this selection {' '.join(str(i) for i in p_selection)} for ethnicity {p_ethnicity}!\n"
               f"For more information use the -h option 'python haplotype.py -h'.")
+        
+
+def get_abbrivations():
+    with open("abbreviations.json","r") as file:
+        abbr_dict = json.load(file)
+        options = list(abbr_dict.keys()) + list(abbr_dict.values())
+        option_string = ""
+        for k,v in abbr_dict.items():
+            option_string += f"{k} ({v}) "
+    return abbr_dict, options, option_string
+        
+
+       
 def main():
     parser = argparse.ArgumentParser(description="Predict genotypes from SSLP values for FSHD analysis", formatter_class=RawTextHelpFormatter)
     group1 = parser.add_argument_group('required arguments')
@@ -163,12 +150,14 @@ def main():
                     help="Integer values representing the SSLP selection.\n"
                          "It must always be a length of 4 SSLP's.\n"
                          "Example: -s 159 161 163 166.")
-    group1.add_argument("-r", "--region", choices=["EU", "AF", "AS", "European", "African", "Asian"], required=False, metavar="REGION", 
-                        help="The region the sample is from.\n"
-                        "Choose from: EU (European), AF (African), AS (Asian).")
+    ethnicity_full, options, option_string = get_abbrivations()
+    group1.add_argument("-e", "--ethnicity", choices=options, required=False, metavar="ETHNICITY", 
+                        help="The ethnicity of the patient.")
     group2 = parser.add_argument_group('optional arguments')
     group2.add_argument("-H", "--haplotypes",  action="store_true", 
                         help="Display the list of all possible haplotypes.")
+    group2.add_argument("-a", "--abbriviations",  action="store_true", 
+                    help="Display the list of all possible abbriviations.")
     group2.add_argument("-n", "--top", type=int, metavar="N", 
                         help="Display top N results. If not specified, all results are displayed.")
     group2.add_argument("-i", "--input", type=str, metavar="INPUT FILE",
@@ -178,7 +167,7 @@ def main():
     group2.add_argument("-sep", "--separator", type=str, choices=[",", "t", "|", ";", " "], metavar="SEPARATOR",
                         help="Choose a separator for the output file.\n"
                         "For a tab, enter 't'.\n"
-                        " Default is comma ','.", default=",")
+                        "Default is comma ','.", default=",")
 
     args = parser.parse_args()
     if args.selection:
@@ -186,25 +175,26 @@ def main():
             parser.error(f"You must have a input of 4 SSLP's. The length of your input is {len(args.selection)} SSLP's.")
     
     global haplotypes
-    region_full = {"EU": "European", "AF": "African", "AS": "Asian"}
-    args.region = region_full.get(args.region, args.region)
+    args.ethnicity = ethnicity_full.get(args.ethnicity, args.ethnicity)
 
     if args.input:
         with open(args.input, 'r') as f:
             haplotypes = json.load(f)
-    
-    
+        
     if args.haplotypes:
         haplotype_options = haplo()
-        print(f"List of all possible haplotypes: {haplotype_options}.")
+        print(f"List of all possible haplotypes: {haplotype_options}.", end="")
         sys.exit()
 
-    if args.selection is None or args.region is None:
+    if args.abbriviations:
+        print(f"The possible abbrivations are: {option_string}", end="")
+        sys.exit()
+
+
+    if args.selection is None or args.ethnicity is None:
         parser.error("the following arguments are required: -s/--selection, -r/--region")
 
-
     run(args)
-
 if __name__ == "__main__":
     main()
 

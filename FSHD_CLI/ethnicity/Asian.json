@@ -1,0 +1,75 @@
+{
+    "chr4": {
+        "161": [
+            {
+                "haplotype": "A161",
+                "%": "34.3",
+                "permissive": "1"
+            }
+        ],
+        "163": [
+            {
+                "haplotype": "A163",
+                "%": "0.6",
+                "permissive": "1"
+            },
+            {
+                "haplotype": "B163",
+                "%": "57.3",
+                "permissive": "0"
+            }
+        ],
+        "166": [
+            {
+                "haplotype": "A166",
+                "%": "0.6",
+                "permissive": "0"
+            },
+            {
+                "haplotype": "A166H",
+                "%": "2.8",
+                "permissive": "1"
+            },
+            {
+                "haplotype": "B166",
+                "%": "0.6",
+                "permissive": "0"
+            }
+        ],
+        "170": [
+            {
+                "haplotype": "B170",
+                "%": "0.6",
+                "permissive": "0"
+            }
+        ]
+    },
+    "chr10": {
+        "161": [
+            {
+                "haplotype": "B161T",
+                "%": "8.4",
+                "permissive": "0"
+            }
+        ],
+        "164": [
+            {
+                "haplotype": "A164",
+                "%": "25.8",
+                "permissive": "0"
+            }
+        ],
+        "166": [
+            {
+                "haplotype": "A166",
+                "%": "53.9",
+                "permissive": "0"
+            },
+            {
+                "haplotype": "A166H",
+                "%": "11.8",
+                "permissive": "1"
+            }
+        ]
+    }
+}
