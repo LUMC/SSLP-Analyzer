@@ -1,10 +1,27 @@
-
 import argparse
 from argparse import RawTextHelpFormatter
 from itertools import product
 import sys
 import json
+import pkg_resources
+from pathlib import Path
+import shutil
 
+def get_abbrivations():
+    """Fetches the abbrivations from abbrivations.json
+    Returns this data as different objects
+    :return: 
+    abbr_dict: dict: Dictonary which maps abbriviations to full names
+    options: list: List which contains all abrivations and full names
+    option_string: str: String which says what abbrivations are possible and what they stand
+    """
+    with open(pkg_resources.resource_filename(__name__, "abbreviations.json"), "r") as file:
+        abbr_dict = json.load(file)
+        options = list(abbr_dict.keys()) + list(abbr_dict.values())
+        option_string = ""
+        for k, v in abbr_dict.items():
+            option_string += f"{k} ({v}) "
+        return abbr_dict, options, option_string
 
 
 def get_ethnicity(ethnicity):
@@ -13,17 +30,83 @@ def get_ethnicity(ethnicity):
     :param ethnicity: Full ethnicity name
     :return: haplotype dictonary for specified ethnicity
     """
-    with open(f"ethnicity/{ethnicity}.json","r") as file:
+    with open(pkg_resources.resource_filename(__name__, f"ethnicity/{ethnicity}.json"), "r") as file:
         haplo_dict = json.load(file)
         print(f"Using haplotypes from file: ethnicity/{ethnicity}.json")
     return haplo_dict
+
+def validate_combinations(args):
+    valid_combinations = [
+        args.abbriviations,  
+        args.selection and args.ethnicity, 
+        args.haplotypes and args.ethnicity,
+        args.selection and args.input,
+        args.add and args.input and args.file_abbreviation,
+    ]
+    return not any(valid_combinations)
+    
+
+def to_ethnicity(new_file):
+    source = Path(new_file)
+    destination_dir = Path(pkg_resources.resource_filename(__name__, "ethnicity"))
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(str(source), destination_dir)
+
+def print_table(row):
+    print(f"{row[0]:<10}{row[1]:<10}{row[2]:<10}{row[3]:<10}{row[4]:<15}{row[5]:<15}{row[6]:<15}")
+
+
+def write_table(row, separator, filename):
+    with open(filename, 'a') as outfile:
+        outfile.write(f"{separator.join(row)}\n")
+
+def print_header():
+    print(f"{'chr4_A':<10}{'chr4_B':<10}{'chr10_A':<10}{'chr10_B':<10}{'Probability(%)':<15}{'Permutation':<15}{'Incidence(%)':<15}")
+
+def result_table(result, totaalkans, amount, separator, write=False, filename=None):
+    """_summary_
+
+    :param result: _description_
+    :param totaalkans: _description_
+    :param amount: _description_
+    :param separator: _description_
+    :param write: _description_, defaults to False
+    :param filename: _description_, defaults to None
+    """
+    if write:
+        header = ['chr4_A', 'chr4_B', 'chr10_A', 'chr10_B', 'Probability(%)', 'Permutation', 'Incidence(%)']
+        with open(filename, 'w') as outfile:
+            outfile.write(f"{separator.join(header)}\n" )
+    else:
+        print_header()
+    for i in result[:amount]:
+        values = [str(val) for val in i[1]]
+        percentage = 100 * i[0] / totaalkans
+        probability = i[0]
+        row = values + [f"{percentage:.3f}", str(i[2]), f"{probability:.3f}"]
+        if write:
+            write_table(row, separator, filename)
+        else:
+            print_table(row)
+
+
+def haplo(args):
+    with open(pkg_resources.resource_filename(__name__, f"ethnicity/{args.ethnicity}.json"), "r") as filename:
+        haplotypes = json.load(filename)
+    haplotype_nums = list(haplotypes["chr4"].keys()) + list(haplotypes["chr10"])
+    unique_haplotypes = sorted(list(set(haplotype_nums)))
+    return (", ".join(unique_haplotypes))
+
 
 def predict(p_selection, p_region, input_type):
     """
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
-    
-    ethnicity_haplotypes = get_ethnicity(p_region)
+    if input_type:
+        with open(input_type, 'r') as f:
+            ethnicity_haplotypes = json.load(f)
+    else:
+        ethnicity_haplotypes = get_ethnicity(p_region)
     
     
     reeksvier, reekstien, kansenreeks = [],[],[]
@@ -31,7 +114,6 @@ def predict(p_selection, p_region, input_type):
     for nr in set(p_selection):
         nr = str(nr)
         for chr in ethnicity_haplotypes:
-            # print(chr)
             try:
                 if chr == "chr4":
                     reeksvier += ethnicity_haplotypes[chr][nr]
@@ -75,50 +157,25 @@ def predict(p_selection, p_region, input_type):
     return ingeklapt, totaalkans
 
 
-def print_table(row):
-    print(f"{row[0]:<10}{row[1]:<10}{row[2]:<10}{row[3]:<10}{row[4]:<15}{row[5]:<15}{row[6]:<15}")
+def other_options(args, option_string):
+    if args.haplotypes and args.ethnicity:
+        haplotype_options = haplo(args)
+        print(f"List of all possible haplotypes: {haplotype_options}.", end="")
+        sys.exit()
 
-
-def write_table(row, separator, filename):
-    with open(filename, 'a') as outfile:
-        outfile.write(f"{separator.join(row)}\n")
-
-def print_header():
-    print(f"{'chr4_A':<10}{'chr4_B':<10}{'chr10_A':<10}{'chr10_B':<10}{'Probability(%)':<15}{'Permutation':<15}{'Incidence(%)':<15}")
-
-def result_table(result, totaalkans, amount, separator, write=False, filename=None):
-    """_summary_
-
-    :param result: _description_
-    :param totaalkans: _description_
-    :param amount: _description_
-    :param separator: _description_
-    :param write: _description_, defaults to False
-    :param filename: _description_, defaults to None
-    """
-    if write:
-        header = ['chr4_A', 'chr4_B', 'chr10_A', 'chr10_B', 'Probability(%)', 'Permutation', 'Incidence(%)']
-        with open(filename, 'w') as outfile:
-            outfile.write(f"{separator.join(header)}\n" )
-    else:
-        print_header()
-    for i in result[:amount]:
-        values = [str(val) for val in i[1]]
-        percentage = 100 * i[0] / totaalkans
-        probability = i[0]
-        row = values + [f"{percentage:.3f}", str(i[2]), f"{probability:.3f}"]
-        if write:
-            write_table(row, separator, filename)
-        else:
-            print_table(row)
-
-
-def haplo(args):
-    with open(f"ethnicity/{args.ethnicity}.json") as filename:
-        haplotypes = json.load(filename)
-    haplotype_nums = list(haplotypes["chr4"].keys()) + list(haplotypes["chr10"])
-    unique_haplotypes = sorted(list(set(haplotype_nums)))
-    return (", ".join(unique_haplotypes))
+    if args.abbriviations:
+        print(f"The possible abbrivations are: {option_string}", end="")
+        sys.exit()
+        
+    if args.add and args.input and args.file_abbreviation:
+        to_ethnicity(args.input)
+        with open(pkg_resources.resource_filename(__name__, "abbreviations.json"), "r+") as file:
+            abbr_dict = json.load(file)
+            full_name = Path(args.input).name.split('.')[0]
+            abbr_dict[args.file_abbreviation] = full_name
+        with open(pkg_resources.resource_filename(__name__, "abbreviations.json"), "w") as new_file: 
+            new_file.write(json.dumps(abbr_dict, indent=4))
+        sys.exit()
 
 def run(args):
     p_selection = sorted(args.selection)
@@ -143,22 +200,6 @@ def run(args):
               f"For more information use the -h option 'python haplotype.py -h'.")
         
 
-def get_abbrivations():
-    """Fetches the abbrivations from abbrivations.json
-    Returns this data as different objects
-    :return: 
-    abbr_dict: dict: Dictonary which maps abbriviations to full names
-    options: list: List which contains all abrivations and full names
-    option_string: str: String which says what abbrivations are possible and what they stand
-    """
-    with open("abbreviations.json","r") as file:
-        abbr_dict = json.load(file)
-        options = list(abbr_dict.keys()) + list(abbr_dict.values())
-        option_string = ""
-        for k,v in abbr_dict.items():
-            option_string += f"{k} ({v}) "
-    return abbr_dict, options, option_string
-        
 
        
 def main():
@@ -186,32 +227,25 @@ def main():
                         help="Choose a separator for the output file.\n"
                         "For a tab, enter 't'.\n"
                         "Default is comma ','.", default=",")
+    group2.add_argument("-A", "--add", action="store_true",
+                        help="Add a new JSON file containing new haplotypes from a ethnicity.")
+    group2.add_argument("-Fa", "--file_abbreviation", type=str, metavar="NEW_ABBREVIATION",
+                        help="Specify the abbreviation for the new haplotype file.")
 
     args = parser.parse_args()
-    if args.selection:
-        if len(args.selection) !=  4:
-            parser.error(f"You must have a input of 4 SSLP's. The length of your input is {len(args.selection)} SSLP's.")
-    
     args.ethnicity = ethnicity_full.get(args.ethnicity, args.ethnicity)
+    if args.selection and len(args.selection) !=  4:
+        parser.error(f"You must have a input of 4 SSLP's. The length of your input is {len(args.selection)} SSLP's.")
+    if validate_combinations(args):
+        parser.error("Invalid combination of arguments. You must provide one of the following combinations:\n"
+                     "-a/--abbriviations\n"
+                     "-s/--selection and -e/--ethnicity\n"
+                     "-s/--selection and -i/--input\n"
+                     "-h/--haplotypes and -e/--ethnicity")
 
-    if args.input:
-        with open(args.input, 'r') as f:
-            haplotypes = json.load(f)
-    
-    if args.haplotypes and args.ethnicity:
-        haplotype_options = haplo(args)
-        print(f"List of all possible haplotypes: {haplotype_options}.", end="")
-        sys.exit()
-
-    if args.abbriviations:
-        print(f"The possible abbrivations are: {option_string}", end="")
-        sys.exit()
-
-
-    if args.selection is None or args.ethnicity is None:
-        parser.error("the following arguments are required: -s/--selection, -r/--region")
-
+    other_options(args, option_string)
     run(args)
 if __name__ == "__main__":
     main()
+
 

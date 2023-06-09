@@ -1,0 +1,2 @@
+include FSHD_CLI/FSHD/abbreviations.json
+include FSHD_CLI/FSHD/ethnicity/*.json
