@@ -36,6 +36,16 @@ def get_ethnicity(ethnicity):
     return haplo_dict
 
 def validate_combinations(args):
+    """
+    Function to check if there is a valid combination of arguments given by the user.
+
+    Args:
+        args: (argparse.Namespace): namespace with all the arguments given by the user from the command line.
+
+    Returns:
+        bool: boolean to indicate of there is a valid combination of arguments.
+        True if there is a valid combination of arguments. False if there is there are no combinations found.
+    """
     valid_combinations = [
         args.abbriviations,  
         args.selection and args.ethnicity, 
@@ -47,6 +57,12 @@ def validate_combinations(args):
     
 
 def to_ethnicity(new_file):
+    """
+    Function to copy a new "ethnicity.json" file to the "ethnicity" directory in current package.
+
+    Args:
+        new_file (str): A string representing the file path of the given json file.
+    """
     source = Path(new_file)
     destination_dir = Path(pkg_resources.resource_filename(__name__, "ethnicity"))
     destination_dir.mkdir(parents=True, exist_ok=True)
@@ -199,40 +215,48 @@ def run(args):
         print(f"No results found for this selection {' '.join(str(i) for i in p_selection)} for ethnicity {p_ethnicity}!\n"
               f"For more information use the -h option 'python haplotype.py -h'.")
         
+def parser_args():
+    """
+    Function with all the arguments that are necessary to use the FSHD commandline tool.
 
+    Returns:
+        args: argparser.namespace: Parsed command-line arguments.
+        parser: ArgumentParser: The ArgumentParser instance for the tool.
+        ethnicity_full: dict: Dictonary which maps abbriviations to full names.
+        option_string: string: String which says what abbrivations are possible and what they stand 
+_
+    """
+    parser = argparse.ArgumentParser(description="A tool for predicting genotypes from SSLP values for FSHD analysis. This tool allows users to input specific SSLP selections, specify the ethnicity of the patient, and also provides the ability to add new haplotype files.", formatter_class=RawTextHelpFormatter)
+    group1 = parser.add_argument_group('required arguments')
+    group1.add_argument("-s", "--selection", nargs="+", type=int, required=False, metavar="SSLP",
+                    help="Provide a list of four integer SSLP values. Example usage: -s 159 161 163 166.")
+    ethnicity_full, options, option_string = get_abbrivations()
+    group1.add_argument("-e", "--ethnicity", choices=options, required=False, metavar="ETHNICITY", 
+                        help="Specify the ethnicity of the patient using the abbreviation or full name.\nSee -a/--abbriviations for the full list of options.")
+    group2 = parser.add_argument_group('optional arguments')
+    group2.add_argument("-H", "--haplotypes",  action="store_true", 
+                        help="Use this flag to display a list of all possible haplotypes.")
+    group2.add_argument("-a", "--abbriviations",  action="store_true", 
+                    help="Use this flag to display a list of all abbreviations that can be used with the -e/--ethnicity option.")
+    group2.add_argument("-n", "--top", type=int, metavar="N", 
+                        help="Use this option to only display the top N results.\nIf not specified, all results are displayed.")
+    group2.add_argument("-i", "--input", type=str, metavar="INPUT FILE",
+                        help="Provide the path to a custom input JSON file containing haplotypes.")
+    group2.add_argument("-o", "--output", type=str, metavar="OUTPUT FILE",
+                        help="Specify the path to an output file where the results will be written.\nIf not specified, results will be printed to the console.")
+    group2.add_argument("-sep", "--separator", type=str, choices=[",", "t", "|", ";", " "], metavar="SEPARATOR",
+                        help="Choose a separator for the output file.\nOptions include comma (,), tab (t), pipe (|), semicolon (;), or space ( ). Default is comma ','.")
+    group2.add_argument("-A", "--add", action="store_true",
+                        help="Use this flag in combination with -i/--input and -Fa/--file_abbreviation to add a new haplotype file.")
+    group2.add_argument("-Fa", "--file_abbreviation", type=str, metavar="FILE ABBREVIATION",
+                        help="When adding a new haplotype file, specify the abbreviation to be associated with this file.")
+    args = parser.parse_args()
+    return args, parser,  ethnicity_full, option_string
+    
 
        
 def main():
-    parser = argparse.ArgumentParser(description="Predict genotypes from SSLP values for FSHD analysis", formatter_class=RawTextHelpFormatter)
-    group1 = parser.add_argument_group('required arguments')
-    group1.add_argument("-s", "--selection", nargs="+", type=int, required=False, metavar="SSLP",
-                    help="Integer values representing the SSLP selection.\n"
-                         "It must always be a length of 4 SSLP's.\n"
-                         "Example: -s 159 161 163 166.")
-    ethnicity_full, options, option_string = get_abbrivations()
-    group1.add_argument("-e", "--ethnicity", choices=options, required=False, metavar="ETHNICITY", 
-                        help="The ethnicity of the patient.")
-    group2 = parser.add_argument_group('optional arguments')
-    group2.add_argument("-H", "--haplotypes",  action="store_true", 
-                        help="Display the list of all possible haplotypes.")
-    group2.add_argument("-a", "--abbriviations",  action="store_true", 
-                    help="Display the list of all possible abbriviations.")
-    group2.add_argument("-n", "--top", type=int, metavar="N", 
-                        help="Display top N results. If not specified, all results are displayed.")
-    group2.add_argument("-i", "--input", type=str, metavar="INPUT FILE",
-                        help="Path to the input JSON file containing haplotypes.")
-    group2.add_argument("-o", "--output", type=str, metavar="OUTPUT FILE",
-                        help="Specify the output file where the results will be written.")
-    group2.add_argument("-sep", "--separator", type=str, choices=[",", "t", "|", ";", " "], metavar="SEPARATOR",
-                        help="Choose a separator for the output file.\n"
-                        "For a tab, enter 't'.\n"
-                        "Default is comma ','.", default=",")
-    group2.add_argument("-A", "--add", action="store_true",
-                        help="Add a new JSON file containing new haplotypes from a ethnicity.")
-    group2.add_argument("-Fa", "--file_abbreviation", type=str, metavar="NEW_ABBREVIATION",
-                        help="Specify the abbreviation for the new haplotype file.")
-
-    args = parser.parse_args()
+    args, parser, ethnicity_full, option_string = parser_args()
     args.ethnicity = ethnicity_full.get(args.ethnicity, args.ethnicity)
     if args.selection and len(args.selection) !=  4:
         parser.error(f"You must have a input of 4 SSLP's. The length of your input is {len(args.selection)} SSLP's.")
@@ -241,8 +265,10 @@ def main():
                      "-a/--abbriviations\n"
                      "-s/--selection and -e/--ethnicity\n"
                      "-s/--selection and -i/--input\n"
-                     "-h/--haplotypes and -e/--ethnicity")
-
+                     "-h/--haplotypes and -e/--ethnicity\n"
+                     "-h/--haplotypes and -i/--input\n"
+                     "-A/--add, -i/--input, and -Fa/--file_abbreviation\n"
+                     "-s/--selection, -e/--ethnicity, and -n/--top")
     other_options(args, option_string)
     run(args)
 if __name__ == "__main__":
