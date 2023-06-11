@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SSLP_App',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static '/css/signin-signup.css' %}">
+<link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %} 
+<script src="{% static '/javascript/register.js' %}"></script>
+<script src="https://unpkg.com/ionicons@4.2.2/dist/ionicons.js"></script>
+{% endblock %}
+
+{%if not request.user.is_authenticated %}
+<div class="background">
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="/signup/" method="POST"> {% csrf_token %}
+                <h1 class="h1">Create Account</h1>
+                <div class="social-container">
+                    <a  href="#" class="social a">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                    </a>
+                    <a href="#" class="social">
+                        <ion-icon name="logo-googleplus"></ion-icon>
+                    </a>
+                    <a href="#" class="social">
+                        <ion-icon name="logo-linkedin"></ion-icon>
+                    </a>
+                </div>
+                <span class="span">or use your email for registration</span>
+                {{register_form.username|attr:"placeholder:Your username"}}
+                {{register_form.password1|attr:"placeholder:Your password"}}
+                {{register_form.password2|attr:"placeholder:Confirm your password"}}
+                <button onclick="" type="submit" name="register_form">Sign Up</button>
+                {% if messagesr %}
+                <p class="pp">{{messagesr}}</p>
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="form-container sign-in-container">
+            <form action="" method="POST">{% csrf_token %}
+                <h1>Sign In</h1>
+                <div class="social-container">
+                    <a href="#" class="social">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                    </a>
+                    <a href="#" class="social">
+                        <ion-icon name="logo-googleplus"></ion-icon>
+                    </a>
+                    <a href="#" class="social">
+                        <ion-icon name="logo-linkedin"></ion-icon>
+                    </a>
+                </div>
+                <span class="span">or use your anime-blog account</span>
+                {{ login_form.username|attr:"placeholder:Your username"}}
+                {{ login_form.password|attr:"placeholder:Your password"}}
+                <button type="submit" name="login_form" class="bb">Sign In</button>
+                {% if messagesl %}
+                <p class="pp">{{messagesl}}</p>
+                {% endif %}
+        </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                    <h1>Welcome Back</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+                <div class="overlay-panel overlay-left">
+                    <h1>Hey there, anime fan!</h1>
+                    <p>Join us on our anime blog journey by entering your personal details and getting started with our community</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="background">
+    <div class="logout-box">
+        <form action="/logout/">
+            <p class="plg">You're already signed in and cannot register. Would you like to sign out?</p>
+            <button type="submit" name="home">No, cancel</button>
+            <button type="submit" name="signout">Yes, sign out</button>        
+        </form>
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock content %}

@@ -33,7 +33,7 @@ urlpatterns = [
     path('', home_view, name='homepage'),
     path('data-editor/', data_editor_view, name="data_editor"),
     path('feed/', feed_view, name="feed"),
-    path("login/", login_and_register_view, name="login"),
+    path("signin/", login_and_register_view, name="login"),
     path("register/", login_and_register_view, name="register"),
     path("logout/", logout_view, name="logout"),
 ]
