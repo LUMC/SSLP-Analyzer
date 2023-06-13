@@ -33,6 +33,8 @@ def get_haplotypes():
 
 def predict(args):
     """
+    Prediction function (Algorithm written by Jan Oliehoek)
+    Does the statistical calculations which detirmine the percentages
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
     if args.list_datasets:
@@ -145,22 +147,35 @@ def to_population(new_file):
 
 
 def print_table(row):
+    """Prints the table to the standard output
+
+    :param row: the row that needs printing
+    """
     print(
         f"{row[0]:<10}{row[1]:<10}{row[2]:<10}{row[3]:<10}{row[4]:<15}{row[5]:<15}{row[6]:<15}")
 
 
 def write_table(row, separator, filename):
+    """Saves table to file
+    Saves table in append mode
+    :param row: row specified
+    :param separator: character to use as seperator
+    :param filename: name of file
+    """
     with open(filename, 'a') as outfile:
         outfile.write(f"{separator.join(row)}\n")
 
 
 def print_header():
+    """Print the header of the table to the standard output
+    
+    """
     print(f"{'chr4_1':<10}{'chr4_1':<10}{'chr10_1':<10}{'chr10_2':<10}{'Probability(%)':<15}{'Permissive':<15}{'Incidence(%)':<15}")
 
 
 def result_table(result, totaalkans, amount, separator, write=False, filename=None):
     """_summary_
-
+    Format the results into a neatly formatted table. 
     :param result: _description_
     :param totaalkans: _description_
     :param amount: _description_
@@ -200,6 +215,11 @@ def haplo(args):
 
 
 def other_options(args):
+    """Function which allows the datasets to be selected using questonary. 
+    Furthermore adds the support for printing the haplotypes for a specific population.
+    Also calls the to_population() method if the users wishes to add haplotypes to the database\
+    :param args: argparse object 
+    """
     if args.list_datasets:
         selected_dataset = questionary.select(
             "Select a dataset",
@@ -263,7 +283,7 @@ _
     group2.add_argument("-n", "--top", type=int, metavar="N",
                         help="Use this option to only display the top N results.\nIf not specified, all results are displayed.")
     group2.add_argument("-A", "--add", type=str, metavar="INPUT FILE",
-                        help="Provide the path to a JSON file containing haplotypes. To be added to the database")
+                        help="Use this argument independently to add new haplotype files to the database. Example usage: -A ./new_haplotypes.json.")
     group2.add_argument("-o", "--output", type=str, metavar="OUTPUT FILE",
                         help="Specify the path to an output file where the results will be written.\nIf not specified, results will be printed to the console.")
     group2.add_argument("-sep", "--separator", type=str, choices=[",", "t", "|", ";", " "], default=",", metavar="SEPARATOR",
@@ -276,6 +296,9 @@ _
 
 
 def run(args):
+    """Function which calls the predict method after parsing of arguments
+    :param args: _description_
+    """
     args.selection = sorted(args.selection)
     separator = {'t': '\t', ',': ',', '|': '|',
                  ';': ';', ' ': ' '}.get(args.separator)

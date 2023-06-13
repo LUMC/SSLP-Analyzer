@@ -7,7 +7,14 @@ This Python script allows you to predict genotypes from Short Sequence Length Po
 Requirements
 
     Python 3.x
-    argparse library
+    - sys
+    - json
+    - shutil
+    - argparse
+    - pkg_resources
+    - questionary
+    - pathlib
+    - itertools
 
 ## Script Description
 
@@ -31,12 +38,19 @@ python haplotype_predictor.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
 7.  **-o/--output**: Specify the output file where the results will be written.
 8.  **-sep/--separator**: Choose a separator for the output file. For a tab, enter 't'. Default is comma ','.
 
+## Valid combinations
+
+1. **-l, --list_datasets and -s, --selection**: This combination allows you to display all datasets available for a given SSLP selection. Example usage: -l -s 159 161 163 166.
+2. **-s, --selection and -p, --population**: Use this to run the genotype predictor on the given SSLP values for a specific population. Example usage: -s 159 161 163 166 -p Asian.
+3. **-H, --haplotypes and -p, --population**: This combination displays all possible haplotypes for a given population. Example usage: -H -p Asian.
+4. **-H, --haplotypes and -l, --list_datasets**: Use this combination to display all possible haplotypes and the list of all populations that have a haplotype dataset. Example usage: -H -l.
+5. **-A, --add**: Use this argument independently to add new haplotype files to the database. Example usage: -A ./new_haplotypes.json.
 ## Example
 
 ### shell
 
 ```bash
-Python haplotype_predictor.py -s 159 161 163 166 -p European -n 10
+Python FSHD.py -s 159 161 163 166 -p European -n 10
 ```
 
 This command will predict the genotypes for SSLP values 159 161 163 166 from the European region and display the top 10 results.
@@ -48,7 +62,7 @@ The script outputs a table with the columns:
  - chr10_1
  - chr10_2
  - Probability(%)
- - Permutation
+ - Permissive
  - Incidence(%)
 
 It also calculates and displays the Total Likelihood value at the end. If the -o/--output argument is used, the results will be written to the specified file instead of printing on the console.
