@@ -11,7 +11,7 @@ Requirements
 
 ## Script Description
 
-The script uses pre-defined haplotypes for prediction. A haplotype is a group of genes within an organism that was inherited together from a single parent. This script uses haplotypes of certain regions (European, African, Asian) to predict the genotypes from the provided SSLP values.
+The script uses pre-defined haplotypes for prediction. A haplotype is a group of genes within an organism that was inherited together from a single parent. This script uses haplotypes of certain populations (European, African, Asian) to predict the genotypes from the provided SSLP values.
 
 You can also provide an optional input JSON file that contains the haplotypes. If no file is provided, the script uses default haplotypes.
 Usage
@@ -19,34 +19,34 @@ Usage
 shell
 
 ```bash
-python haplotype_predictor.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -r <region>
+python haplotype_predictor.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
 ```
 ## Parameters
-
-   1.  **-s/--selection** (required): Integer values representing the SSLP selection. It must always be a length of 4 SSLP's. Example: `-s 159 161 163 166`.
-2.  **-r/--region** (required): The region the sample is from. Choose from: EU (European), AF (African), AS (Asian).
-3.  **-H/--haplotypes**: Display the list of all possible haplotypes.
-4.  **-n/--top**: Display top N results. If not specified, all results are displayed.
-5.  **-i/--input**: Path to the input JSON file containing haplotypes.
-6.  **-o/--output**: Specify the output file where the results will be written.
-7.  **-sep/--separator**: Choose a separator for the output file. For a tab, enter 't'. Default is comma ','.
+1.  **-h/--help**: Displays help message.
+2.  **-s/--selection** (required): Integer values representing the SSLP selection. It must always be a length of 4 SSLP's. Example: `-s 159 161 163 166`.
+3.  **-p/--population** (required): The region the sample is from. Choose from: African, Asian, European.
+4.  **-H/--haplotypes**: Display the list of all possible haplotypes.
+5.  **-n/--top**: Display top N results. If not specified, all results are displayed.
+6.  **-a/--add**: Specify a json file containing haplotypes which will be added to the database.
+7.  **-o/--output**: Specify the output file where the results will be written.
+8.  **-sep/--separator**: Choose a separator for the output file. For a tab, enter 't'. Default is comma ','.
 
 ## Example
 
 ### shell
 
 ```bash
-Python haplotype_predictor.py -s 159 161 163 166 -r EU -n 10
+Python haplotype_predictor.py -s 159 161 163 166 -p European -n 10
 ```
 
 This command will predict the genotypes for SSLP values 159 161 163 166 from the European region and display the top 10 results.
 Output
 
 The script outputs a table with the columns:
- - chr4_A
- - chr4_B
- - chr10_A
- - chr10_B
+ - chr4_1
+ - chr4_2
+ - chr10_1
+ - chr10_2
  - Probability(%)
  - Permutation
  - Incidence(%)
