@@ -23,7 +23,7 @@ def login_and_register_view(request):
         elif 'register_form' in request.POST:
             if register_form.is_valid():
                 user_object = register_form.save()
-                return redirect("/signup")
+                return redirect("/signin")
             else:
                 messagesr = get_error_message(register_form)
                 print(messagesr)
@@ -32,7 +32,7 @@ def login_and_register_view(request):
                 "register_form": register_form,
                 "messagesr": messagesr,
                 }
-                return render(request, "accounts/signup.html", context)
+                return render(request, "accounts/signin.html", context)
     else:
         login_form = AuthenticationForm(request, data=request.POST)
         register_form = UserCreationForm(request.POST or None)
