@@ -3,97 +3,165 @@
 {% load widget_tweaks %}
 
 {% block content %}
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        margin-top: 0rem;
+    }
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static '/css/signin-signup.css' %}">
-<link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
-{% endblock %}
+    .login-container {
+        background: #799AE0;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        width: 342px;
+        padding: 2rem;
+        height: 400px;
+        text-align: center;
+    }
 
-{% block extra_js %} 
-<script src="{% static '/javascript/register.js' %}"></script>
-<script src="https://unpkg.com/ionicons@4.2.2/dist/ionicons.js"></script>
-{% endblock %}
+    .login-container h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: 30px;
+        text-align: center;
+        color: rgb(0, 0, 0);
+        font-weight: 700;
+    }
 
-{%if not request.user.is_authenticated %}
-<div class="background">
-    <div class="container" id="container">
-        <div class="form-container sign-up-container">
-            <form action="/signup/" method="POST"> {% csrf_token %}
-                <h1 class="h1">Create Account</h1>
-                <div class="social-container">
-                    <a  href="#" class="social a">
-                        <ion-icon name="logo-facebook"></ion-icon>
-                    </a>
-                    <a href="#" class="social">
-                        <ion-icon name="logo-googleplus"></ion-icon>
-                    </a>
-                    <a href="#" class="social">
-                        <ion-icon name="logo-linkedin"></ion-icon>
-                    </a>
+    .register-container {
+        background: #283E70;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        width: 342px;
+        padding: 2rem;
+        margin-left: -2rem;
+        height: 365px;
+    }
+
+    .register-container h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: 30px;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        font-weight: 700;
+    }
+
+    form {
+        text-align: center;
+        height: 100%;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+    width: 240px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #000000;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 10px 0;
+    transition: border 0.5s;
+    outline: none;
+    color: #fff;
+    font-style: italic;
+}
+
+
+    .buton-login {
+    border-radius: 5px;
+    background: #283E70;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    width: 95px;
+    height: 38px;
+    }
+
+    .buton-register {
+    border-radius: 5px;
+    background: #799AE0;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    margin-top: 55px;
+    border: none;
+    width: 95px;
+    height: 38px;
+    }
+
+    /* button:hover{
+        background: #cd6a59;
+    }
+    button:active {
+        transform: scale(0.95);
+    }
+    
+    button:focus {
+    outline: none;
+    }
+
+    button.ghost {
+    background: transparent;
+    border-color: #ff4b2b;
+    background-color: #ff4b2b;
+    } */
+
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        height: 100%;
+    }
+
+    .flex-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 1rem;
+
+    }
+
+    .input-field-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
+<div class="container">
+    <div class="login-container">
+        <form action="" method="POST">{% csrf_token %}
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h1>Login</h1>
                 </div>
-                <span class="span">or use your email for registration</span>
-                {{register_form.username|attr:"placeholder:Your username"}}
-                {{register_form.password1|attr:"placeholder:Your password"}}
-                {{register_form.password2|attr:"placeholder:Confirm your password"}}
-                <button onclick="" type="submit" name="register_form">Sign Up</button>
-                {% if messagesr %}
-                <p class="pp">{{messagesr}}</p>
-                {% endif %}
-            </form>
-        </div>
 
-        <div class="form-container sign-in-container">
-            <form action="" method="POST">{% csrf_token %}
-                <h1>Sign In</h1>
-                <div class="social-container">
-                    <a href="#" class="social">
-                        <ion-icon name="logo-facebook"></ion-icon>
-                    </a>
-                    <a href="#" class="social">
-                        <ion-icon name="logo-googleplus"></ion-icon>
-                    </a>
-                    <a href="#" class="social">
-                        <ion-icon name="logo-linkedin"></ion-icon>
-                    </a>
+                <div class = "flex-item input-field-container">
+                    {{ login_form.username|attr:"placeholder:Username" }}
+                    {{ login_form.password|attr:"placeholder:Password" }}
                 </div>
-                <span class="span">or use your anime-blog account</span>
-                {{ login_form.username|attr:"placeholder:Your username"}}
-                {{ login_form.password|attr:"placeholder:Your password"}}
-                <button type="submit" name="login_form" class="bb">Sign In</button>
-                {% if messagesl %}
-                <p class="pp">{{messagesl}}</p>
-                {% endif %}
-        </form>
-        </div>
-
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-right">
-                    <h1>Welcome Back</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button class="ghost" id="signUp">Sign Up</button>
-                </div>
-                <div class="overlay-panel overlay-left">
-                    <h1>Hey there, anime fan!</h1>
-                    <p>Join us on our anime blog journey by entering your personal details and getting started with our community</p>
-                    <button class="ghost" id="signIn">Sign In</button>
+                <div class="flex-item">
+                    <button type="submit" name="login_form" class="buton-login">Login</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</div>
 
-{% else %}
-<div class="background">
-    <div class="logout-box">
-        <form action="/logout/">
-            <p class="plg">You're already signed in and cannot register. Would you like to sign out?</p>
-            <button type="submit" name="home">No, cancel</button>
-            <button type="submit" name="signout">Yes, sign out</button>        
+    <div class="register-container">
+        <form action="/signup/" method="POST">{% csrf_token %}
+            <h1>Create Account</h1>
+            {{ register_form.username|attr:"placeholder:Your username" }}
+            {{ register_form.password1|attr:"placeholder:Your password" }}
+            {{ register_form.password2|attr:"placeholder:Confirm your password" }}
+            <button type="submit" name="register_form" class="buton-register">Register</button>
         </form>
     </div>
 </div>
-{% endif %}
-
-
 {% endblock content %}
