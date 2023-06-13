@@ -38,6 +38,8 @@
         padding: 2rem;
         margin-left: -2rem;
         height: 365px;
+        text-align: center;
+
     }
 
     .register-container h1 {
@@ -53,8 +55,7 @@
         height: 100%;
     }
 
-    input[type="text"],
-    input[type="password"] {
+    .input1 {
     width: 240px;
     text-align: center;
     background: transparent;
@@ -68,8 +69,31 @@
     outline: none;
     color: #fff;
     font-style: italic;
-}
+    }
 
+    .input1::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .input2 {
+        width: 240px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #ffffff;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 10px 0;
+        transition: border 0.5s;
+        outline: none;
+        color: #fff;
+        font-style: italic;
+
+    }
+    .input2::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
 
     .buton-login {
     border-radius: 5px;
@@ -90,7 +114,6 @@
     font-size: 16px;
     font-weight: bold;
     font-family: 'Inter', sans-serif;
-    margin-top: 55px;
     border: none;
     width: 95px;
     height: 38px;
@@ -120,6 +143,13 @@
         height: 100%;
     }
 
+    .flex-container-register {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        height: 100%;
+    }
+
     .flex-item {
         display: flex;
         justify-content: center;
@@ -142,10 +172,9 @@
                 <div class="flex-item">
                     <h1>Login</h1>
                 </div>
-
                 <div class = "flex-item input-field-container">
-                    {{ login_form.username|attr:"placeholder:Username" }}
-                    {{ login_form.password|attr:"placeholder:Password" }}
+                    {% render_field login_form.username class="input1" placeholder="Username" %}
+                    {% render_field login_form.password class="input1" placeholder="Password" %}
                 </div>
                 <div class="flex-item">
                     <button type="submit" name="login_form" class="buton-login">Login</button>
@@ -156,11 +185,19 @@
 
     <div class="register-container">
         <form action="/signup/" method="POST">{% csrf_token %}
-            <h1>Create Account</h1>
-            {{ register_form.username|attr:"placeholder:Your username" }}
-            {{ register_form.password1|attr:"placeholder:Your password" }}
-            {{ register_form.password2|attr:"placeholder:Confirm your password" }}
-            <button type="submit" name="register_form" class="buton-register">Register</button>
+            <div class="flex-container-register">
+                <div class="flex-item">
+                    <h1>Create Account</h1>
+                </div>
+                <div class = "flex-item input-field-container">
+                    {% render_field register_form.username class="input2" placeholder="Username" %}
+                    {% render_field register_form.password1 class="input2" placeholder="Password" %}
+                    {% render_field register_form.password2 class="input2" placeholder="Repeat password" %}
+                </div>
+                <div class="flex-item" style="margin-top: 10px;">
+                    <button type="submit" name="register_form" class="buton-register">Register</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
