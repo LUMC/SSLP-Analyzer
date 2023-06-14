@@ -6,6 +6,10 @@ def home_view(request):
     return render(request, 'homepage.html')
 
 def data_editor_view(request,population):
+    edit_mode = False
+    if request.method == "POST":
+        if "edit" in request.POST:
+            edit_mode = True
     print(population)
     with open("haplotypes.json","r") as file:
         haplotypes = load(file)
@@ -18,13 +22,14 @@ def data_editor_view(request,population):
     for chr,chrdict in pop_dict.items():
         for SSLP,haplolist in chrdict.items():
             for haplodict in haplolist:
-                d = {"haplo":haplodict["haplotype"], "chr":chr,"SSLP":SSLP,"percent":haplodict["%"],"perm": True if haplodict["permissive"] == "1" else False}
+                d = {"haplo":haplodict["haplotype"], "chr":chr,"SSLP":SSLP,"percent":haplodict["%"],"perm": haplodict["permissive"]}
                 parsed_haplotypes.append(d)
                 
     return render(request, 'editpage.html',{
         "population":population,
         "table_data":parsed_haplotypes,
-        "population_options": haplotypes.keys()
+        "population_options": haplotypes.keys(),
+        "edit_mode":edit_mode
         })
 
 def feed_view(request):
