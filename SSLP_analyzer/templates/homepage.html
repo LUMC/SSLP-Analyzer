@@ -1,42 +1,135 @@
-{% extends 'base.html' %}
+<html lang="en">
 
-{% block content %}
-<div>
-    <h1>title</h1>
-<div style="display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 80px;">
-    <table class="table table-striped">
-        <thead style="background-color: #283E70; color: #ffffff">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Homepage</title>
+
+    <style>
+        .body{
+            overflow-y: hidden;
+        }
+        .bg-light-gray {
+            background-color: #D0CFCF;
+        }
+
+        .text-color-sidefield {
+            color: #283E70;
+        }
+
+        .btn-dark-blue {
+            color: #fff;
+            background-color: #283E70 !important;
+            border-color: #001f3f;
+        }
+
+        .btn-dark-blue:hover {
+            color: #fff;
+            background-color: #003366 !important;
+            border-color: #003366;
+        }
+
+        .height-class{
+            height: 50vh;
+        }
+
+        .width-class-sidefield{
+            width: 10rem !important;
+        }
+
+    </style>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div>
+        <h1 style="text-align: center">title</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 height-class">
+                    <table class="table table-striped height-class">
+                        <thead style="background-color: #283E70; color: #ffffff">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="container d-flex align-items-center justify-content-center">
+                        <div class="row">
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 1
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 2
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 3
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 4
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 5
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 6
+                                </button>
+                            </div>
+                            <div class="col btn-col">
+                                <button class="btn btn-primary btn-dark-blue">Button 7
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 bg-light-gray height-class width-class-sidefield">
+                    <div class="text text-color-sidefield p-4">
+                        <h4>Saved results</h4>
+                        <p>tempresult</p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary btn-dark-blue">Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</head>
 {% endblock content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
