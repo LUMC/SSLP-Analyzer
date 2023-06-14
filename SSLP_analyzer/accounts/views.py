@@ -23,7 +23,7 @@ def login_and_register_view(request):
         elif 'register_form' in request.POST:
             if register_form.is_valid():
                 user_object = register_form.save()
-                return redirect("/signin")
+                return redirect("/")
             else:
                 messagesr = get_error_message(register_form)
                 print(messagesr)
