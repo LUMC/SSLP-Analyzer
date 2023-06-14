@@ -4,7 +4,21 @@
 # Haplotype Predictor
 
 This Python script allows you to predict genotypes from Short Sequence Length Polymorphisms (SSLPs) values for Facioscapulohumeral muscular dystrophy (FSHD) analysis. It requires a selection of SSLPs and the region from where the sample is derived.
-Requirements
+
+## Pip package
+This analayser can also be used as a standalone pip package. It can be installed by navigating to the FSHD_CLI directory and executing the following command in your enviroment of choice.
+```bash
+pip install .
+```
+
+The package can then be used as normal by substituting `python FSHD.py` with `FSHD`
+
+## Example
+```bash
+FSHD -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
+```
+
+## Requirements
 
     Python 3.x
     - sys
@@ -26,7 +40,7 @@ Usage
 shell
 
 ```bash
-python haplotype_predictor.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
+python FSHD.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
 ```
 ## Parameters
 1.  **-h/--help**: Displays help message.
