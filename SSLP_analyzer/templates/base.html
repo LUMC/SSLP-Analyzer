@@ -58,9 +58,15 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'homepage' %}">Home</a>
                         </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'signin' %}">Login</a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'feed' %}">Feed</a>
                         </li>
