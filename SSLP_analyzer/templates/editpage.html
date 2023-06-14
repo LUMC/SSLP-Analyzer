@@ -5,29 +5,33 @@
  <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <table class="table table-striped mt-2">
-                <thead class="bg-primary text-white" style="background-color: #283E70 !important">
-                    <tr>
-                        <th scope="col" colspan="5" class="text-left fs-2" style="background-color: #283E70;">European</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Haplo</th>
-                        <th scope="col">Chr</th>
-                        <th scope="col">SSLP</th>
-                        <th scope="col">%</th>
-                        <th scope="col">Per</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Value 1</td>
-                        <td>Value 2</td>
-                        <td>Value 3</td>
-                        <td>Value 4</td>
-                        <td>Value 5</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="overflow:auto; height:80vh;"> <!-- div to make table scrollable -->
+                <table class="table table-striped mt-2">
+                    <thead class="bg-primary text-white sticky-top" style="background-color: #283E70 !important; top:0; z-index: 100;"> <!-- added sticky-top class and additional CSS -->
+                        <tr>
+                            <th scope="col" colspan="5" class="text-left fs-2" style="background-color: #283E70;">European</th>
+                        </tr>
+                        <tr>
+                            <th scope="col">Haplotype</th>
+                            <th scope="col">Chromosome</th>
+                            <th scope="col">SSLP</th>
+                            <th scope="col">%</th>
+                            <th scope="col">Permissive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table %}
+                        <tr>
+                            <td>{{row.haplo}}</td>
+                            <td>{{row.chr}}</td>
+                            <td>{{row.SSLP}}</td>
+                            <td>{{row.percent}}%</td>
+                            <td>{{row.perm}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="border p-3 mt-2 d-flex flex-column">
