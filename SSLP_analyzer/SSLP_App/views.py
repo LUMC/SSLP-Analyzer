@@ -15,7 +15,7 @@ def data_editor_view(request,population):
                 d = {"haplo":haplodict["haplotype"], "chr":chr,"SSLP":SSLP,"percent":haplodict["%"],"perm":haplodict["permissive"]}
                 parsed_haplotypes.append(d)
                 
-    return render(request, 'editpage.html',{"table":parsed_haplotypes})
+    return render(request, 'editpage.html',{"population":population,"table_data":parsed_haplotypes})
 
 def feed_view(request):
     return render(request, 'login.html')
