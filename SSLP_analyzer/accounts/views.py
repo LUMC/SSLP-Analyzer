@@ -19,6 +19,7 @@ def login_and_register_view(request):
                 "register_form": register_form,
                 "messagesl": messagesl,
                 }
+                print(messagesl)
                 return render(request, "accounts/signin.html", context)
         elif 'register_form' in request.POST:
             if register_form.is_valid():
@@ -27,7 +28,6 @@ def login_and_register_view(request):
                 return redirect("/")
             else:
                 messagesr = get_error_message(register_form)
-                print(messagesr)
                 context = {
                 "login_form": login_form,
                 "register_form": register_form,
