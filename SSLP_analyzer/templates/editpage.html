@@ -1,5 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>Edit</p>
+ <!-- Include Bootstrap CSS -->
+ <div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-striped mt-2">
+                <thead class="bg-primary text-white" style="background-color: #283E70 !important">
+                    <tr>
+                        <th scope="col" colspan="5" class="text-left fs-2" style="background-color: #283E70;">European</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Haplo</th>
+                        <th scope="col">Chr</th>
+                        <th scope="col">SSLP</th>
+                        <th scope="col">%</th>
+                        <th scope="col">Per</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Value 1</td>
+                        <td>Value 2</td>
+                        <td>Value 3</td>
+                        <td>Value 4</td>
+                        <td>Value 5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="border p-3 mt-2 d-flex flex-column">
+                <button type="button" class="btn btn-primary mt-2">Button 1</button>
+                <button type="button" class="btn btn-primary mt-2">Button 2</button>
+                <button type="button" class="btn btn-primary mt-2">Button 3</button>
+            </div>
+        </div>        
+    </div>
+</div>
 {% endblock content %}
