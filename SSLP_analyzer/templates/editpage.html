@@ -13,6 +13,23 @@
         align-items: center;
         justify-content: center;
     }
+    .edit-button {
+        background: none;
+        border: none;
+        color: #fff;
+    }
+
+    .edit-button:hover {
+        color: #007cc2
+    }
+
+    .full-width {
+        width: 100%;
+    }
+    th {
+        width: 20%; /* if you have 5 columns, each taking up an equal amount of space */
+    }
+        
  </style>
  <div class="container mt-2">
     <div class="row">
@@ -21,15 +38,18 @@
                 <table class="table table-striped text-center">
                     <thead class="bg-primary text-white sticky-top" style="background-color: #283E70 !important; top:0; z-index: 100;">
                         <tr>
-                            <th scope="col" colspan="5" class="text-left fs-2 d-flex justify-content-start align-items-center" style="background-color: #283E70; text-align: left;">
-                                {{population}}
-                                <form action={% url 'data_editor' population=population %} method="post">
-                                    {% csrf_token %}
-
-                                    <button type="submit" name="edit" class=" btn btn-primary">Edit</button>
-                                </form>
+                            <th scope="col" colspan="5" class="text-left fs-2 align-items-center px-4 pt-3" style="background-color: #283E70; text-align: left;">
+                                <div class="d-flex justify-content-between w-100">
+                                    <div>{{population}}</div>
+                                    <div>
+                                        <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
+                                            {% csrf_token %}
+                                            <button type="submit" name="edit" class="edit-button"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
                             </th>
-                        </tr>
+                        </tr>                                               
                         <tr>
                             <th scope="col">Haplotype</th>
                             <th scope="col">Chromosome</th>
@@ -40,35 +60,53 @@
                     </thead>
                     <tbody>
                         {% for row in table_data %}
-                        {% if edit_mode %}
-                        <tr>
-                            <td><input type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}></td>
-                            <td><input type="text" class="form-control text-center" style="width: 6rem;" value={{row.chr}}></td>
-                            <td><input type="text" class="form-control text-center" style="width: 6rem;" value={{row.SSLP}}></td>
-                            <td><input type="text" class="form-control text-center" style="width: 6rem;" value={{row.percent}}></td>
-                            <td>
-                                <select class="form-select" aria-label="Permissive">
-                                {% if row.perm == '1' %}
-                                <option value="1" selected>True</option>
-                                <option value="0">False</option>
-                                {% else %}
-                                <option value="1">True</option>
-                                <option value="0" selected>False</option>
-                                {% endif %}
-                              </select></td>
-                        </tr>
-                        
-                        {% else %}
-                        <tr>
-                            <td>{{row.haplo}}</td>
-                            <td>{{row.chr}}</td>
-                            <td>{{row.SSLP}}</td>
-                            <td>{{row.percent}}%</td>
-                            <td>{% if row.perm == "1" %}True{% else %}False{% endif %}</td>
-                        </tr>
-                        {% endif %}
+                            {% if edit_mode %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.chr}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.SSLP}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.percent}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <select class="form-select text-center" aria-label="Permissive">
+                                                {% if row.perm == '1' %}
+                                                    <option value="1" selected>True</option>
+                                                    <option value="0">False</option>
+                                                {% else %}
+                                                    <option value="1">True</option>
+                                                    <option value="0" selected>False</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{row.haplo}}</td>
+                                    <td>{{row.chr}}</td>
+                                    <td>{{row.SSLP}}</td>
+                                    <td>{{row.percent}}%</td>
+                                    <td>{% if row.perm == "1" %}True{% else %}False{% endif %}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
-                    </tbody>
+                    </tbody>                    
                 </table>
             </div>
         </div>
