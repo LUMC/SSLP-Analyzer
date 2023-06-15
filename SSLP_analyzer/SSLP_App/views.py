@@ -16,18 +16,18 @@ def haplotype_saver(request, population, haplotypes):
             if chr not in save_dict:
                 save_dict[chr] = {}
             else: 
-            if sslp not in save_dict[chr]:
-                save_dict[chr][sslp] = [{
-                    "haplotype": haplo,
-                    "%": percent,
-                    "permissive": perm
-                }]
-            else:
-                save_dict[chr][sslp].append({
-                    "haplotype": haplo,
-                    "%": percent,
-                    "permissive": perm
-                })
+                if sslp not in save_dict[chr]:
+                    save_dict[chr][sslp] = [{
+                        "haplotype": haplo,
+                        "%": percent,
+                        "permissive": perm
+                    }]
+                else:
+                    save_dict[chr][sslp].append({
+                        "haplotype": haplo,
+                        "%": percent,
+                        "permissive": perm
+                    })
 
         print(dumps(save_dict,indent=4))
             
