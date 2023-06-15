@@ -38,13 +38,21 @@
                 <table class="table table-striped text-center">
                     <thead class="bg-primary text-white sticky-top" style="background-color: #283E70 !important; top:0; z-index: 100;">
                         <tr>
-                            <th scope="col" colspan="5" class="text-left fs-2 align-items-center px-4 pt-3" style="background-color: #283E70; text-align: left;">
+                            <th scope="col" colspan="5" class="text-left fs-2 align-items-center p-4 " style="background-color: #283E70; text-align: left;">
                                 <div class="d-flex justify-content-between w-100">
-                                    <div>{{population}}</div>
+                                    {% if edit_mode %}
+                                        <input type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
+                                    {% else %}
+                                        <div>{{population}}</div>
+                                    {% endif %}
                                     <div>
                                         <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
                                             {% csrf_token %}
-                                            <button type="submit" name="edit" class="edit-button"><i class="fa-regular fa-pen-to-square"></i></button>
+                                            {% if edit_mode %}
+                                                <button type="submit" name="done" class="btn btn-primary">Done</button>
+                                            {% else %}
+                                                <button type="submit" name="edit" class="edit-button"><i class="fa-regular fa-pen-to-square"></i></button>
+                                            {% endif %}
                                         </form>
                                     </div>
                                 </div>
