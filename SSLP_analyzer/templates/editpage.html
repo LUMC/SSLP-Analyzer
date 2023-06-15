@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% load static %}
+{% block head %}
+<script src="{% static 'javascript/haplotype.js' %}" ></script>
+
+{% endblock head %}
+
 {% block content %}
  <!-- Include Bootstrap CSS -->
  <style>
@@ -35,25 +41,27 @@
     <div class="row">
         <div class="col-md-8">
             <div style="overflow:auto; height:80vh;"> <!-- div to make table scrollable -->
+                <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
+                {% csrf_token %}
                 <table class="table table-striped text-center">
                     <thead class="bg-primary text-white sticky-top" style="background-color: #283E70 !important; top:0; z-index: 100;">
                         <tr>
                             <th scope="col" colspan="5" class="text-left fs-2 align-items-center p-4 " style="background-color: #283E70; text-align: left;">
                                 <div class="d-flex justify-content-between w-100">
                                     {% if edit_mode %}
-                                        <input type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
+                                        <input name="new_population" type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
                                     {% else %}
                                         <div>{{population}}</div>
                                     {% endif %}
                                     <div>
-                                        <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
-                                            {% csrf_token %}
+                                        
+                                            
                                             {% if edit_mode %}
                                                 <button type="submit" name="done" class="btn btn-primary">Done</button>
                                             {% else %}
                                                 <button type="submit" name="edit" class="edit-button"><i class="fa-regular fa-pen-to-square"></i></button>
                                             {% endif %}
-                                        </form>
+                                        
                                     </div>
                                 </div>
                             </th>
@@ -66,39 +74,43 @@
                             <th scope="col">Permissive</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="haplotable">
                         {% for row in table_data %}
                             {% if edit_mode %}
                                 <tr>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}>
+                                            <input name="haplo" type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.chr}}>
+                                            <input name="chr" type="text" class="form-control text-center" style="width: 6rem;" value={{row.chr}}>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.SSLP}}>
+                                            <input name="SSLP" type="text" class="form-control text-center" style="width: 6rem;" value={{row.SSLP}}>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <input type="text" class="form-control text-center" style="width: 6rem;" value={{row.percent}}>
+                                            <input name="percent" type="text" class="form-control text-center" style="width: 6rem;" value={{row.percent}}>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <select class="form-select text-center" aria-label="Permissive">
+                                            <select name="perm" class="form-select text-center" aria-label="Permissive">
                                                 {% if row.perm == '1' %}
                                                     <option value="1" selected>True</option>
                                                     <option value="0">False</option>
-                                                {% else %}
+                                                {% elif row.perm == '0' %}
                                                     <option value="1">True</option>
                                                     <option value="0" selected>False</option>
+                                                {% else %}
+                                                    <option value="" selected>Select Value</option>
+                                                    <option value="1">True</option>
+                                                    <option value="0" >False</option>
                                                 {% endif %}
                                             </select>
                                         </div>
@@ -116,6 +128,7 @@
                         {% endfor %}
                     </tbody>                    
                 </table>
+                </form>
             </div>
         </div>
             <div class="col-md-4">
