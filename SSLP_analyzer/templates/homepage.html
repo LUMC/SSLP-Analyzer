@@ -22,6 +22,11 @@
         .text-color-sidefield {
             color: #283E70;
             text-decoration: underline #283E70;
+            border: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            background-color: #D0CFCF;
         }
 
         .btn-dark-blue {
@@ -74,7 +79,8 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-10 height-class" style="overflow-y: auto;">
-            <table id="myTable" class="table table-striped height-class" style="background-color: #D0CFCF !important;">
+            <table id="myTable" class="table table-striped height-class"
+                   style="background-color: #D0CFCF !important;">
                 <thead style="background-color: #283E70; color: #ffffff !important; position: sticky; top: 0;">
                 <tr style="color: white !important;">
                     <th scope="col">chr4_1</th>
@@ -87,79 +93,88 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {% for row in data %}
-                    <tr>
-                      {% for item in row %}
-                      <td>{{ item }}</td>
-                      {% endfor %}
-                    </tr>
+                {% for row in data %}
+                <tr>
+                    {% for item in row %}
+                    <td>{{ item }}</td>
                     {% endfor %}
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
         <div class="col-lg-2 bg-light-gray height-class width-class-sidefield">
             <div class="text text-color-sidefield p-4">
-                <p>tempresult</p>
-                <p>tempresult</p>
+                {% for saved_result in saved_results %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="change_result_input" value={{saved_result}}>
+                    •<button type="submit" name="change_result_submit"
+                            class="text-color-sidefield">{{saved_result}}
+                    </button>
+                </form>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 <form method="post">
     {% csrf_token %}
-<div class="container" style="margin-top: 1rem">
+    <div class="container" style="margin-top: 1rem">
 
-    <div class="row">
-        <div class="col-lg-10">
-            <div class="d-flex align-items-center justify-content-center" style="margin-left: 1.5rem">
-                <div class="col btn-col">
-                    <select id="SSLP-waarde1"
-                            class="btn btn-primary btn-dark-blue"
-                            style="text-align: left;"></select>
-                </div>
-                <div class="col btn-col">
-                    <select id="SSLP-waarde2"
-                            class="btn btn-primary btn-dark-blue"
-                            style="text-align: left;"></select>
-                </div>
-                <div class="col btn-col">
-                    <select id="SSLP-waarde3"
-                            class="btn btn-primary btn-dark-blue"
-                            style="text-align: left;"></select>
-                </div>
-                <div class="col btn-col">
-                    <select id="SSLP-waarde4"
-                            class="btn btn-primary btn-dark-blue"
-                            style="text-align: left;"></select>
-                </div>
-                <div class="col btn-col">
-                    <select id="SSLP-regio"
-                            class="btn btn-primary btn-dark-blue"
-                            style="text-align: left;"></select>
-                </div>
-                <div class="col btn-col">
-                    <button class="btn btn-primary btn-dark-blue">Predict
-                    </button>
-                </div>
-                <div class="col btn-col">
-                    <button class="btn btn-primary btn-dark-blue">Save
-                    </button>
-                </div>
-                <div class="col btn-col">
-                    <button class="btn btn-primary btn-dark-blue">Upload
-                    </button>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="d-flex align-items-center justify-content-center"
+                     style="margin-left: 1.5rem">
+                    <div class="col btn-col">
+                        <select id="SSLP-waarde1"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;"></select>
+                    </div>
+                    <div class="col btn-col">
+                        <select id="SSLP-waarde2"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;"></select>
+                    </div>
+                    <div class="col btn-col">
+                        <select id="SSLP-waarde3"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;"></select>
+                    </div>
+                    <div class="col btn-col">
+                        <select id="SSLP-waarde4"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;"></select>
+                    </div>
+                    <div class="col btn-col">
+                        <select id="SSLP-regio"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;"></select>
+                    </div>
+                    <div class="col btn-col">
+                        <button class="btn btn-primary btn-dark-blue">Predict
+                        </button>
+                    </div>
+                    <div class="col btn-col">
+                        <button class="btn btn-primary btn-dark-blue">Save
+                        </button>
+                    </div>
+                    <div class="col btn-col">
+                        <button class="btn btn-primary btn-dark-blue">Upload
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-2 height-class width-class-sidefield">
-            <div class="d-flex align-items-center justify-content-center">
-        <input type="submit" class="btn btn-primary btn-dark-blue" role="button"
-               name="export_button" value="Export">
-                </button>
+            <div class="col-lg-2 height-class width-class-sidefield">
+                <div class="d-flex align-items-center justify-content-center">
+                    <input type="submit" class="btn btn-primary btn-dark-blue"
+                           role="button"
+                           name="export_button" value="Export">
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </form>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -206,7 +221,8 @@
         population.value = populations[i];
         population_dropdown.appendChild(population);
     }
-  // Functie om de tabelrijen te kleuren op basis van de kolom 'Incidence(%)'
+
+    // Functie om de tabelrijen te kleuren op basis van de kolom 'Incidence(%)'
     function determineRB(d_perc) {
         if (d_perc > 30) {
             return 70;
@@ -249,7 +265,7 @@
     }
 
     // Roept de functie aan wanneer het document is geladen
-    window.onload = function() {
+    window.onload = function () {
         colorRows();
     };
 
