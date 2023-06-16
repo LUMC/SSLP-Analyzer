@@ -1,6 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from json import load,dumps
 from django.urls import reverse
+from django.http import FileResponse
+from django import forms
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
 
 def home_view(request):
     return render(request, 'homepage.html')
@@ -36,8 +41,16 @@ def haplotype_saver(request, population, haplotypes):
         haplotypes[population] = save_dict
     return haplotypes, population
             
+def haplotype_uploader(request,population):
+    form = UploadFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        file_in_memory = request.FILES['file'].read()
+        print(file_in_memory)
+        
+def haplotype_downloader(request, population):
+    return FileResponse(open("haplotypes.json", "rb"), filename="haplotypes.json", as_attachment=True)
 
-def data_editor_view(request,population):
+def data_editor_view(request, population):
     with open("haplotypes.json","r") as file:
         haplotypes = load(file)
     edit_mode = False
@@ -45,12 +58,18 @@ def data_editor_view(request,population):
         if "edit" in request.POST:
             edit_mode = True
         elif "done" in request.POST:
-            haplotypes, population = haplotype_saver(request,population,haplotypes)
+            haplotypes, population = haplotype_saver(request, population, haplotypes)
+            with open("haplotypes.json","w") as file:
+                file.write(dumps(haplotypes,indent=4))
             edit_mode = False
+        elif "Upload" in request.POST:
+            haplotype_uploader(request,population)
+        elif "Download" in request.POST:
+            return haplotype_downloader(request,population)
     try:
         pop_dict = haplotypes[population]
     except KeyError:
-        return redirect("data_editor",population="European")
+        return redirect("data_editor",population=list(haplotypes.keys())[0])
     
     parsed_haplotypes = []
     for chr,chrdict in pop_dict.items():
@@ -66,7 +85,8 @@ def data_editor_view(request,population):
         "population":population,
         "table_data":parsed_haplotypes,
         "population_options": haplotypes.keys(),
-        "edit_mode":edit_mode
+        "edit_mode":edit_mode,
+        "form": UploadFileForm()
         })
 
 
