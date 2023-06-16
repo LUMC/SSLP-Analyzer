@@ -9,40 +9,33 @@ def home_view(request):
 
 def haplotype_saver(request, population, haplotypes):
     POST_value = dict(request.POST)
+    new_population_name = POST_value.get("new_population")[0]
     save_dict = {}
     for pack in zip(POST_value.get("haplo"), POST_value.get("chr"), POST_value.get("SSLP"), POST_value.get("percent"), POST_value.get("perm")):
         if all(pack):
             haplo, chr, sslp, percent, perm = pack
             if chr not in save_dict:
                 save_dict[chr] = {}
-            else: 
-                if sslp not in save_dict[chr]:
-                    save_dict[chr][sslp] = [{
-                        "haplotype": haplo,
-                        "%": percent,
-                        "permissive": perm
-                    }]
-                else:
-                    save_dict[chr][sslp].append({
-                        "haplotype": haplo,
-                        "%": percent,
-                        "permissive": perm
-                    })
-
-        print(dumps(save_dict,indent=4))
-            
-    
-            
-        
-        
-        
-        
-        
-        
-    new_population_name = POST_value.get("new_population")[0]
-    if new_population_name != population:
-        haplotypes[new_population_name] = haplotypes[population]
+            if sslp not in save_dict[chr]:
+                save_dict[chr][sslp] = [{
+                    "haplotype": haplo,
+                    "%": percent,
+                    "permissive": perm
+                }]
+            else:
+                save_dict[chr][sslp].append({
+                    "haplotype": haplo,
+                    "%": percent,
+                    "permissive": perm
+                })
+    if population != new_population_name:
         del haplotypes[population]
+        haplotypes[new_population_name] = save_dict
+        population = new_population_name
+    else:
+        haplotypes[population] = save_dict
+    return haplotypes, population
+            
 
 def data_editor_view(request,population):
     with open("haplotypes.json","r") as file:
@@ -52,8 +45,8 @@ def data_editor_view(request,population):
         if "edit" in request.POST:
             edit_mode = True
         elif "done" in request.POST:
-            haplotype_saver(request,population,haplotypes)
-            
+            haplotypes, population = haplotype_saver(request,population,haplotypes)
+            edit_mode = False
     try:
         pop_dict = haplotypes[population]
     except KeyError:
@@ -67,13 +60,15 @@ def data_editor_view(request,population):
                 parsed_haplotypes.append(d)
     if edit_mode:
         parsed_haplotypes.append({"haplo":"", "chr":"","SSLP":"","percent":"","perm": ""})
-                
+    
+    # print(parsed_haplotypes[0])
     return render(request, 'editpage.html',{
         "population":population,
         "table_data":parsed_haplotypes,
         "population_options": haplotypes.keys(),
         "edit_mode":edit_mode
         })
+
 
 def feed_view(request):
     return render(request, 'login.html')
