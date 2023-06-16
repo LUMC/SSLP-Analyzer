@@ -1,12 +1,3 @@
-from django.shortcuts import render
-import pandas as pd
-from pathlib import Path
-import os.path
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
-import mimetypes
-
-def home_view(request):
     data = [
     ['4A161', '4B163', '10A166', '10A166', 92.034, 1, 19.121],
     ['4A161', '4A163', '10A166', '10A166', 2.518, 2, 0.523],
@@ -32,38 +23,3 @@ def home_view(request):
     ['4B161', '4B163', '10A166H', '10A166H', 0.000, 2, 0.000],
     ['4A163', '4B166', '10A166H', '10B161T', 0.000, 2, 0.000],
     ['4A163', '4B161', '10A166H', '10A166H', 0.000, 2, 0.000]]
-
-    context = {
-        'data': data
-    }
-    if request.POST.get('export_button'):
-        try:
-            response = downloadfile(request, "tempfile")
-            return response
-        except FileNotFoundError:
-            message = 'No template for this month created'
-    
-    return render(request, 'homepage.html', context)
-
-
-def downloadfile(request, filename):
-    base_dir = Path(__file__).resolve().parent.parent
-    filepath = str(base_dir) + '\\Files\\' + filename
-    thefile = filepath
-    filename = os.path.basename(thefile)
-    chunk_size = 8192
-    response = StreamingHttpResponse(
-        FileWrapper(open(thefile, 'rb'), chunk_size),
-        content_type=mimetypes.guess_type(thefile)[0])
-    response['Content-length'] = os.path.getsize(thefile)
-    response['Content-Disposition'] = "Attachment;filename=%s" % filename
-    return response
-
-
-
-def data_editor_view(request):
-    return render(request, 'editpage.html')
-
-def feed_view(request):
-    return render(request, 'login.html')
-
