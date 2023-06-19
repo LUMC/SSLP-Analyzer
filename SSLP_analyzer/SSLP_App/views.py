@@ -5,10 +5,11 @@ import os.path
 from django.http import StreamingHttpResponse
 from wsgiref.util import FileWrapper
 import mimetypes
+from .utils import haplotype
 
 
 def home_view(request):
-    print(request.POST)
+    # print(request.POST)
     data = []
     data1 = [
         ['4A161', '4B163', '10A166', '10A166', 92.034, 1, 19.121],
@@ -36,22 +37,30 @@ def home_view(request):
         ['4A163', '4B166', '10A166H', '10B161T', 0.000, 2, 0.000],
         ['4A163', '4B161', '10A166H', '10A166H', 0.000, 2, 0.000]]
 
-    if request.POST.get('export_button'):
+    if 'export_button' in request.POST:
         try:
             response = downloadfile(request, "tempfile")
             return response
         except FileNotFoundError:
             message = 'No results to export'
-    if request.POST.get('save'):
+    elif 'save' in request.POST:
         return render(request, 'homepage.html', {
             'data': data1,
             'saved_results': ['result 1', 'result 2', 'result 3']
         })
-    if request.POST.get('change_result_submit'):
+    elif 'change_result_submit' in request.POST:
         return render(request, 'homepage.html', {
             'data': data1,
             'saved_results': ['result 1', 'result 2']
         })
+    elif "predict" in request.POST:
+        request_values = request.POST
+        SSLP1 = request_values.get('SSLP1')
+        SSLP2 = request_values.get('SSLP2')
+        SSLP3 = request_values.get('SSLP3')
+        SSLP4 = request_values.get('SSLP4')
+        region = request_values.get('region')
+        haplotype(sorted([166, 161, 163, 166]), "European")
     return render(request, 'homepage.html', {
         'data': data,
         'saved_results': ['result 1', 'result 2']

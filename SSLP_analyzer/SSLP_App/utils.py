@@ -1,12 +1,15 @@
+from django.contrib.staticfiles import finders
 from itertools import product
 import json
+import pkg_resources
 
 
 def predict(selection, population):
     """
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
-    with open('haplotypes.json', 'r') as f:
+    
+    with open(pkg_resources.resource_filename(__name__, "files/haplotypes.json"), "r") as f:
         ethnicity_haplotypes = json.load(f)
         ethnicity_haplotypes = ethnicity_haplotypes[population]
     
