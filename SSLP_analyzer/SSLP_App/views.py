@@ -13,12 +13,15 @@ def home_view(request):
     chrom_lengths = []
     file_path = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
-
+    all_sslps = []
+    poplutations = []
     with open(file_path, "r") as file:
         haplotype_file = json.load(file)
         poplutations = list(haplotype_file.keys())
-        for pop in poplutations:
-            print(haplotype_file[pop])
+        for _, pop in haplotype_file.items():
+            for _, sslps in pop.items():
+                all_sslps.extend((sslps))
+    all_sslps = sorted(list(set(all_sslps)))
             
 
 
@@ -63,13 +66,15 @@ def home_view(request):
         return render(request, 'homepage.html', {
             'data': data1,
             'saved_results': ['result 1', 'result 2', 'result 3'],
-            'chrom_lengths': chrom_lengths,
+            'chrom_lengths': all_sslps,
+            'populations': poplutations,
         })
     elif 'change_result_submit' in request.POST:
         return render(request, 'homepage.html', {
             'data': data1,
             'saved_results': ['result 1', 'result 2'],
-            'chrom_lengths': chrom_lengths,
+            'chrom_lengths': all_sslps,
+            'populations': poplutations,
         })
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
@@ -80,7 +85,8 @@ def home_view(request):
     return render(request, 'homepage.html', {
         'data': data,
         'saved_results': ['result 1', 'result 2'],
-        'chrom_lengths': chrom_lengths,
+        'chrom_lengths': all_sslps,
+        'populations': poplutations,
     })
 
 

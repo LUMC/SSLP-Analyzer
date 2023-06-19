@@ -190,8 +190,8 @@
     var waarde4 = document.getElementById("SSLP-waarde4");
     var population_dropdown = document.getElementById("SSLP-regio");
 
-    var options = {{ chrom_lengths|safe }};
-    var populations = ["Europa", "Afrika", "Azie", "India"];
+    var options = {{ chrom_lengths | safe }};
+    var populations = {{populations | safe }};
 
     for (var i = 0; i < options.length; i++) {
         var option = document.createElement("option");
