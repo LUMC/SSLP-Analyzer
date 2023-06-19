@@ -42,6 +42,11 @@ def home_view(request):
             return response
         except FileNotFoundError:
             message = 'No results to export'
+    if request.POST.get('save'):
+        return render(request, 'homepage.html', {
+            'data': data1,
+            'saved_results': ['result 1', 'result 2', 'result 3']
+        })
     if request.POST.get('change_result_submit'):
         return render(request, 'homepage.html', {
             'data': data1,
