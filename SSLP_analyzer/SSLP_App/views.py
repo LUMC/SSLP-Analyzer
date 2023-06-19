@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,HttpResponse
-from json import load,dumps
+from json import load, loads, dumps
 from django.urls import reverse
 from django.http import FileResponse
 from django import forms
@@ -45,8 +45,9 @@ def haplotype_uploader(request,population):
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
-        print(file_in_memory)
-        
+        decoded_file = loads(file_in_memory.decode('utf-8'))
+    print(decoded_file[0])
+    
 def haplotype_downloader(request, population):
     return FileResponse(open("haplotypes.json", "rb"), filename="haplotypes.json", as_attachment=True)
 
