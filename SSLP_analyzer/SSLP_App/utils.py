@@ -2,14 +2,17 @@ from django.contrib.staticfiles import finders
 from itertools import product
 import json
 import pkg_resources
+import os
 
 
 def predict(selection, population):
     """
     haplotypes = [[EU4, EU10], [AF4, AF10], [AS4, AS10]]
     """
-    
-    with open(pkg_resources.resource_filename(__name__, "files/haplotypes.json"), "r") as f:
+    file_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),  # Navigate up two directories from __file__
+    "files/haplotypes.json")
+    with open(file_path, "r") as f:
         ethnicity_haplotypes = json.load(f)
         ethnicity_haplotypes = ethnicity_haplotypes[population]
     
@@ -79,5 +82,6 @@ def result_table(result, totaalkans):
 
 def haplotype(selection, region):
     ingeklapt, totaalkans = predict(selection, region)
-    results, total_like = result_table(ingeklapt, totaalkans)   
+    results, total_like = result_table(ingeklapt, totaalkans)  
+    print(results, total_like) 
     return results, total_like

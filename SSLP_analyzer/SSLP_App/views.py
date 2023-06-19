@@ -6,10 +6,26 @@ from django.http import StreamingHttpResponse
 from wsgiref.util import FileWrapper
 import mimetypes
 from .utils import haplotype
+import json
 
 
 def home_view(request):
-    # print(request.POST)
+    chrom_lengths = []
+    file_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
+
+    with open(file_path, "r") as file:
+        haplotype_file = json.load(file)
+        poplutations = list(haplotype_file.keys())
+        for pop in poplutations:
+            print(haplotype_file[pop])
+            
+
+
+    #     for line in file:
+    #         number = line.strip()  
+    #         chrom_lengths.append(int(number))  
+    # chrom_lengths = list(set(chrom_lengths))
     data = []
     data1 = [
         ['4A161', '4B163', '10A166', '10A166', 92.034, 1, 19.121],
@@ -46,24 +62,25 @@ def home_view(request):
     elif 'save' in request.POST:
         return render(request, 'homepage.html', {
             'data': data1,
-            'saved_results': ['result 1', 'result 2', 'result 3']
+            'saved_results': ['result 1', 'result 2', 'result 3'],
+            'chrom_lengths': chrom_lengths,
         })
     elif 'change_result_submit' in request.POST:
         return render(request, 'homepage.html', {
             'data': data1,
-            'saved_results': ['result 1', 'result 2']
+            'saved_results': ['result 1', 'result 2'],
+            'chrom_lengths': chrom_lengths,
         })
     elif "predict" in request.POST:
-        request_values = request.POST
-        SSLP1 = request_values.get('SSLP1')
-        SSLP2 = request_values.get('SSLP2')
-        SSLP3 = request_values.get('SSLP3')
-        SSLP4 = request_values.get('SSLP4')
-        region = request_values.get('region')
-        haplotype(sorted([166, 161, 163, 166]), "European")
+        SSLPs = request.POST.getlist('SSLP_value')
+        region = request.POST.get('region')
+        SSLPs = sorted([int(i) for i in SSLPs])
+        print(SSLPs)
+        # haplotype(sorted([166, 161, 163, 166]), "European")
     return render(request, 'homepage.html', {
         'data': data,
-        'saved_results': ['result 1', 'result 2']
+        'saved_results': ['result 1', 'result 2'],
+        'chrom_lengths': chrom_lengths,
     })
 
 

@@ -127,33 +127,33 @@
                     <div class="col btn-col">
                         <select 
                         id="SSLP-waarde1" 
-                        name="SSLP1" 
+                        name="SSLP_value" 
                         class="btn btn-primary btn-dark-blue" 
-                        style="text-align: left;"></select>
+                        style="text-align: left;"><option value="" selected>SSLP-1</option></select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde2"
-                                name="SSLP2"
+                                name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"></select>
+                                style="text-align: left;"><option value="" selected>SSLP-2</option></select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde3"
-                                name="SSLP3"
+                                name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"></select>
+                                style="text-align: left;"><option value="" selected>SSLP-3</option></select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde4"
-                                name="SSLP4"
+                                name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"></select>
+                                style="text-align: left;"><option value="" selected>SSLP-4</option></select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-regio"
                                 name="region"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"></select>
+                                style="text-align: left;"><option value="" selected>Population</option></select>
                     </div>
                     <div class="col btn-col">
                         <input type="submit" name="predict" class="btn btn-primary btn-dark-blue" value="Predict" />
@@ -190,7 +190,7 @@
     var waarde4 = document.getElementById("SSLP-waarde4");
     var population_dropdown = document.getElementById("SSLP-regio");
 
-    var options = ["SSLP-1", "SSLP-2", "SSLP-3", "SSLP-4", "SSLP-5", "SSLP-6", "SSLP-7", "SSLP-8"];
+    var options = {{ chrom_lengths|safe }};
     var populations = ["Europa", "Afrika", "Azie", "India"];
 
     for (var i = 0; i < options.length; i++) {
