@@ -10,9 +10,10 @@ import json
 
 
 def home_view(request):
+    total_perc = ""
     chrom_lengths = []
     file_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
+        os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
     all_sslps = []
     poplutations = []
     with open(file_path, "r") as file:
@@ -22,9 +23,6 @@ def home_view(request):
             for _, sslps in pop.items():
                 all_sslps.extend((sslps))
     all_sslps = sorted(list(set(all_sslps)))
-            
-
-
     #     for line in file:
     #         number = line.strip()  
     #         chrom_lengths.append(int(number))  
@@ -68,6 +66,8 @@ def home_view(request):
             'saved_results': ['result 1', 'result 2', 'result 3'],
             'chrom_lengths': all_sslps,
             'populations': poplutations,
+            'likelihood': total_perc,
+
         })
     elif 'change_result_submit' in request.POST:
         return render(request, 'homepage.html', {
@@ -75,18 +75,41 @@ def home_view(request):
             'saved_results': ['result 1', 'result 2'],
             'chrom_lengths': all_sslps,
             'populations': poplutations,
+            'likelihood': total_perc,
+
         })
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
         region = request.POST.get('region')
-        SSLPs = sorted([int(i) for i in SSLPs])
-        print(SSLPs)
-        # haplotype(sorted([166, 161, 163, 166]), "European")
+        if "" not in SSLPs and region != "":
+            SSLPs = sorted([int(i) for i in SSLPs])
+            table_haplotype, total_perc = haplotype(SSLPs, region)
+            print(total_perc)
+            if table_haplotype != 1:
+                return render(request, 'homepage.html', {
+                    'data': table_haplotype,
+                    'saved_results': ['result 1', 'result 2'],
+                    'chrom_lengths': all_sslps,
+                    'populations': poplutations,
+                    'likelihood': str(total_perc),
+
+                })
+            else:
+                return render(request, 'homepage.html', {
+                    'data': data,
+                    'saved_results': ['result 1', 'result 2'],
+                    'chrom_lengths': all_sslps,
+                    'populations': poplutations,
+                    'likelihood': "No results",
+
+                })
     return render(request, 'homepage.html', {
         'data': data,
         'saved_results': ['result 1', 'result 2'],
         'chrom_lengths': all_sslps,
         'populations': poplutations,
+        'likelihood': total_perc,
+
     })
 
 

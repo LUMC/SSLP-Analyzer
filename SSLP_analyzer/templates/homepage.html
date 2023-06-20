@@ -59,6 +59,14 @@
             justify-content: flex-end;
         }
 
+        .likelihood-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 100;
+            text-align: start;
+            justify-content: flex-end;
+        }
+
     </style>
 </head>
 
@@ -67,7 +75,12 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-10">
-            <h1 class=titles-text-class id="Title">Title</h1>
+
+            <div class="col-md-9"><p class=titles-text-class id="Title">
+                Title</p>
+            </div>
+            <div class="col-md-2"><p id="Likelihood">Total Likelihood: {{ likelihood }} </p>
+            </div>
         </div>
         <div class="col-lg-2 width-class-sidefield">
             <h4 class=titles-text-class>Saved</h4>
@@ -110,7 +123,8 @@
                     {% csrf_token %}
                     •
                     <input type="submit" name="change_result_submit"
-                            class="text-color-sidefield" value="{{saved_result}}">
+                           class="text-color-sidefield"
+                           value="{{saved_result}}">
                 </form>
                 {% endfor %}
             </div>
@@ -125,49 +139,63 @@
                 <div class="d-flex align-items-center justify-content-center"
                      style="margin-left: 1.5rem">
                     <div class="col btn-col">
-                        <select 
-                        id="SSLP-waarde1" 
-                        name="SSLP_value" 
-                        class="btn btn-primary btn-dark-blue" 
-                        style="text-align: left;"><option value="" selected>SSLP-1</option></select>
+                        <select
+                                id="SSLP-waarde1"
+                                name="SSLP_value"
+                                class="btn btn-primary btn-dark-blue"
+                                style="text-align: left;">
+                            <option value="" selected>SSLP-1</option>
+                        </select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde2"
                                 name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"><option value="" selected>SSLP-2</option></select>
+                                style="text-align: left;">
+                            <option value="" selected>SSLP-2</option>
+                        </select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde3"
                                 name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"><option value="" selected>SSLP-3</option></select>
+                                style="text-align: left;">
+                            <option value="" selected>SSLP-3</option>
+                        </select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-waarde4"
                                 name="SSLP_value"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"><option value="" selected>SSLP-4</option></select>
+                                style="text-align: left;">
+                            <option value="" selected>SSLP-4</option>
+                        </select>
                     </div>
                     <div class="col btn-col">
                         <select id="SSLP-regio"
                                 name="region"
                                 class="btn btn-primary btn-dark-blue"
-                                style="text-align: left;"><option value="" selected>Population</option></select>
+                                style="text-align: left;">
+                            <option value="" selected>Population</option>
+                        </select>
                     </div>
                     <div class="col btn-col">
-                        <input type="submit" name="predict" class="btn btn-primary btn-dark-blue" value="Predict" />
+                        <input type="submit" name="predict"
+                               class="btn btn-primary btn-dark-blue"
+                               value="Predict"/>
                         </input>
                     </div>
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Save
-                        <input type="submit" name="save"  style="display: none;"></input>
+                            <input type="submit" name="save"
+                                   style="display: none;"></input>
                         </label>
                     </div>
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Upload
-                        <input type="file" id="upload" style="display: none;"></input>
-                    </label>
+                            <input type="file" id="upload"
+                                   style="display: none;"></input>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -190,8 +218,10 @@
     var waarde4 = document.getElementById("SSLP-waarde4");
     var population_dropdown = document.getElementById("SSLP-regio");
 
-    var options = {{ chrom_lengths | safe }};
-    var populations = {{populations | safe }};
+    var options = {{ chrom_lengths | safe }}
+    ;
+    var populations = {{ populations | safe }}
+    ;
 
     for (var i = 0; i < options.length; i++) {
         var option = document.createElement("option");
