@@ -75,7 +75,7 @@ def result_table(result, totaalkans):
         values = [str(val) for val in i[1]]
         percentage = 100 * i[0] / totaalkans
         probability = i[0]
-        row = values + [f"{percentage:.3f}", str(i[2]), f"{probability:.3f}"]
+        row = values + [f"{percentage:.1f}", str(i[2]), f"{probability:.1f}"]
         results.append(row)
     tot_perm = sum([100*i[0]/totaalkans for i in result if i[2] > 0])
     return results, tot_perm

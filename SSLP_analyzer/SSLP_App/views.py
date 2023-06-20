@@ -9,6 +9,7 @@ from .utils import haplotype
 import json
 
 
+
 def home_view(request):
     total_perc = ""
     chrom_lengths = []
@@ -61,9 +62,22 @@ def home_view(request):
         except FileNotFoundError:
             message = 'No results to export'
     elif 'save' in request.POST:
+        file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "files/current_haplotypes.txt")
+        with open(file_path, "r") as file:
+            current = file.readline()
+        file_path2 = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "files/saved_results.txt")
+        with open(file_path2, "a") as file:
+            file.write(current)
+        with open(file_path2, "r") as file:
+            saved_results = file.readlines()
         return render(request, 'homepage.html', {
+            'Title': "",
             'data': data1,
-            'saved_results': ['result 1', 'result 2', 'result 3'],
+            'saved_results': saved_results,
             'chrom_lengths': all_sslps,
             'populations': poplutations,
             'likelihood': total_perc,
@@ -71,6 +85,7 @@ def home_view(request):
         })
     elif 'change_result_submit' in request.POST:
         return render(request, 'homepage.html', {
+            'Title': "",
             'data': data1,
             'saved_results': ['result 1', 'result 2'],
             'chrom_lengths': all_sslps,
@@ -86,24 +101,34 @@ def home_view(request):
             table_haplotype, total_perc = haplotype(SSLPs, region)
             print(total_perc)
             if table_haplotype != 1:
+                file_path = os.path.join(
+                    os.path.dirname(os.path.dirname(__file__)),
+                    "files/current_haplotypes.txt")
+
+                with open(file_path, "w") as file:
+                    file.write(f'{SSLPs};{region}')
                 return render(request, 'homepage.html', {
+                    'Title': str(SSLPs),
                     'data': table_haplotype,
                     'saved_results': ['result 1', 'result 2'],
                     'chrom_lengths': all_sslps,
                     'populations': poplutations,
-                    'likelihood': str(total_perc),
+                    'likelihood': f'{total_perc:.1f}%',
 
                 })
             else:
                 return render(request, 'homepage.html', {
+                    'Title': "Current selection does not create results",
                     'data': data,
                     'saved_results': ['result 1', 'result 2'],
                     'chrom_lengths': all_sslps,
                     'populations': poplutations,
-                    'likelihood': "No results",
+                    'likelihood': "",
 
                 })
+
     return render(request, 'homepage.html', {
+        'Title': "",
         'data': data,
         'saved_results': ['result 1', 'result 2'],
         'chrom_lengths': all_sslps,
