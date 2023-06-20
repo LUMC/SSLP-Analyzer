@@ -26,16 +26,22 @@ def home_view(request):
             "files/current_haplotypes.txt")
         with open(file_path, "r") as file:
             current = file.readline()
-        file_path2 = os.path.join(
+        saved_results_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "files/saved_results.txt")
-        with open(file_path2, "a") as file:
+        print(current)
+        with open(saved_results_path, "a") as file:
             file.write(current)
-        with open(file_path2, "r") as file:
+        with open(saved_results_path, "r") as file:
             saved_results = file.readlines()
 
     elif 'change_result_submit' in request.POST:
-        pass
+        saved_results_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "files/saved_results.txt")
+        with open(saved_results_path, "r") as file:
+            saved_results = file.readlines()
+
 
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
@@ -51,9 +57,9 @@ def home_view(request):
                     "files/current_haplotypes.txt")
 
                 with open(file_path, "w") as file:
-                    file.write(f'{SSLPs};{region}')
+                    file.write(f':{SSLPs};{region}')
             else:
-                pass
+                title="Current selection does not return results"
 
     return render(request, 'homepage.html', {
         'Title': title,
