@@ -11,49 +11,8 @@ import json
 
 
 def home_view(request):
-    total_perc = ""
-    chrom_lengths = []
-    file_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
-    all_sslps = []
-    poplutations = []
-    with open(file_path, "r") as file:
-        haplotype_file = json.load(file)
-        poplutations = list(haplotype_file.keys())
-        for _, pop in haplotype_file.items():
-            for _, sslps in pop.items():
-                all_sslps.extend((sslps))
-    all_sslps = sorted(list(set(all_sslps)))
-    #     for line in file:
-    #         number = line.strip()  
-    #         chrom_lengths.append(int(number))  
-    # chrom_lengths = list(set(chrom_lengths))
-    data = []
-    data1 = [
-        ['4A161', '4B163', '10A166', '10A166', 92.034, 1, 19.121],
-        ['4A161', '4A163', '10A166', '10A166', 2.518, 2, 0.523],
-        ['4B161', '4B163', '10A166', '10A166', 1.643, 0, 0.341],
-        ['4A161', '4B163', '10A166', '10A166H', 1.283, 2, 0.266],
-        ['4B163', '4A166', '10B161T', '10A166', 1.104, 0, 0.229],
-        ['4B163', '4A166H', '10B161T', '10A166', 0.978, 1, 0.203],
-        ['4B163', '4B166', '10A166', '10B161T', 0.251, 0, 0.052],
-        ['4B161', '4A163', '10A166', '10A166', 0.045, 1, 0.009],
-        ['4A161', '4A163', '10A166', '10A166H', 0.035, 3, 0.007],
-        ['4A163', '4A166', '10B161T', '10A166', 0.030, 1, 0.006],
-        ['4A163', '4A166H', '10B161T', '10A166', 0.027, 2, 0.006],
-        ['4B161', '4B163', '10A166H', '10A166', 0.023, 1, 0.005],
-        ['4B163', '4A166', '10B161T', '10A166H', 0.008, 1, 0.002],
-        ['4A163', '4B166', '10B161T', '10A166', 0.007, 1, 0.001],
-        ['4B163', '4A166H', '10B161T', '10A166H', 0.007, 2, 0.001],
-        ['4A161', '4B163', '10A166H', '10A166H', 0.004, 3, 0.001],
-        ['4B163', '4B166', '10B161T', '10A166H', 0.002, 1, 0.000],
-        ['4B161', '4A163', '10A166H', '10A166', 0.001, 2, 0.000],
-        ['4A163', '4A166', '10B161T', '10A166H', 0.000, 2, 0.000],
-        ['4A163', '4A166H', '10B161T', '10A166H', 0.000, 3, 0.000],
-        ['4A161', '4A163', '10A166H', '10A166H', 0.000, 4, 0.000],
-        ['4B161', '4B163', '10A166H', '10A166H', 0.000, 2, 0.000],
-        ['4A163', '4B166', '10A166H', '10B161T', 0.000, 2, 0.000],
-        ['4A163', '4B161', '10A166H', '10A166H', 0.000, 2, 0.000]]
+    total_perc, title, saved_results, haplotype_table = "", "", [], []
+    all_sslps, populations = list_of_sslps()
 
     if 'export_button' in request.POST:
         try:
@@ -74,68 +33,50 @@ def home_view(request):
             file.write(current)
         with open(file_path2, "r") as file:
             saved_results = file.readlines()
-        return render(request, 'homepage.html', {
-            'Title': "",
-            'data': data1,
-            'saved_results': saved_results,
-            'chrom_lengths': all_sslps,
-            'populations': poplutations,
-            'likelihood': total_perc,
 
-        })
     elif 'change_result_submit' in request.POST:
-        return render(request, 'homepage.html', {
-            'Title': "",
-            'data': data1,
-            'saved_results': ['result 1', 'result 2'],
-            'chrom_lengths': all_sslps,
-            'populations': poplutations,
-            'likelihood': total_perc,
+        pass
 
-        })
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
         region = request.POST.get('region')
         if "" not in SSLPs and region != "":
             SSLPs = sorted([int(i) for i in SSLPs])
-            table_haplotype, total_perc = haplotype(SSLPs, region)
-            print(total_perc)
-            if table_haplotype != 1:
+            table_haplotype_filled, total_perc_int = haplotype(SSLPs, region)
+            if table_haplotype_filled != 1:
+                haplotype_table = table_haplotype_filled
+                total_perc = f'{total_perc_int:.1f}%'
                 file_path = os.path.join(
                     os.path.dirname(os.path.dirname(__file__)),
                     "files/current_haplotypes.txt")
 
                 with open(file_path, "w") as file:
                     file.write(f'{SSLPs};{region}')
-                return render(request, 'homepage.html', {
-                    'Title': str(SSLPs),
-                    'data': table_haplotype,
-                    'saved_results': ['result 1', 'result 2'],
-                    'chrom_lengths': all_sslps,
-                    'populations': poplutations,
-                    'likelihood': f'{total_perc:.1f}%',
-
-                })
             else:
-                return render(request, 'homepage.html', {
-                    'Title': "Current selection does not create results",
-                    'data': data,
-                    'saved_results': ['result 1', 'result 2'],
-                    'chrom_lengths': all_sslps,
-                    'populations': poplutations,
-                    'likelihood': "",
-
-                })
+                pass
 
     return render(request, 'homepage.html', {
-        'Title': "",
-        'data': data,
-        'saved_results': ['result 1', 'result 2'],
+        'Title': title,
+        'data': haplotype_table,
+        'saved_results': saved_results,
         'chrom_lengths': all_sslps,
-        'populations': poplutations,
+        'populations': populations,
         'likelihood': total_perc,
 
     })
+
+def list_of_sslps():
+    file_path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
+    all_sslps, populations = [], []
+    with open(file_path, "r") as file:
+        haplotype_file = json.load(file)
+        populations = list(haplotype_file.keys())
+        for _, pop in haplotype_file.items():
+            for _, sslps in pop.items():
+                all_sslps.extend((sslps))
+    all_sslps = sorted(list(set(all_sslps)))
+    return all_sslps, populations
 
 
 def downloadfile(request, filename):
