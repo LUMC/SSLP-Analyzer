@@ -9,7 +9,6 @@ from .utils import haplotype
 import json
 
 
-
 def home_view(request):
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
@@ -33,17 +32,23 @@ def home_view(request):
         with open(saved_results_path, "a") as file:
             file.write(current)
         with open(saved_results_path, "r") as file:
-            saved_results = file.readlines()
-
+            saved_results = file.readline().split(":")
     elif 'change_result_submit' in request.POST:
-        saved_results_path = os.path.join(
+        saved_results = get_saved_results()
+        chosen_result = request.POST.get('change_result_submit').split(';')
+        table_haplotype_filled, total_perc_int = haplotype(json.loads(chosen_result[0]), chosen_result[1])
+        haplotype_table = table_haplotype_filled
+        total_perc = f'{total_perc_int:.1f}%'
+        file_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
-            "files/saved_results.txt")
-        with open(saved_results_path, "r") as file:
-            saved_results = file.readlines()
+            "files/current_haplotypes.txt")
 
+        with open(file_path, "w") as file:
+            file.write(f'{chosen_result[0]};{chosen_result[1]}:')
+        title = f'{chosen_result[0]};{chosen_result[1]}:'
 
     elif "predict" in request.POST:
+        saved_results = get_saved_results()
         SSLPs = request.POST.getlist('SSLP_value')
         region = request.POST.get('region')
         if "" not in SSLPs and region != "":
@@ -55,11 +60,11 @@ def home_view(request):
                 file_path = os.path.join(
                     os.path.dirname(os.path.dirname(__file__)),
                     "files/current_haplotypes.txt")
-
+                title=f'{SSLPs} {region}'
                 with open(file_path, "w") as file:
-                    file.write(f':{SSLPs};{region}')
+                    file.write(f'{SSLPs};{region}:')
             else:
-                title="Current selection does not return results"
+                title = "Current selection does not return results"
 
     return render(request, 'homepage.html', {
         'Title': title,
@@ -70,6 +75,7 @@ def home_view(request):
         'likelihood': total_perc,
 
     })
+
 
 def list_of_sslps():
     file_path = os.path.join(
@@ -83,6 +89,16 @@ def list_of_sslps():
                 all_sslps.extend((sslps))
     all_sslps = sorted(list(set(all_sslps)))
     return all_sslps, populations
+
+
+def get_saved_results():
+    saved_results_path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        "files/saved_results.txt")
+    with open(saved_results_path, "r") as file:
+        saved_results = file.readline().split(':')
+    print(saved_results)
+    return saved_results
 
 
 def downloadfile(request, filename):

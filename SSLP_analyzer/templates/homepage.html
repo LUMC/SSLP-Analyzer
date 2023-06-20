@@ -121,7 +121,6 @@
                 {% for saved_result in saved_results %}
                 <form method="post">
                     {% csrf_token %}
-                    •
                     <input type="submit" name="change_result_submit"
                            class="text-color-sidefield"
                            value="{{saved_result}}">
