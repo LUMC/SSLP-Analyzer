@@ -84,6 +84,5 @@ def haplotype(selection, region):
     ingeklapt, totaalkans = predict(selection, region)
     if ingeklapt != 1:
         results, total_like = result_table(ingeklapt, totaalkans)
-        print(results, total_like)
         return results, total_like
     return 1,1
