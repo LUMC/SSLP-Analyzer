@@ -3,6 +3,7 @@ from json import load, loads, dumps
 from django.urls import reverse
 from django.http import FileResponse
 from django import forms
+from .utils import xslx_parser, json_parser
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -42,12 +43,19 @@ def haplotype_saver(request, population, haplotypes):
     return haplotypes, population
             
 def haplotype_uploader(request,population):
+    with open("haplotypes.json","r") as file:
+        haplotypes = load(file)
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
-        decoded_file = loads(file_in_memory.decode('utf-8'))
-    print(decoded_file[0])
-    
+        df = xslx_parser(file_in_memory)
+        new_population = json_parser(df)
+    haplotypes["India"] = loads(new_population)
+    print(new_population)
+    # with open("haplotype.json", "w") as newfile:
+    #     newfile.write(dumps(haplotypes, indent=4))
+
+
 def haplotype_downloader(request, population):
     return FileResponse(open("haplotypes.json", "rb"), filename="haplotypes.json", as_attachment=True)
 

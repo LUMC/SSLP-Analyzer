@@ -173,14 +173,14 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
-                        {% render_field form.file class="upload-btn" id="selectedFile" style="display: none;" %}
-                        <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" onclick="document.getElementById('selectedFile').click();">Upload</button>
-                        <button name="Upload" id="test" type="submit" style="display: none;"></button>
+                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" %}
+                        <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
+                        <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
                         <script>
-                            function test() {
-                                document.getElementById("test").click();
+                            function submit_file() {
+                                document.getElementById("submitUploadBtn").click();
                             }
-                            document.getElementById("selectedFile").addEventListener('input', test)
+                            document.getElementById("hiddenUploadBtn").addEventListener('input', submit_file)
                         </script>
                     </form>
                     <form action="" method="post" enctype="multipart/form-data"> 

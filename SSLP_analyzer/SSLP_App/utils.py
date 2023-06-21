@@ -9,8 +9,6 @@ def haplo_parser(haplotype):
     haplo_string = re.sub("^\d+", '', haplotype)
     return haplo_string,chromosome,sslp
 
-
-
 def xslx_parser(filename):
     df = pd.read_excel(filename,header=None)
     df_list = np.split(df, df[df.isnull().all(1)].index)
@@ -24,9 +22,12 @@ def xslx_parser(filename):
             chr_dict["haplotype"].append(haplotype)
             chr_dict["chr"].append(chromosome)
             chr_dict["SSLP"].append(sslp)
-            chr_dict["%"].append(percent)
+            chr_dict["%"].append(percent.replace(",",".").strip("%"))
             chr_dict["permissive"].append(permissive)
-    return pd.DataFrame(chr_dict)
+    df = pd.DataFrame(chr_dict)
+    df["%"] = df["%"].astype(float)
+    df["%"] = df["%"].div(100)
+    return  df
         
         
 def json_parser(df):
@@ -40,7 +41,24 @@ def json_parser(df):
             result_dict[chromosome][sslp] = []
         result_dict[chromosome][sslp].append({"haplotype":haplo,"%":percent*100,"permissive":perm})
     return json.dumps(result_dict,indent=4)
-        
+
+def export_xslx(population):
+    with open("haplotypes.json","r") as file:
+        haplotypes = json.load(file)
+    save_list = []
+    selected_pop = haplotypes[population]
+    for chr,sslps in selected_pop.items():
+        chr = chr.lstrip("chr")
+        save_list.append([f"{chr}q haplotype {population}","","frequency","permissive"])
+        for sslp,info in sslps.items():
+            for entry in info:
+                save_list.append([f"{chr}{entry['haplotype']}",None,entry["%"].replace(".",","),entry["permissive"]])
+        save_list.append(["","Not available","",""])
+        save_list.append(["","","",""])
+    df = pd.DataFrame(save_list)
+    df.to_excel(f"{population}.xlsx",header=False,index=False) 
+                
+
             
             
         
@@ -52,4 +70,5 @@ def main(filename):
     
     
 if __name__ == "__main__":
-    main("india.xlsx")
+    export_xslx("European")
+    # main("india.xlsx")
