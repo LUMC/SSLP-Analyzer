@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponse
 import pandas as pd
 from pathlib import Path
 import os.path
@@ -8,17 +8,47 @@ import mimetypes
 from .utils import haplotype
 import json
 
+def export_home_view(request):
+    saved_results_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "files/saved_results.txt")
+    with open(saved_results_path, "r") as file:
+        saved_results = [[sorted([int(sslp) for sslp in data.split(";")[0].strip("[]").split(",")]),data.split(";")[1]] for data in file.readline().split(":")[:-1]]
+    starting_header = ["position","population","SSLP-1","SSLP-2","SSLP-3","SSLP-4","Total likelihood permissive genotype"]
+    repeating_header = ["chr4_1","chr4_2","chr10_1","chr10_2","probability(%)","permissive alleles","population incidence"]
+    save_string = ""
+    max_len = 0
+    for sslp,population in saved_results:
+        table_haplotype_filled, total_perc = haplotype(sslp, population)
+        if table_haplotype_filled != 1:
+            haplotype_table = table_haplotype_filled
+            id = "-".join(map(str,sslp))
+            entry_list = [id]+sslp
+            entry_list.append(population)
+            entry_list.append(total_perc)
+            for entry in haplotype_table:
+                entry_list += entry
+            if len(entry_list) > max_len:
+                max_len = len(entry_list) - len(starting_header)
+            save_string += ";".join(map(str,entry_list)) + "\n"
+    headers_needed = max_len//len(repeating_header)
+    header = starting_header + repeating_header*headers_needed
+    header_str = ";".join(header) + "\n"
+    return_results = header_str + save_string
+    content = return_results.replace(".",",")
+    filename = "result.csv"
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+    return response
+        
 
 def home_view(request):
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
 
     if 'export_button' in request.POST:
-        try:
-            response = downloadfile(request, "tempfile")
-            return response
-        except FileNotFoundError:
-            message = 'No results to export'
+        return export_home_view(request)
+
     elif 'save' in request.POST:
         file_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
@@ -28,7 +58,6 @@ def home_view(request):
         saved_results_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "files/saved_results.txt")
-        print(current)
         with open(saved_results_path, "a") as file:
             file.write(current)
         with open(saved_results_path, "r") as file:
@@ -109,7 +138,6 @@ def get_saved_results():
         "files/saved_results.txt")
     with open(saved_results_path, "r") as file:
         saved_results = file.readline().split(':')
-    print(saved_results)
     return saved_results
 
 
