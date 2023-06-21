@@ -25,15 +25,20 @@
             border: none;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
             background-color: #D0CFCF;
+            font-size: 15px;
+        }
+
+        .text-align-sidefield{
+            overflow: hidden;
+            margin: 0 !important;
         }
 
         .btn-dark-blue {
             color: #fff;
             background-color: #283E70 !important;
-            border-color: #001f3f;
-            width: 6.5rem !important;
+            border-color: #283E70 !important;
+            width: 8rem !important;
         }
 
         .btn-dark-blue:hover {
@@ -45,7 +50,9 @@
         .height-class {
             height: 50vh;
         }
-
+        .scroll-sidefield{
+            overflow-y: auto;
+        }
 
         .width-class-sidefield {
             width: 10rem !important;
@@ -116,8 +123,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-lg-2 bg-light-gray height-class width-class-sidefield">
-            <div class="text text-color-sidefield p-4">
+        <div class="col-lg-2 bg-light-gray height-class width-class-sidefield scroll-sidefield">
+            <div class="text text-align-sidefield p-4">
                 {% for saved_result in saved_results %}
                 <form method="post">
                     {% csrf_token %}

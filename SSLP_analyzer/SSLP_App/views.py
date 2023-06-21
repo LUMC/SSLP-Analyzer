@@ -28,11 +28,14 @@ def home_view(request):
         saved_results_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "files/saved_results.txt")
-        print(current)
-        with open(saved_results_path, "a") as file:
-            file.write(current)
+
         with open(saved_results_path, "r") as file:
-            saved_results = file.readline().split(":")
+            saved_results_check = file.readline().split(":")
+        if f'{current}:' not in saved_results_check:
+            with open(saved_results_path, "a") as file:
+                file.write(current)
+            with open(saved_results_path, "r") as file:
+                saved_results = file.readline().split(":")
     elif 'change_result_submit' in request.POST:
         saved_results = get_saved_results()
         chosen_result = request.POST.get('change_result_submit').split(';')
