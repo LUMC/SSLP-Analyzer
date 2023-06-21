@@ -130,7 +130,7 @@
         </div>
     </div>
 </div>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="container" style="margin-top: 1rem">
         <div class="row">
@@ -190,11 +190,19 @@
                                    style="display: none;"></input>
                         </label>
                     </div>
+
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Upload
                             <input type="file" id="upload"
                                    style="display: none;"></input>
                         </label>
+                        <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
+                        <script>
+                            function submit_file() {
+                                document.getElementById("submitUploadBtn").click();
+                            }
+                            document.getElementById("upload").addEventListener('input', submit_file)
+                        </script>
                     </div>
                 </div>
             </div>
