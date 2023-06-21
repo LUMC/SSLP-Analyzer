@@ -65,7 +65,18 @@ def home_view(request):
                     file.write(f'{SSLPs};{region}:')
             else:
                 title = "Current selection does not return results"
-
+    elif "Upload" in request.POST:
+        input_data_file = str(request.FILES['upload'].read())
+        input_data_list = input_data_file.split("\\r\\n")
+        population_fromfile = input_data_list[1].split(';')[5]
+        all_items = ""
+        for line in input_data_list[2:-1]:
+            items = line.split(';')[:-1]
+            id_item = items[0]
+            all_items =(f'{all_items}:{id_item};{[int(x) for x in items[1:]]};{population_fromfile}')
+            print(all_items)
+            table, total_like = haplotype([int(x) for x in items[1:]], population_fromfile)
+        haplotype_table = table
     return render(request, 'homepage.html', {
         'Title': title,
         'data': haplotype_table,
