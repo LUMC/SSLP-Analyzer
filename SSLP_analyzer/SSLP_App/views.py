@@ -75,6 +75,7 @@ def home_view(request):
             id_item = items[0]
             all_items =(f'{all_items}:{id_item};{[int(x) for x in items[1:]]};{population_fromfile}')
             print(all_items)
+            saved_results = all_items.split(':')
             table, total_like = haplotype([int(x) for x in items[1:]], population_fromfile)
         haplotype_table = table
     return render(request, 'homepage.html', {
