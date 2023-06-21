@@ -26,7 +26,6 @@ def home_view(request):
             combinations += last_result
             request.session["combinations"] = combinations
     elif 'change_result_submit' in request.POST:
-        saved_results = get_saved_results(request)
         chosen_result = request.POST.get('change_result_submit').split(';')
         int_list = [int(num) for num in re.findall(r'\d+', chosen_result[0])]
         table_haplotype_filled, total_perc_int = haplotype(sorted(int_list), chosen_result[1]) 
@@ -36,7 +35,6 @@ def home_view(request):
         title = f'{chosen_result[0]};{chosen_result[1]}:'
 
     elif "predict" in request.POST:
-        saved_results = get_saved_results(request)
         SSLPs = request.POST.getlist('SSLP_value')
         region = request.POST.get('region')
         last_result = request.session.get('last_result', '')
@@ -55,7 +53,7 @@ def home_view(request):
     return render(request, 'homepage.html', {
         'Title': title,
         'data': haplotype_table,
-        'saved_results': saved_results,
+        'saved_results':  get_saved_results(request),
         'chrom_lengths': all_sslps,
         'populations': populations,
         'likelihood': total_perc,
