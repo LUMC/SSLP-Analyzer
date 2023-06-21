@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render, HttpResponse
 import pandas as pd
 from pathlib import Path
 import os.path
@@ -8,41 +8,51 @@ import mimetypes
 from .utils import haplotype
 import json
 import re
+
+
 def export_home_view(request):
     saved_results_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "files/saved_results.txt")
+        os.path.dirname(os.path.dirname(__file__)),
+        "files/saved_results.txt")
     with open(saved_results_path, "r") as file:
-        saved_results = [[sorted([int(sslp) for sslp in data.split(";")[0].strip("[]").split(",")]),data.split(";")[1]] for data in file.readline().split(":")[:-1]]
-    starting_header = ["position","population","SSLP-1","SSLP-2","SSLP-3","SSLP-4","Total likelihood permissive genotype"]
-    repeating_header = ["chr4_1","chr4_2","chr10_1","chr10_2","probability(%)","permissive alleles","population incidence"]
+        saved_results = [[sorted(
+            [int(sslp) for sslp in data.split(";")[0].strip("[]").split(",")]),
+                          data.split(";")[1]] for data in
+                         file.readline().split(":")[:-1]]
+    starting_header = ["position", "population", "SSLP-1", "SSLP-2", "SSLP-3",
+                       "SSLP-4", "Total likelihood permissive genotype"]
+    repeating_header = ["chr4_1", "chr4_2", "chr10_1", "chr10_2",
+                        "probability(%)", "permissive alleles",
+                        "population incidence"]
     save_string = ""
     max_len = 0
-    for sslp,population in saved_results:
+    for sslp, population in saved_results:
         table_haplotype_filled, total_perc = haplotype(sslp, population)
         if table_haplotype_filled != 1:
             haplotype_table = table_haplotype_filled
-            id = "-".join(map(str,sslp))
-            entry_list = [id]+sslp
+            id = "-".join(map(str, sslp))
+            entry_list = [id] + sslp
             entry_list.append(population)
             entry_list.append(total_perc)
             for entry in haplotype_table:
                 entry_list += entry
             if len(entry_list) > max_len:
                 max_len = len(entry_list) - len(starting_header)
-            save_string += ";".join(map(str,entry_list)) + "\n"
-    headers_needed = max_len//len(repeating_header)
-    header = starting_header + repeating_header*headers_needed
+            save_string += ";".join(map(str, entry_list)) + "\n"
+    headers_needed = max_len // len(repeating_header)
+    header = starting_header + repeating_header * headers_needed
     header_str = ";".join(header) + "\n"
     return_results = header_str + save_string
-    content = return_results.replace(".",",")
+    content = return_results.replace(".", ",")
     filename = "result.csv"
     response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+        filename)
     return response
-        
+
 
 def home_view(request):
+    request.session["ids"] = ""
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
 
@@ -58,7 +68,8 @@ def home_view(request):
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit').split(';')
         int_list = [int(num) for num in re.findall(r'\d+', chosen_result[0])]
-        table_haplotype_filled, total_perc_int = haplotype(sorted(int_list), chosen_result[1]) 
+        table_haplotype_filled, total_perc_int = haplotype(sorted(int_list),
+                                                           chosen_result[1])
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
         combinations = request.session.get('combinations', '')
@@ -68,7 +79,7 @@ def home_view(request):
         SSLPs = request.POST.getlist('SSLP_value')
         region = request.POST.get('region')
         last_result = request.session.get('last_result', '')
-        last_result =f'{SSLPs};{region}:' 
+        last_result = f'{SSLPs};{region}:'
         request.session["last_result"] = last_result
         if "" not in SSLPs and region != "":
             SSLPs = sorted([int(i) for i in SSLPs])
@@ -76,7 +87,7 @@ def home_view(request):
             if table_haplotype_filled != 1:
                 haplotype_table = table_haplotype_filled
                 total_perc = f'{total_perc_int:.1f}%'
-                title=f'{SSLPs} {region}'
+                title = f'{SSLPs} {region}'
             else:
                 title = "Current selection does not return results"
     elif "Upload" in request.POST:
@@ -84,22 +95,31 @@ def home_view(request):
         input_data_list = input_data_file.split("\\r\\n")
         population_fromfile = input_data_list[1].split(';')[5]
         all_items, all_ids = "", ""
-        for line in input_data_list[2:-1]:
+        for line in input_data_list[1:-1]:
             items = line.split(';')[:-1]
             all_ids = f'{all_ids};{items[0]}'
             all_items = f'{all_items}:{[int(x) for x in items[1:]]};{population_fromfile}'
-            table, total_like = haplotype(sorted([int(x) for x in items[1:]]), population_fromfile)
+
+        table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
+                                          population_fromfile)
         saved_results = all_items.split(':')
         haplotype_table = table
+        title = f'{items[0]}: {items[1:]} {population_fromfile}'
+        total_perc = f'{total_like:.1f}%'
+        request.session["combinations"] = "-"
+        request.session["combinations"] = all_items[1:]
+        request.session["ids"] = all_ids.split(';')
+
     return render(request, 'homepage.html', {
         'Title': title,
         'data': haplotype_table,
-        'saved_results':  get_saved_results(request),
+        'saved_results': get_saved_results(request),
         'chrom_lengths': all_sslps,
         'populations': populations,
         'likelihood': total_perc,
-
+        'ids': request.session["ids"],
     })
+
 
 
 def list_of_sslps():
