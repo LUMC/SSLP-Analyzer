@@ -69,14 +69,13 @@ def home_view(request):
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
         population_fromfile = input_data_list[1].split(';')[5]
-        all_items = ""
+        all_items, all_ids = "", ""
         for line in input_data_list[2:-1]:
             items = line.split(';')[:-1]
-            id_item = items[0]
-            all_items =(f'{all_items}:{id_item};{[int(x) for x in items[1:]]};{population_fromfile}')
-            print(all_items)
-            saved_results = all_items.split(':')
-            table, total_like = haplotype([int(x) for x in items[1:]], population_fromfile)
+            all_ids = f'{all_ids};{items[0]}'
+            all_items = f'{all_items}:{[int(x) for x in items[1:]]};{population_fromfile}'
+            table, total_like = haplotype(sorted([int(x) for x in items[1:]]), population_fromfile)
+        saved_results = all_items.split(':')
         haplotype_table = table
     return render(request, 'homepage.html', {
         'Title': title,
