@@ -74,7 +74,7 @@ def home_view(request):
     if 'export_button' in request.POST:
         return export_home_view(request)
 
-    elif 'project-name-submit' in request.POST:
+    elif 'name_save' in request.POST:
         name_result = request.POST.get("name_result")
         last_result = request.session.get('last_result', {})
         combinations = request.session.get('combinations', {})
