@@ -17,8 +17,8 @@ def export_home_view(request):
     with open(saved_results_path, "r") as file:
         saved_results = [[sorted(
             [int(sslp) for sslp in data.split(";")[0].strip("[]").split(",")]),
-                          data.split(";")[1]] for data in
-                         file.readline().split(":")[:-1]]
+            data.split(";")[1]] for data in
+            file.readline().split(":")[:-1]]
     starting_header = ["position", "population", "SSLP-1", "SSLP-2", "SSLP-3",
                        "SSLP-4", "Total likelihood permissive genotype"]
     repeating_header = ["chr4_1", "chr4_2", "chr10_1", "chr10_2",
@@ -94,14 +94,23 @@ def home_view(request):
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
         population_fromfile = input_data_list[1].split(';')[5]
+        if population_fromfile == "":
+            message = f"No population found in file"
+            print(message)
+            population_fromfile = "European"
+        elif population_fromfile not in populations:
+            message = f"Population found in file does not match populations" \
+                      f" in database"
+            print(message)
+
+            population_fromfile = "European"
         all_items, all_ids = "", ""
         for line in input_data_list[1:-1]:
             items = line.split(';')[:-1]
             all_ids = f'{all_ids};{items[0]}'
             all_items = f'{all_items}:{[int(x) for x in items[1:]]};{population_fromfile}'
-
         table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
-                                          population_fromfile)
+                                      population_fromfile)
         saved_results = all_items.split(':')
         haplotype_table = table
         title = f'{items[0]}: {items[1:]} {population_fromfile}'
@@ -119,7 +128,6 @@ def home_view(request):
         'likelihood': total_perc,
         'ids': request.session["ids"],
     })
-
 
 
 def list_of_sslps():
