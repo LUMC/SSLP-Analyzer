@@ -95,16 +95,15 @@ def home_view(request):
         chosen_result = request.POST.get('change_result_submit')
         combinations = request.session.get('combinations', {})
         chosen_result_dict = combinations[str(chosen_result)]
+        title = f'{chosen_result}' 
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(chosen_result_dict["SSLPS"]),
             chosen_result_dict["Population"])
-        title = f'{chosen_result[0]}'
         if table_haplotype_filled == 1 and total_perc_int == 1:
             switch_title = True
             title = "Current selection does not return results"
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
-        title = f'{chosen_result}' 
         request.session["last_result"] = {chosen_result:chosen_result_dict} 
 
     elif "predict" in request.POST:
