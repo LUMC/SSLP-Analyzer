@@ -243,7 +243,7 @@
                     </div>
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Upload
-                            <input type="file" id="upload" name="upload"
+                            <input type="file" name="upload"
                                    style="display: none;" id="ignore_button_upload"></input>
                         </label>
                         <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
@@ -382,11 +382,6 @@
     window.onload = function () {
         colorRows();
     };
-
-    document.getElementById('ignore_button_save').addEventListener('click', function () {
-        var form = document.getElementById('button_form');
-        form.setAttribute('novalidate', 'true');
-    });
 
     document.getElementById('ignore_button_upload').addEventListener('click', function () {
         var form = document.getElementById('button_form');
