@@ -10,6 +10,17 @@ import json
 import re
 
 
+def check_SSLP(data, new_SSLP):
+    for key in data:
+        if new_SSLP == data[key]['SSLPS']:
+            return False
+    return True
+
+
+def get_last_key(combinations):
+    return int(list(combinations.keys())[-1])
+
+
 def export_home_view(request):
     saved_results_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
@@ -60,58 +71,64 @@ def home_view(request):
         return export_home_view(request)
 
     elif 'save' in request.POST:
-        last_result = request.session.get('last_result')
-        combinations = request.session.get('combinations', '')
-        if last_result not in combinations:
-            combinations += last_result
+        last_result = request.session.get('last_result', {})
+        combinations = request.session.get('combinations', {})
+        key = list(last_result.keys())[0]
+        value = last_result[key]
+        if check_SSLP(combinations, value["SSLPS"]):
+            combinations[key] = value
+            print(combinations)
             request.session["combinations"] = combinations
     elif 'change_result_submit' in request.POST:
-        chosen_result = request.POST.get('change_result_submit').split(';')
-        int_list = [int(num) for num in re.findall(r'\d+', chosen_result[0])]
-        table_haplotype_filled, total_perc_int = haplotype(sorted(int_list),
-                                                           chosen_result[1])
+        chosen_result = request.POST.get('change_result_submit').split(':')
+        combinations = request.session.get('combinations', {})
+        chosen_result_dict = combinations[str(chosen_result[0])]
+        table_haplotype_filled, total_perc_int = haplotype(
+            sorted(chosen_result_dict["SSLPS"]),
+            chosen_result_dict["Population"])
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
-        combinations = request.session.get('combinations', '')
-        title = f'{chosen_result[0]};{chosen_result[1]}:'
+
+        title = f'{chosen_result} {chosen_result_dict["SSLPS"]} {chosen_result_dict["Population"]}'
 
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
-        region = request.POST.get('region')
-        last_result = request.session.get('last_result', '')
-        last_result = f'{SSLPs};{region}:'
+        population_name = request.POST.get('population_name')
+        last_result = request.session.get('last_result', {})
+        combinations = request.session.get('combinations', {})
+        if combinations != {}:
+            last = get_last_key(combinations) + 1
+        else:
+            last = "1"
+        last_result = {
+            last: {
+                "Population": population_name,
+                "SSLPS": [int(i) for i in SSLPs],
+            }
+        }
         request.session["last_result"] = last_result
-        if "" not in SSLPs and region != "":
+        if "" not in SSLPs and population_name != "":
             SSLPs = sorted([int(i) for i in SSLPs])
-            table_haplotype_filled, total_perc_int = haplotype(SSLPs, region)
+            table_haplotype_filled, total_perc_int = haplotype(SSLPs,
+                                                               population_name)
             if table_haplotype_filled != 1:
                 haplotype_table = table_haplotype_filled
                 total_perc = f'{total_perc_int:.1f}%'
-                title = f'{SSLPs} {region}'
+                title = f'{SSLPs} {population_name}'
             else:
                 title = "Current selection does not return results"
     elif "Upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
         population_fromfile = input_data_list[1].split(';')[5]
-        if population_fromfile == "":
-            message = f"No population found in file"
-            print(message)
-            population_fromfile = "European"
-        elif population_fromfile not in populations:
-            message = f"Population found in file does not match populations" \
-                      f" in database"
-            print(message)
-
-            population_fromfile = "European"
         all_items, all_ids = "", ""
         for line in input_data_list[1:-1]:
             items = line.split(';')[:-1]
             all_ids = f'{all_ids};{items[0]}'
             all_items = f'{all_items}:{[int(x) for x in items[1:]]};{population_fromfile}'
+
         table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
                                       population_fromfile)
-        saved_results = all_items.split(':')
         haplotype_table = table
         title = f'{items[0]}: {items[1:]} {population_fromfile}'
         total_perc = f'{total_like:.1f}%'
@@ -145,11 +162,9 @@ def list_of_sslps():
 
 
 def get_saved_results(request):
-    combinations = request.session.get('combinations', '')
-    last_result = request.session.get('last_result', '')
-    if combinations != "":
-        saved_results = combinations.split(':')
-        return saved_results
+    combinations = request.session.get('combinations', {})
+    if combinations != {}:
+        return combinations
 
 
 def downloadfile(request, filename):
