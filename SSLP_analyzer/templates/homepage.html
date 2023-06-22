@@ -41,10 +41,37 @@
             width: 8rem !important;
         }
 
-        .btn-dark-blue:hover {
+        .select-dark-blue:hover {
             color: #fff;
             background-color: #003366 !important;
             border-color: #003366;
+        }
+
+                .btn-dark-blue {
+            color: #fff;
+            background-color: #283E70 !important;
+            border-color: #283E70 !important;
+            width: 8rem !important;
+        }
+
+        .select-dark-blue:hover {
+            color: #fff;
+            background-color: #003366 !important;
+            border-color: #003366;
+        }
+
+        .select-dark-blue:invalid{
+            background-color: #283E70 !important;
+            border-color: #283E70 !important;
+            width: 8rem !important;
+
+        }
+
+        .select-dark-blue:valid{
+            background-color: #283E70 !important;
+            border-color: #283E70 !important;
+            width: 8rem !important;
+
         }
 
         .btn-dark-green {
@@ -154,49 +181,49 @@
         </div>
     </div>
 </div>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="button_form">
     {% csrf_token %}
     <div class="container" style="margin-top: 1rem">
         <div class="row">
             <div class="col-lg-10">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="col btn-col">
-                        <select
+                        <select required
                                 id="SSLP-waarde1"
                                 name="SSLP_value"
-                                class="btn btn-primary btn-dark-blue"
+                                class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>SSLP-1</option>
                         </select>
                     </div>
                     <div class="col btn-col">
-                        <select id="SSLP-waarde2"
+                        <select required id="SSLP-waarde2"
                                 name="SSLP_value"
-                                class="btn btn-primary btn-dark-blue"
+                                class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>SSLP-2</option>
                         </select>
                     </div>
                     <div class="col btn-col">
-                        <select id="SSLP-waarde3"
+                        <select required id="SSLP-waarde3"
                                 name="SSLP_value"
-                                class="btn btn-primary btn-dark-blue"
+                                class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>SSLP-3</option>
                         </select>
                     </div>
                     <div class="col btn-col">
-                        <select id="SSLP-waarde4"
+                        <select required id="SSLP-waarde4"
                                 name="SSLP_value"
-                                class="btn btn-primary btn-dark-blue"
+                                class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>SSLP-4</option>
                         </select>
                     </div>
                     <div class="col btn-col">
-                        <select id="SSLP-regio"
+                        <select required id="SSLP-regio"
                                 name="region"
-                                class="btn btn-primary btn-dark-blue"
+                                class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>Population</option>
                         </select>
@@ -209,7 +236,7 @@
                     </div>
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Save
-                            <input type="submit" name="save"
+                            <input type="submit" name="save" id="ignore_button_save"
                                    style="display: none;"></input>
                         </label>
                     </div>
@@ -217,7 +244,7 @@
                     <div class="col btn-col">
                         <label class="btn btn-primary btn-dark-blue">Upload
                             <input type="file" id="upload" name="upload"
-                                   style="display: none;"></input>
+                                   style="display: none;" id="ignore_button_upload"></input>
                         </label>
                         <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
                         <script>
@@ -231,9 +258,9 @@
             </div>
             <div class="col-lg-2 height-class width-class-sidefield">
                 <div class="d-flex align-items-center justify-content-center">
-                    <input type="submit" class="btn btn-primary btn-dark-blue"
+                    <input id="ignore_button_export" type="submit" class="btn btn-primary btn-dark-blue"
                            role="button"
-                           name="export_button" value="Export">
+                           name="export_button" value="Export" >
                     </input>
                 </div>
             </div>
@@ -334,6 +361,21 @@
     window.onload = function () {
         colorRows();
     };
+
+    document.getElementById('ignore_button_save').addEventListener('click', function () {
+        var form = document.getElementById('button_form');
+        form.setAttribute('novalidate', 'true');
+    });
+
+    document.getElementById('ignore_button_upload').addEventListener('click', function () {
+        var form = document.getElementById('button_form');
+        form.setAttribute('novalidate', 'true');
+    });
+
+    document.getElementById('ignore_button_export').addEventListener('click', function () {
+        var form = document.getElementById('button_form');
+        form.setAttribute('novalidate', 'true');
+    });
 
 </script>
 </body>
