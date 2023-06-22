@@ -84,17 +84,23 @@ def home_view(request):
             name_result = get_new_key(combinations, name_result)
         combinations[name_result] = value
         request.session["combinations"] = combinations
+        table_haplotype_filled, total_perc_int = haplotype(
+            sorted(value["SSLPS"]),
+            value["Population"])
+        haplotype_table = table_haplotype_filled
+        total_perc = f'{total_perc_int:.1f}%'
+        title = f'{name_result}'
     elif 'change_result_submit' in request.POST:
-        chosen_result = request.POST.get('change_result_submit').split(':')
+        chosen_result = request.POST.get('change_result_submit')
         combinations = request.session.get('combinations', {})
-        chosen_result_dict = combinations[str(chosen_result[0])]
+        chosen_result_dict = combinations[str(chosen_result)]
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(chosen_result_dict["SSLPS"]),
             chosen_result_dict["Population"])
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
-
-        title = f'{chosen_result[0]}'
+        title = f'{chosen_result}' 
+        request.session["last_result"] = {chosen_result:chosen_result_dict} 
 
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
