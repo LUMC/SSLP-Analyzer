@@ -246,12 +246,12 @@
                             <input type="file" name="upload"
                                    style="display: none;" id="ignore_button_upload"></input>
                         </label>
-                        <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
+                        <button name="upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
                         <script>
                             function submit_file() {
                                 document.getElementById("submitUploadBtn").click();
                             }
-                            document.getElementById("upload").addEventListener('input', submit_file)
+                            document.getElementById("ignore_button_upload").addEventListener('input', submit_file)
                         </script>
                     </div>
                 </div>

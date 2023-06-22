@@ -26,26 +26,22 @@ def get_new_key(dict_data, base_name):
 
 
 def export_home_view(request):
-    saved_results_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        "files/saved_results.txt")
-    with open(saved_results_path, "r") as file:
-        saved_results = [[sorted(
-            [int(sslp) for sslp in data.split(";")[0].strip("[]").split(",")]),
-            data.split(";")[1]] for data in
-            file.readline().split(":")[:-1]]
-    starting_header = ["position", "population", "SSLP-1", "SSLP-2", "SSLP-3",
-                       "SSLP-4", "Total likelihood permissive genotype"]
+    combinations = request.session.get('combinations', {})
+
+    starting_header = ["position", "SSLP-1", "SSLP-2", "SSLP-3",
+                       "SSLP-4", "population", "Total likelihood permissive genotype"]
     repeating_header = ["chr4_1", "chr4_2", "chr10_1", "chr10_2",
                         "probability(%)", "permissive alleles",
                         "population incidence"]
     save_string = ""
     max_len = 0
-    for sslp, population in saved_results:
-        table_haplotype_filled, total_perc = haplotype(sslp, population)
+    for key, values in combinations.items():
+        id = key
+        sslp = values['SSLPS']
+        population = values['Population']
+        table_haplotype_filled, total_perc = haplotype(sorted(sslp), population)
         if table_haplotype_filled != 1:
             haplotype_table = table_haplotype_filled
-            id = "-".join(map(str, sslp))
             entry_list = [id] + sslp
             entry_list.append(population)
             entry_list.append(total_perc)
@@ -67,6 +63,8 @@ def export_home_view(request):
 
 
 def home_view(request):
+    print(request.POST)
+
     request.session["ids"] = ""
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
@@ -118,24 +116,31 @@ def home_view(request):
                 title = f'{SSLPs} {population_name}'
             else:
                 title = "Current selection does not return results"
-    elif "Upload" in request.POST:
+    elif "upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
         population_fromfile = input_data_list[1].split(';')[5]
+        if population_fromfile not in populations:
+            population_fromfile = "European"
         all_items, all_ids = "", ""
+        combinations = {}
+        request.session["combinations"] = {}
+
         for line in input_data_list[1:-1]:
             items = line.split(';')[:-1]
-            all_ids = f'{all_ids};{items[0]}'
-            all_items = f'{all_items}:{[int(x) for x in items[1:]]};{population_fromfile}'
+            id = items[0]
+            sslps = [int(x) for x in items[1:]]
+            combinations[id] = {'Population': population_fromfile, 'SSLPS': sslps}
+        request.session["combinations"] = combinations
+        print(request.session["combinations"])
+        #table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
+        #                              population_fromfile)
+        #haplotype_table = table
+        #title = f'{items[0]}: {items[1:]} {population_fromfile}'
+        #total_perc = f'{1:.1f}%'
+        #request.session["ids"] = all_ids.split(';')
 
-        table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
-                                      population_fromfile)
-        haplotype_table = table
-        title = f'{items[0]}: {items[1:]} {population_fromfile}'
-        total_perc = f'{total_like:.1f}%'
-        request.session["combinations"] = "-"
-        request.session["combinations"] = all_items[1:]
-        request.session["ids"] = all_ids.split(';')
+
 
     return render(request, 'homepage.html', {
         'Title': title,
