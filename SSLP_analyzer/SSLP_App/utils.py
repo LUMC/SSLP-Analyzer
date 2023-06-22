@@ -13,7 +13,7 @@ def xslx_parser(filename):
     df = pd.read_excel(filename,header=None)
     df_list = np.split(df, df[df.isnull().all(1)].index)
     for i, chrs in enumerate(df_list):
-        df_list[i] = chrs.dropna(how='all').reset_index(drop=True)[1:-1].drop(columns=1)
+        df_list[i] = chrs.dropna(how='all').reset_index(drop=True)[1:]
     chr_dict = {"haplotype":[],"chr":[],"SSLP":[],"%":[],"permissive":[]}
     for dfs in df_list:
         for row in dfs.values.tolist():
@@ -22,11 +22,12 @@ def xslx_parser(filename):
             chr_dict["haplotype"].append(haplotype)
             chr_dict["chr"].append(chromosome)
             chr_dict["SSLP"].append(sslp)
-            chr_dict["%"].append(percent.replace(",",".").strip("%"))
+            chr_dict["%"].append(percent)
             chr_dict["permissive"].append(permissive)
     df = pd.DataFrame(chr_dict)
     df["%"] = df["%"].astype(float)
-    df["%"] = df["%"].div(100)
+    if max(df["%"]) <= 1:
+        df["%"] = df["%"].multiply(100)
     return  df
         
         
@@ -39,7 +40,7 @@ def json_parser(df):
             result_dict[chromosome] = {}
         if sslp not in result_dict[chromosome]:
             result_dict[chromosome][sslp] = []
-        result_dict[chromosome][sslp].append({"haplotype":haplo,"%":percent*100,"permissive":perm})
+        result_dict[chromosome][sslp].append({"haplotype":haplo,"%":"{:0.1f}".format(percent),"permissive":str(perm)})
     return json.dumps(result_dict,indent=4)
 
 def export_xslx(population):
@@ -49,14 +50,14 @@ def export_xslx(population):
     selected_pop = haplotypes[population]
     for chr,sslps in selected_pop.items():
         chr = chr.lstrip("chr")
-        save_list.append([f"{chr}q haplotype {population}","","frequency","permissive"])
+        save_list.append([f"{chr}q haplotype {population}","frequency (%)","permissive"])
         for sslp,info in sslps.items():
             for entry in info:
-                save_list.append([f"{chr}{entry['haplotype']}",None,entry["%"].replace(".",","),entry["permissive"]])
-        save_list.append(["","Not available","",""])
+                save_list.append([f"{chr}{entry['haplotype']}",float(entry["%"]),int(entry["permissive"])])
         save_list.append(["","","",""])
     df = pd.DataFrame(save_list)
-    df.to_excel(f"{population}.xlsx",header=False,index=False) 
+    df.to_excel(f"result.xlsx",header=False,index=False) 
+    
                 
 
             
@@ -65,6 +66,7 @@ def export_xslx(population):
 def main(filename):
     df = xslx_parser(filename)
     json_string = json_parser(df)
+    print(df)
      
         
     
@@ -72,3 +74,4 @@ def main(filename):
 if __name__ == "__main__":
     export_xslx("European")
     # main("india.xlsx")
+    

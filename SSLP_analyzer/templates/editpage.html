@@ -173,15 +173,40 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
-                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" %}
+                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" %}
                         <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
-                        <button name="Upload" id="submitUploadBtn" type="submit" style="display: none;"></button>
                         <script>
                             function submit_file() {
-                                document.getElementById("submitUploadBtn").click();
+                                let inp_el = document.getElementById('hiddenUploadBtn')
+                                let filename = inp_el.value.split('\\').pop()
+                                document.getElementById('fileModelLabel').innerText = `File selected: ${filename}`;
+                                document.getElementById("triggerModalBtn").click();
                             }
                             document.getElementById("hiddenUploadBtn").addEventListener('input', submit_file)
                         </script>
+                        <button type="button" id="triggerModalBtn" style="display: none;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileUploadModal" >
+                            This should not be visible 
+                        </button>
+                        <div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileModelLabel" aria-hidden="true" >
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="fileModelLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">Population Name</span>
+                                        <input required name="new_population" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                      </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                     <form action="" method="post" enctype="multipart/form-data"> 
                         {% csrf_token %}

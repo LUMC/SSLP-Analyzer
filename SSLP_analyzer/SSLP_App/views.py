@@ -3,7 +3,7 @@ from json import load, loads, dumps
 from django.urls import reverse
 from django.http import FileResponse
 from django import forms
-from .utils import xslx_parser, json_parser
+from .utils import xslx_parser, json_parser , export_xslx
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -50,20 +50,23 @@ def haplotype_uploader(request,population):
         file_in_memory = request.FILES['file'].read()
         df = xslx_parser(file_in_memory)
         new_population = json_parser(df)
-    haplotypes["India"] = loads(new_population)
-    print(new_population)
-    # with open("haplotype.json", "w") as newfile:
-    #     newfile.write(dumps(haplotypes, indent=4))
+    new_name = request.POST.get("new_population")
+    haplotypes[new_name] = loads(new_population)
+    with open("haplotypes.json", "w") as newfile:
+        newfile.write(dumps(haplotypes, indent=4))
+    return redirect("data_editor",population=new_name)
 
 
 def haplotype_downloader(request, population):
-    return FileResponse(open("haplotypes.json", "rb"), filename="haplotypes.json", as_attachment=True)
+    export_xslx(population)
+    return FileResponse(open("result.xlsx", "rb"), filename=f"{population}.xlsx", as_attachment=True)
 
 def data_editor_view(request, population):
     with open("haplotypes.json","r") as file:
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
+        print(request.POST)
         if "edit" in request.POST:
             edit_mode = True
         elif "done" in request.POST:
@@ -71,8 +74,8 @@ def data_editor_view(request, population):
             with open("haplotypes.json","w") as file:
                 file.write(dumps(haplotypes,indent=4))
             edit_mode = False
-        elif "Upload" in request.POST:
-            haplotype_uploader(request,population)
+        elif "new_population" in request.POST:
+            return haplotype_uploader(request,population)
         elif "Download" in request.POST:
             return haplotype_downloader(request,population)
     try:
