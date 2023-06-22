@@ -115,46 +115,10 @@
     height: 38px;
     }
 
-    .buton-register {
-    border-radius: 5px;
-    background: #799AE0;
-    color: #000000;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'Inter', sans-serif;
-    border: none;
-    width: 95px;
-    height: 38px;
-    }
-
-    /* button:hover{
-        background: #cd6a59;
-    }
-    button:active {
-        transform: scale(0.95);
-    }
-    
-    button:focus {
-    outline: none;
-    }
-
-    button.ghost {
-    background: transparent;
-    border-color: #ff4b2b;
-    background-color: #ff4b2b;
-    } */
-
     .flex-container {
         display: flex;
         flex-direction: column;
         gap: 3rem;
-        height: 100%;
-    }
-
-    .flex-container-register {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
         height: 100%;
     }
 
@@ -191,35 +155,10 @@
             </div>
         </form>
     </div>
-
-    <div class="register-container">
-        <form action="/signin/" method="POST">{% csrf_token %}
-            <div class="flex-container-register">
-                <div class="flex-item">
-                    <h1>Create Account</h1>
-                </div>
-                <div class = "flex-item input-field-container">
-                    {% render_field register_form.username class="input2" placeholder="Username" %}
-                    {% render_field register_form.password1 class="input2" placeholder="Password" %}
-                    {% render_field register_form.password2 class="input2" placeholder="Repeat password" %}
-                </div>
-                <div class="flex-item" style="margin-top: 10px;">
-                    <button type="submit" name="register_form" class="buton-register">Register</button>
-                </div>
-            </div>
-        </form>
-    </div>
     {% if messagesl %}
     <div class="alert alert-danger" role="alert">
         <ul>
             <li>{{ messagesl }}</li>
-        </ul>
-    </div>
-    {% endif %}
-    {% if messagesr %}
-    <div class="alert alert-danger" role="alert">
-        <ul>
-            <li>{{ messagesr }}</li>
         </ul>
     </div>
     {% endif %}
