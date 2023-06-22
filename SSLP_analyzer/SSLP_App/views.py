@@ -68,6 +68,7 @@ def export_home_view(request):
 
 def home_view(request):
     request.session["ids"] = ""
+    switch_title = False
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
 
@@ -91,10 +92,13 @@ def home_view(request):
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(chosen_result_dict["SSLPS"]),
             chosen_result_dict["Population"])
+        title = f'{chosen_result[0]}'
+        if table_haplotype_filled == 1 and total_perc_int == 1:
+            switch_title = True
+            title = "Current selection does not return results"
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
 
-        title = f'{chosen_result[0]}'
 
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
@@ -118,6 +122,7 @@ def home_view(request):
                 title = f'{SSLPs} {population_name}'
             else:
                 title = "Current selection does not return results"
+                switch_title = True
     elif "Upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
@@ -145,6 +150,7 @@ def home_view(request):
         'populations': populations,
         'likelihood': total_perc,
         'ids': request.session["ids"],
+        'switch_title': switch_title
     })
 
 

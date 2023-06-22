@@ -125,12 +125,13 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-10">
-
-            <div class="col-lg-12"><p class=titles-text-class id="Title" value="{{ Title }}">
-                {{ Title }}</p>
-            </div>
-            <div class="col-md-2"><p id="Likelihood">Total Likelihood: {{ likelihood }} </p>
-            </div>
+            {% if not switch_title %}
+                <div class="col-lg-12"><p class=titles-text-class id="Title" value="{{ Title }}">
+                    {{ Title }}</p>
+                </div>
+                <div class="col-md-2"><p id="Likelihood">Total Likelihood: {{ likelihood }} </p>
+                </div>
+            {% endif %}
         </div>
         <div class="col-lg-2 width-class-sidefield">
             <h4 class=titles-text-class>Saved</h4>
@@ -142,6 +143,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-10 height-class" style="overflow-y: auto;">
+            {% if not switch_title %}
             <table id="myTable" class="table table-striped height-class"
                    style="background-color: #D0CFCF !important;">
                 <thead style="background-color: #283E70; color: #ffffff !important; position: sticky; top: 0;">
@@ -165,6 +167,25 @@
                 {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+                <table id="myTable" class="table table-striped height-class">
+                    <thead style="background-color: #283E70; color: #ffffff !important; position: sticky; top: 0;">
+                    <tr style="color: white !important;">
+                        <th scope="col">chr4_1</th>
+                        <th scope="col">chr4_2</th>
+                        <th scope="col">chr10_1</th>
+                        <th scope="col">chr10_2</th>
+                        <th scope="col">Probability(%)</th>
+                        <th scope="col">Permissive</th>
+                        <th scope="col">Incidence(%)</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="col-12 d-flex justify-content-center align-items-center w-100 h-100">
+                    <p class="text-center fs-2 fw-bold">{{Title}}</p>
+                </div>
+              
+            {% endif %}
         </div>
         <div class="col-lg-2 bg-light-gray height-class width-class-sidefield scroll-sidefield">
             <div class="text text-align-sidefield p-4">
