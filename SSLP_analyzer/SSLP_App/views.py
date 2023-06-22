@@ -16,9 +16,13 @@ def check_SSLP(data, new_SSLP):
             return False
     return True
 
-
-def get_last_key(combinations):
-    return int(list(combinations.keys())[-1])
+def get_new_key(dict_data, base_name):
+    i = 2
+    new_name = base_name
+    while new_name in dict_data:
+        new_name = f"{base_name}({i})"
+        i += 1
+    return new_name
 
 
 def export_home_view(request):
@@ -76,10 +80,10 @@ def home_view(request):
         combinations = request.session.get('combinations', {})
         key = list(last_result.keys())[0]
         value = last_result[key]
-        if check_SSLP(combinations, value["SSLPS"]):
-            combinations[key] = value
-            print(combinations)
-            request.session["combinations"] = combinations
+        if name_result in list(combinations.keys()):
+            name_result = get_new_key(combinations, name_result)
+        combinations[name_result] = value
+        request.session["combinations"] = combinations
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit').split(':')
         combinations = request.session.get('combinations', {})
@@ -90,19 +94,15 @@ def home_view(request):
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
 
-        title = f'{chosen_result} {chosen_result_dict["SSLPS"]} {chosen_result_dict["Population"]}'
+        title = f'{chosen_result[0]}'
 
     elif "predict" in request.POST:
         SSLPs = request.POST.getlist('SSLP_value')
         population_name = request.POST.get('population_name')
         last_result = request.session.get('last_result', {})
         combinations = request.session.get('combinations', {})
-        if combinations != {}:
-            last = get_last_key(combinations) + 1
-        else:
-            last = "1"
         last_result = {
-            last: {
+            "new": {
                 "Population": population_name,
                 "SSLPS": [int(i) for i in SSLPs],
             }
