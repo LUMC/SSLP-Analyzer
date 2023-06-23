@@ -146,24 +146,30 @@ def home_view(request):
                 total_perc = ""
     elif "upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
-        input_data_list = input_data_file.split("\\r\\n")
-        population_fromfile = input_data_list[1].split(';')[-1]
-        if population_fromfile == "":
-            population_fromfile = populations[0]
-            messages.success(request, f"No population was found in file, {population_fromfile} was used instead.")
-        elif population_fromfile not in populations:
-            population_fromfile = populations[0]
-            messages.success(request, f"Population found in file is not currently in database, {population_fromfile} was used instead.")
-        combinations = {}
-        request.session["combinations"] = {}
+        try:
+            input_data_list = input_data_file.split("\\r\\n")
+            population_fromfile = input_data_list[1].split(';')[-1]
+            if population_fromfile == "":
+                population_fromfile = populations[0]
+                messages.success(request, f"No population was found in file, {population_fromfile} was used instead.")
+            elif population_fromfile not in populations:
+                population_fromfile = populations[0]
+                messages.success(request, f"Population found in file is not currently in database, {population_fromfile} was used instead.")
+            combinations = {}
+            request.session["combinations"] = {}
 
-        for line in input_data_list[1:-1]:
-            items = line.split(';')[:-1]
-            id = items[0]
-            sslps = [int(x) for x in items[1:]]
-            combinations[id] = {'Population': population_fromfile,
-                                'SSLPS': sslps}
-        request.session["combinations"] = combinations
+            for line in input_data_list[1:-1]:
+                items = line.split(';')[:-1]
+                id = items[0]
+                sslps = [int(x) for x in items[1:]]
+                combinations[id] = {'Population': population_fromfile,
+                                    'SSLPS': sslps}
+            request.session["combinations"] = combinations
+        except IndexError:
+            messages.success(request, 'File can not be uploaded due to the format.')
+        except ValueError:
+            messages.success(request, 'One or more lines of file include text where numbers are expected.')
+
 
     return render(request, 'homepage.html', {
         'Title': title,
