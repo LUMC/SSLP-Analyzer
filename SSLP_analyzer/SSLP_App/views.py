@@ -91,7 +91,7 @@ def home_view(request):
         title = f'{name_result}'
     elif 'delete_saved' in request.POST:
         combinations =  request.session['combinations']
-        chosen_result = request.POST.get('change_result_submit')
+        chosen_result = request.POST.get('delete_saved')
         del combinations[chosen_result]
         request.session["combinations"] = combinations
 
