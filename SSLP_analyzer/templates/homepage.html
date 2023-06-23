@@ -119,6 +119,10 @@
             color: #007cc2
         }
 
+        .hovertest:hover .delete-button{
+            display: flex !important;
+        }
+
     </style>
 </head>
 
@@ -199,7 +203,7 @@
                 {% for key, value in saved_results.items %}
                     <form method="post">
                         {% csrf_token %}
-                        <div style="display: flex; justify-content: space-between;">
+                        <div class= hovertest style="display: flex; justify-content: space-between;">
                             <div style="text-align: left;">
                                 <button type="submit"
                                         class="text-color-sidefield fs-4 text-truncate d-block text-left"
@@ -208,7 +212,7 @@
                                 </button>
                             </div>
                             <div style="text-align: right;">
-                                <button class="delete-button" type="submit" name="delete_saved" value="{{ key }}">
+                                <button style="display: none" class="delete-button" type="submit" name="delete_saved" value="{{ key }}">
                                     <i class="fa-solid fa-trash"
                                        style="color: #283E70; margin-top: 13px;"></i>
                                 </button>
