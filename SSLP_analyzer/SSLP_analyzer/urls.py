@@ -29,7 +29,7 @@ from accounts.views import (
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('sslp-analyzer-admin/', admin.site.urls),
     path('', home_view, name='homepage'),
     path('data-editor/', data_editor_view, name="data_editor"),
     path('feed/', feed_view, name="feed"),
