@@ -232,7 +232,7 @@
         <div class="row">
             <div class="col-lg-10">
                 <div class="d-flex align-items-center justify-content-center">
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Select an SSLP value">
                         <select required
                                 id="SSLP-waarde1"
                                 name="SSLP_value"
@@ -241,7 +241,7 @@
                             <option value="" selected>SSLP-1</option>
                             </select>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Select an SSLP value">
                         <select required id="SSLP-waarde2"
                                 name="SSLP_value"
                                 class="btn btn-primary select-dark-blue"
@@ -249,7 +249,7 @@
                             <option value="" selected>SSLP-2</option>
                         </select>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Select an SSLP value">
                         <select required id="SSLP-waarde3"
                                 name="SSLP_value"
                                 class="btn btn-primary select-dark-blue"
@@ -257,7 +257,7 @@
                             <option value="" selected>SSLP-3</option>
                         </select>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Select an SSLP value">
                         <select required id="SSLP-waarde4"
                                 name="SSLP_value"
                                 class="btn btn-primary select-dark-blue"
@@ -265,7 +265,7 @@
                             <option value="" selected>SSLP-4</option>
                         </select>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Select the population">
                         <select required id="SSLP-regio"
                                 name="population_name"
                                 class="btn btn-primary select-dark-blue"
@@ -273,20 +273,16 @@
                             <option value="" selected>Population</option>
                         </select>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Predict results from current selection.">
                         <input type="submit" name="predict"
                                class="btn btn-primary btn-dark-green"
                                value="Predict"/>
                         </input>
                     </div>
-                    <div class="col btn-col">
-                        <!-- <label class="btn btn-primary btn-dark-blue">Save
-                            <input type="submit" name="save"
-                                   style="display: none;" data-bs-toggle="modal" data-bs-target="#results-name" data-bs-whatever="@mdo"></input>
-                        </label> -->
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Save current result">
                         <button type="button" class="btn btn-primary btn-dark-blue" data-bs-toggle="modal" data-bs-target="#results-name">Save</button>
                     </div>
-                    <div class="col btn-col">
+                    <div class="col btn-col" data-toggle="tooltip" data-bs-placement="bottom" title="Upload a csv file with patient id's and SSLP values">
                         <label class="btn btn-primary btn-dark-blue">Upload
                             <input type="file" name="upload"
                                    style="display: none;" id="ignore_button_upload"></input>
@@ -302,7 +298,7 @@
                 </div>
             </div>
             <div class="col-lg-2 height-class width-class-sidefield">
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center" data-toggle="tooltip" data-bs-placement="bottom" title="Export all saved results to csv file.">
                     <input id="ignore_button_export" type="submit" class="btn btn-primary btn-dark-blue"
                            role="button"
                            name="export_button" value="Export" >
