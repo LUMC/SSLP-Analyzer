@@ -174,7 +174,7 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
-                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" %}
+                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %}
                         {% if user.is_superuser %}
                         <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Upload an excel sheet to add a new population." onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
                         {% endif %}
