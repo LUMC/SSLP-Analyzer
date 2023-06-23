@@ -79,6 +79,7 @@ def home_view(request):
         combinations = request.session.get('combinations', {})
         key = list(last_result.keys())[0]
         value = last_result[key]
+        title = f'{name_result}' 
         if name_result in list(combinations.keys()):
             name_result = get_new_key(combinations, name_result)
         combinations[name_result] = value
@@ -86,9 +87,12 @@ def home_view(request):
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(value["SSLPS"]),
             value["Population"])
-        haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
-        title = f'{name_result}'
+        if table_haplotype_filled == 1 and total_perc_int == 1:
+            switch_title = True
+            total_perc = ""
+            title = "Current selection does not return results"
+        haplotype_table = table_haplotype_filled
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit')
         combinations = request.session.get('combinations', {})
@@ -97,11 +101,12 @@ def home_view(request):
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(chosen_result_dict["SSLPS"]),
             chosen_result_dict["Population"])
+        total_perc = f'{total_perc_int:.1f}%'
         if table_haplotype_filled == 1 and total_perc_int == 1:
             switch_title = True
             title = "Current selection does not return results"
+            total_perc = ""
         haplotype_table = table_haplotype_filled
-        total_perc = f'{total_perc_int:.1f}%'
         request.session["last_result"] = {chosen_result:chosen_result_dict} 
 
     elif "predict" in request.POST:
@@ -127,6 +132,7 @@ def home_view(request):
             else:
                 title = "Current selection does not return results"
                 switch_title = True
+                total_perc = ""
     elif "upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
