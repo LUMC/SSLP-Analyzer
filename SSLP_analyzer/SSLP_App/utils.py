@@ -11,7 +11,7 @@ def predict(selection, population):
     """
     file_path = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),  # Navigate up two directories from __file__
-    "files/haplotypes.json")
+    "haplotypes.json")
     with open(file_path, "r") as f:
         ethnicity_haplotypes = json.load(f)
         ethnicity_haplotypes = ethnicity_haplotypes[population]

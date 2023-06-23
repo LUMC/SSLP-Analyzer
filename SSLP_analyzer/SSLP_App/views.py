@@ -174,7 +174,7 @@ def home_view(request):
 
 def list_of_sslps():
     file_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "files/haplotypes.json")
+        os.path.dirname(os.path.dirname(__file__)), "haplotypes.json")
     all_sslps, populations = [], []
     with open(file_path, "r") as file:
         haplotype_file = json.load(file)
