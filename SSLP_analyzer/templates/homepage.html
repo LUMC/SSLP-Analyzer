@@ -126,9 +126,10 @@
     <div class="row">
         <div class="col-lg-10">
             {% if not switch_title %}
-                <div class="col-lg-12"><p class=titles-text-class id="Title" value="{{ Title }}">
-                    {{ Title }}</p>
+                <div class="col-12 d-flex justify-content-center align-items-center w-100 h-100">
+                    <p class="text-center fs-2 fw-bold text-truncate overflow-hidden" style="width: 50%;">{{Title}}</p>
                 </div>
+            
                 {% if likelihood %}
                 <div class="col-md-2 fs-2 w-100">
                     <p id="Likelihood">Total Likelihood: <span class="fw-bold">{{ likelihood }}</span> </p>
@@ -185,24 +186,27 @@
                     </thead>
                 </table>
                 <div class="col-12 d-flex justify-content-center align-items-center w-100 h-100">
-                    <p class="text-center fs-2 fw-bold">{{Title}}</p>
+                    <p class="text-center fs-2 fw-bold text-truncate" style="width: 50%;">{{Title}}</p>
                 </div>
+                
               
             {% endif %}
         </div>
         <div class="col-lg-2 bg-light-gray height-class width-class-sidefield scroll-sidefield">
-            <div class="text text-align-sidefield p-4">
-
+            <div class="text text-align-sidefield pt-4">
                 {% for key, value in saved_results.items %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="submit" name="change_result_submit"
-                           class="text-color-sidefield"
-                           value="{{key}}">
-                </form>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="change_result_submit" value="{{key}}">
+                        <button type="submit" class="text-color-sidefield fs-4 text-truncate d-block text-left" 
+                        style="max-width: 100%; overflow: hidden;">
+                            {{key}}
+                        </button>
+                    </form>
                 {% endfor %}
             </div>
         </div>
+        
     </div>
 </div>
 <form method="post" enctype="multipart/form-data" id="button_form">
