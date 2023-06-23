@@ -77,9 +77,9 @@
                                         
                                             
                                             {% if edit_mode %}
-                                                <button type="submit" name="done" class="btn btn-primary">Done</button>
+                                                <button type="submit" name="done" class="btn btn-primary" data-toggle="tooltip" data-bs-placement="top" title="Save the haplotypes of the {{population}} population.">Done</button>
                                             {% else %}
-                                                <button type="submit" name="edit" class="edit-button"><i class="fa-regular fa-pen-to-square"></i></button>
+                                                <button type="submit" name="edit" class="edit-button" data-toggle="tooltip" data-bs-placement="top" title="Edit the haplotypes of the {{population}} population."><i class="fa-regular fa-pen-to-square"></i></button>
                                             {% endif %}
                                         
                                     </div>
@@ -167,14 +167,14 @@
             <div class="col-md-4">
                 <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
                     {% for population in  population_options%}
-                        <a type="button" data-toggle="tooltip" data-placement="top" title="test" class="btn btn-primary mt-2 button" href={% url 'data_editor' population  %}>{{population}}</a>
+                        <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 button" href={% url 'data_editor' population  %}>{{population}}</a>
                     {% endfor %}
                 </div>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
                         {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" %}
-                        <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
+                        <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Upload an excel sheet to add a new population." onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
                         <script>
                             function submit_file() {
                                 let inp_el = document.getElementById('hiddenUploadBtn')
@@ -210,7 +210,7 @@
                     </form>
                     <form action="" method="post" enctype="multipart/form-data"> 
                         {% csrf_token %}
-                        <button name="Download" type="submit" class="btn btn-primary mt-2 button-io">Download</button>
+                        <button name="Download" type="submit" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Download the haplotypes of the {{population}} population.">Download</button>
                     </form>
                     </div>
             </div>
