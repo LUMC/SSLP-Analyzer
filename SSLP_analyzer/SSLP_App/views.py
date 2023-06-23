@@ -66,9 +66,6 @@ def export_home_view(request):
 
 
 def home_view(request):
-    print(request.POST)
-
-    request.session["ids"] = ""
     switch_title = False
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
@@ -98,6 +95,7 @@ def home_view(request):
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
         title = f'{name_result}'
+    
     elif 'delete_saved' in request.POST:
         combinations = request.session['combinations']
         chosen_result = request.POST.get('delete_saved')
@@ -107,6 +105,7 @@ def home_view(request):
         # delete the file from server and session storage
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit')
+        print(chosen_result, request.POST)
         combinations = request.session.get('combinations', {})
         chosen_result_dict = combinations[str(chosen_result)]
         title = f'{chosen_result}'
@@ -151,7 +150,6 @@ def home_view(request):
         population_fromfile = input_data_list[1].split(';')[5]
         if population_fromfile not in populations:
             population_fromfile = "European"
-        all_items, all_ids = "", ""
         combinations = {}
         request.session["combinations"] = {}
 
@@ -162,13 +160,6 @@ def home_view(request):
             combinations[id] = {'Population': population_fromfile,
                                 'SSLPS': sslps}
         request.session["combinations"] = combinations
-        print(request.session["combinations"])
-        # table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
-        #                              population_fromfile)
-        # haplotype_table = table
-        # title = f'{items[0]}: {items[1:]} {population_fromfile}'
-        # total_perc = f'{1:.1f}%'
-        # request.session["ids"] = all_ids.split(';')
 
     return render(request, 'homepage.html', {
         'Title': title,
@@ -177,7 +168,6 @@ def home_view(request):
         'chrom_lengths': all_sslps,
         'populations': populations,
         'likelihood': total_perc,
-        'ids': request.session["ids"],
         'switch_title': switch_title
     })
 
