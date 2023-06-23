@@ -109,12 +109,14 @@
             justify-content: flex-end;
         }
 
-        .likelihood-text {
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            font-weight: 100;
-            text-align: start;
-            justify-content: flex-end;
+        .delete-button {
+            background: none;
+            border: none;
+            color: #fff;
+        }
+
+        .delete-button:hover {
+            color: #007cc2
         }
 
     </style>
@@ -129,7 +131,7 @@
                 <div class="col-12 d-flex justify-content-center align-items-center w-100 h-100">
                     <p class="text-center fs-2 fw-bold text-truncate overflow-hidden" style="width: 50%;">{{Title}}</p>
                 </div>
-            
+
                 {% if likelihood %}
                 <div class="col-md-2 fs-2 w-100">
                     <p id="Likelihood">Total Likelihood: <span class="fw-bold">{{ likelihood }}</span> </p>
@@ -188,8 +190,8 @@
                 <div class="col-12 d-flex justify-content-center align-items-center w-100 h-100">
                     <p class="text-center fs-2 fw-bold text-truncate" style="width: 50%;">{{Title}}</p>
                 </div>
-                
-              
+
+
             {% endif %}
         </div>
         <div class="col-lg-2 bg-light-gray height-class width-class-sidefield scroll-sidefield">
@@ -197,17 +199,26 @@
                 {% for key, value in saved_results.items %}
                     <form method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="change_result_submit" value="{{key}}">
-                        <button type="submit" class="text-color-sidefield fs-4 text-truncate d-block text-left "
-                        style="max-width: 100%; overflow: hidden;">
-                            {{key}}
-                        </button>
-                        <button type="submit" name="delete_saved"><i class="fa-solid fa-trash" style="color: #283E70;"></i></button>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="text-align: left;">
+                                <button type="submit"
+                                        class="text-color-sidefield fs-4 text-truncate d-block text-left"
+                                        style="max-width: 100%; overflow: hidden;">
+                                    {{key}}
+                                </button>
+                            </div>
+                            <div style="text-align: right;">
+                                <button class="delete-button" type="submit" name="delete_saved">
+                                    <i class="fa-solid fa-trash"
+                                       style="color: #283E70;"></i>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 {% endfor %}
             </div>
         </div>
-        
+
     </div>
 </div>
 <form method="post" enctype="multipart/form-data" id="button_form">
