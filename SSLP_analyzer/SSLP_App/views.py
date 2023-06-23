@@ -89,6 +89,13 @@ def home_view(request):
         haplotype_table = table_haplotype_filled
         total_perc = f'{total_perc_int:.1f}%'
         title = f'{name_result}'
+    elif 'delete_saved' in request.POST:
+        combinations =  request.session['combinations']
+        chosen_result = request.POST.get('change_result_submit')
+        del combinations[chosen_result]
+        request.session["combinations"] = combinations
+
+        # delete the file from server and session storage
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit')
         combinations = request.session.get('combinations', {})
