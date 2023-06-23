@@ -1,5 +1,4 @@
 from django.shortcuts import render, HttpResponse
-import pandas as pd
 from pathlib import Path
 import os.path
 from django.http import StreamingHttpResponse
@@ -8,6 +7,7 @@ import mimetypes
 from .utils import haplotype
 import json
 import re
+from django.contrib import messages
 
 
 def check_SSLP(data, new_SSLP):
@@ -147,9 +147,13 @@ def home_view(request):
     elif "upload" in request.POST:
         input_data_file = str(request.FILES['upload'].read())
         input_data_list = input_data_file.split("\\r\\n")
-        population_fromfile = input_data_list[1].split(';')[5]
-        if population_fromfile not in populations:
-            population_fromfile = "European"
+        population_fromfile = input_data_list[1].split(';')[-1]
+        if population_fromfile == "":
+            population_fromfile = populations[0]
+            messages.success(request, f"No population was found in file, {population_fromfile} was used instead.")
+        elif population_fromfile not in populations:
+            population_fromfile = populations[0]
+            messages.success(request, f"Population found in file is not currently in database, {population_fromfile} was used instead.")
         combinations = {}
         request.session["combinations"] = {}
 
