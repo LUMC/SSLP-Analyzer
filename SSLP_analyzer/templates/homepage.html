@@ -205,8 +205,8 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class= hovertest style="display: flex; justify-content: space-between;">
-                            <div style="text-align: left;">
-                                <button type="submit"
+                            <div style="text-align: left; width: 85%;">
+                                <button type="submit" name='change_result_submit' value={{ key }}
                                         class="text-color-sidefield fs-4 text-truncate d-block text-left"
                                         style="max-width: 100%; overflow: hidden;">
                                     {{key}}
@@ -239,7 +239,7 @@
                                 class="btn btn-primary select-dark-blue"
                                 style="text-align: left;">
                             <option value="" selected>SSLP-1</option>
-                        </select>
+                            </select>
                     </div>
                     <div class="col btn-col">
                         <select required id="SSLP-waarde2"
