@@ -66,7 +66,6 @@ def data_editor_view(request, population):
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
-        print(request.POST)
         if "edit" in request.POST:
             edit_mode = True
         elif "done" in request.POST:
