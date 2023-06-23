@@ -66,15 +66,19 @@ def data_editor_view(request, population):
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
+        print(request.user.is_superuser)
         if "edit" in request.POST:
-            edit_mode = True
+            if request.user.is_superuser:
+                edit_mode = True
         elif "done" in request.POST:
-            haplotypes, population = haplotype_saver(request, population, haplotypes)
-            with open("haplotypes.json","w") as file:
-                file.write(dumps(haplotypes,indent=4))
-            edit_mode = False
+            if request.user.is_superuser:
+                haplotypes, population = haplotype_saver(request, population, haplotypes)
+                with open("haplotypes.json","w") as file:
+                    file.write(dumps(haplotypes,indent=4))
+                edit_mode = False
         elif "new_population" in request.POST:
-            return haplotype_uploader(request,population)
+            if request.user.is_superuser:
+                return haplotype_uploader(request,population)
         elif "Download" in request.POST:
             return haplotype_downloader(request,population)
     try:

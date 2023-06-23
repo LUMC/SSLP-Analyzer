@@ -75,12 +75,13 @@
                                     {% endif %}
                                     <div>
                                         
-                                            
+                                        {% if user.is_superuser %}
                                             {% if edit_mode %}
-                                                <button type="submit" name="done" class="btn btn-primary" data-toggle="tooltip" data-bs-placement="top" title="Save the haplotypes of the {{population}} population.">Done</button>
+                                            <button type="submit" name="done" class="btn btn-primary" data-toggle="tooltip" data-bs-placement="top" title="Save the haplotypes of the {{population}} population.">Done</button>
                                             {% else %}
-                                                <button type="submit" name="edit" class="edit-button" data-toggle="tooltip" data-bs-placement="top" title="Edit the haplotypes of the {{population}} population."><i class="fa-regular fa-pen-to-square"></i></button>
+                                            <button type="submit" name="edit" class="edit-button" data-toggle="tooltip" data-bs-placement="top" title="Edit the haplotypes of the {{population}} population."><i class="fa-regular fa-pen-to-square"></i></button>
                                             {% endif %}
+                                        {% endif %}
                                         
                                     </div>
                                 </div>
@@ -174,7 +175,10 @@
                     {% csrf_token %}
                     <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
                         {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" %}
+                        {% if user.is_superuser %}
                         <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Upload an excel sheet to add a new population." onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
+                        {% endif %}
+                        
                         <script>
                             function submit_file() {
                                 let inp_el = document.getElementById('hiddenUploadBtn')
@@ -208,6 +212,7 @@
                             </div>
                         </div>
                     </form>
+
                     <form action="" method="post" enctype="multipart/form-data"> 
                         {% csrf_token %}
                         <button name="Download" type="submit" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Download the haplotypes of the {{population}} population.">Download</button>
