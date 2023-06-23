@@ -166,10 +166,12 @@
             </div>
         </div>
             <div class="col-md-4">
-                <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
-                    {% for population in  population_options%}
-                        <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 button" href={% url 'data_editor' population  %}>{{population}}</a>
-                    {% endfor %}
+                <div class="border p-3 d-flex flex-column justify-content-center align-items-center">
+                    <div style="max-height: calc(13rem + 20px); overflow-y: auto;">
+                        {% for population in  population_options%}
+                            <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 button" style="width: 8rem; height: 4rem;" href={% url 'data_editor' population  %}>{{population}}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
