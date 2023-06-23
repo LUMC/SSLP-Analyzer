@@ -16,6 +16,7 @@ def check_SSLP(data, new_SSLP):
             return False
     return True
 
+
 def get_new_key(dict_data, base_name):
     i = 2
     new_name = base_name
@@ -29,7 +30,8 @@ def export_home_view(request):
     combinations = request.session.get('combinations', {})
 
     starting_header = ["position", "SSLP-1", "SSLP-2", "SSLP-3",
-                       "SSLP-4", "population", "Total likelihood permissive genotype"]
+                       "SSLP-4", "population",
+                       "Total likelihood permissive genotype"]
     repeating_header = ["chr4_1", "chr4_2", "chr10_1", "chr10_2",
                         "probability(%)", "permissive alleles",
                         "population incidence"]
@@ -39,7 +41,8 @@ def export_home_view(request):
         id = key
         sslp = values['SSLPS']
         population = values['Population']
-        table_haplotype_filled, total_perc = haplotype(sorted(sslp), population)
+        table_haplotype_filled, total_perc = haplotype(sorted(sslp),
+                                                       population)
         if table_haplotype_filled != 1:
             haplotype_table = table_haplotype_filled
             entry_list = [id] + sslp
@@ -93,11 +96,20 @@ def home_view(request):
             total_perc = ""
             title = "Current selection does not return results"
         haplotype_table = table_haplotype_filled
+        total_perc = f'{total_perc_int:.1f}%'
+        title = f'{name_result}'
+    elif 'delete_saved' in request.POST:
+        combinations = request.session['combinations']
+        chosen_result = request.POST.get('delete_saved')
+        del combinations[chosen_result]
+        request.session["combinations"] = combinations
+
+        # delete the file from server and session storage
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit')
         combinations = request.session.get('combinations', {})
         chosen_result_dict = combinations[str(chosen_result)]
-        title = f'{chosen_result}' 
+        title = f'{chosen_result}'
         table_haplotype_filled, total_perc_int = haplotype(
             sorted(chosen_result_dict["SSLPS"]),
             chosen_result_dict["Population"])
@@ -147,17 +159,16 @@ def home_view(request):
             items = line.split(';')[:-1]
             id = items[0]
             sslps = [int(x) for x in items[1:]]
-            combinations[id] = {'Population': population_fromfile, 'SSLPS': sslps}
+            combinations[id] = {'Population': population_fromfile,
+                                'SSLPS': sslps}
         request.session["combinations"] = combinations
         print(request.session["combinations"])
-        #table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
+        # table, total_like = haplotype(sorted([int(x) for x in items[1:]]),
         #                              population_fromfile)
-        #haplotype_table = table
-        #title = f'{items[0]}: {items[1:]} {population_fromfile}'
-        #total_perc = f'{1:.1f}%'
-        #request.session["ids"] = all_ids.split(';')
-
-
+        # haplotype_table = table
+        # title = f'{items[0]}: {items[1:]} {population_fromfile}'
+        # total_perc = f'{1:.1f}%'
+        # request.session["ids"] = all_ids.split(';')
 
     return render(request, 'homepage.html', {
         'Title': title,
