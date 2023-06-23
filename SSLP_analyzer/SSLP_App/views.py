@@ -95,7 +95,6 @@ def data_editor_view(request, population):
     if edit_mode:
         parsed_haplotypes.append({"haplo":"", "chr":"","SSLP":"","percent":"","perm": ""})
     
-    # print(parsed_haplotypes[0])
     return render(request, 'editpage.html',{
         "population":population,
         "table_data":parsed_haplotypes,
