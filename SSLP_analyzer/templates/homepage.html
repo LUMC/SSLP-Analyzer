@@ -198,10 +198,11 @@
                     <form method="post">
                         {% csrf_token %}
                         <input type="hidden" name="change_result_submit" value="{{key}}">
-                        <button type="submit" class="text-color-sidefield fs-4 text-truncate d-block text-left" 
+                        <button type="submit" class="text-color-sidefield fs-4 text-truncate d-block text-left "
                         style="max-width: 100%; overflow: hidden;">
                             {{key}}
                         </button>
+                        <button><i class="fa-solid fa-trash" style="color: #283E70;"></i>  </button>
                     </form>
                 {% endfor %}
             </div>
