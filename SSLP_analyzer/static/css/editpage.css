@@ -42,6 +42,10 @@
     color: #007cc2
 }
 
+.trashcan-button:hover {
+    color: #fe2e2e;
+
+}
 .full-width {
     width: 100%;
 }

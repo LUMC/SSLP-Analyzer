@@ -32,7 +32,7 @@
                                     {% if user.is_superuser %}
                                         <div  style="display: flex;">
                                             <input name="new_population" type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
-                                            <button type="button" class="edit-button ml-4" data-bs-toggle="modal" data-bs-target="#deletionModal" data-toggle="tooltip" data-bs-placement="right" title="Delete the {{population}} population.">
+                                            <button type="button" class="edit-button trashcan-button ml-4" data-bs-toggle="modal" data-bs-target="#deletionModal" data-toggle="tooltip" data-bs-placement="right" title="Delete the {{population}} population.">
                                                 <i class="fa-regular fa-trash-can"></i>
                                             </button>
                                             </div>
