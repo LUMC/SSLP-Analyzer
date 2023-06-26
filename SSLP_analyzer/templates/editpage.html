@@ -7,15 +7,14 @@
 {% endblock head %}
 {% block content %}
 {% if messages %}
-        <div class="alert alert-warning border-2 text-black d-flex align-items-center" role="alert" style="font-size: 1.2rem; margin-top:10px; margin-bottom:10px; height: 4rem">
-
-            <ul class="messages">
-                {% for message in messages %}
-                <li> {{ message|safe }} </li>
-                {% endfor %}
-            </ul>
-        </div>
-
+<div class="messages">
+    {% for message in messages %}
+    <div role="alert" {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show"{% endif %}>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
 {% endif %}
 
  <div class="container mt-2">

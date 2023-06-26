@@ -92,12 +92,12 @@ def haplotype_uploader(request,population):
         try:
             df = xslx_parser(file_in_memory)
             new_population = json_parser(df)
+            new_name = request.POST.get("new_population")
         except:
-            messages.success(request, f"Invalid file format. Population not added")
+            messages.warning(request, f"Invalid file format. Population not added.")
             return redirect("data_editor",population=population)
         else:
-            messages.success(request, f"Population succesfully added.")
-    new_name = request.POST.get("new_population")
+            messages.success(request, f"Population {new_name} succesfully added.")
     haplotypes[new_name] = loads(new_population)
     with open("haplotypes.json", "w") as newfile:
         newfile.write(dumps(haplotypes, indent=4))
@@ -163,6 +163,7 @@ def data_editor_view(request, population):
                 del haplos[population]
                 with open("haplotypes.json","w") as file:
                     file.write(dumps(haplos,indent=4))
+                messages.success(request,f"Population: {population} succesfully deleted.")
                 return redirect("data_editor",population=list(haplotypes.keys())[0])
                 
         elif "new_population" in request.POST:
