@@ -105,7 +105,6 @@ def home_view(request):
         # delete the file from server and session storage
     elif 'change_result_submit' in request.POST:
         chosen_result = request.POST.get('change_result_submit')
-        print(chosen_result, request.POST)
         combinations = request.session.get('combinations', {})
         chosen_result_dict = combinations[str(chosen_result)]
         title = f'{chosen_result}'
@@ -151,10 +150,10 @@ def home_view(request):
             population_fromfile = input_data_list[1].split(';')[-1]
             if population_fromfile == "":
                 population_fromfile = populations[0]
-                messages.success(request, f"No population was found in file, {population_fromfile} was used instead.")
+                messages.info(request, f"No population was found in file, the default value {population_fromfile} was used instead.")
             elif population_fromfile not in populations:
                 population_fromfile = populations[0]
-                messages.success(request, f"Population found in file is not currently in database, {population_fromfile} was used instead.")
+                messages.info(request, f"Population found in file is not currently in database, the default value {population_fromfile} was used instead.")
             combinations = {}
             request.session["combinations"] = {}
 
@@ -166,9 +165,9 @@ def home_view(request):
                                     'SSLPS': sslps}
             request.session["combinations"] = combinations
         except IndexError:
-            messages.success(request, 'File can not be uploaded due to the format.')
+            messages.warning(request, 'File cannot be uploaded due to the wrong format.')
         except ValueError:
-            messages.success(request, 'One or more lines of file include text where numbers are expected.')
+            messages.warning(request, 'One or more lines of file include text where numbers are expected.')
 
 
     return render(request, 'homepage.html', {
