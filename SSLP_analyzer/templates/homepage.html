@@ -15,18 +15,17 @@
 {% block content %}
 <div class="container-fluid">
     <div class="container mt-4">
-
         {% if messages %}
-        <div class="alert alert-warning border-2 text-black d-flex align-items-center" role="alert" style="font-size: 1.2rem; margin-top:10px; margin-bottom:10px; height: 4rem">
-
-            <ul class="messages">
-                {% for message in messages %}
-                <li> {{ message|safe }} </li>
-                {% endfor %}
-            </ul>
+        <div class="messages">
+            {% for message in messages %}
+            <div role="alert" {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show"{% endif %}>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
         </div>
-
         {% endif %}
+        
         <div class="row">
             <div class="col-lg-10">
                 {% if not switch_title %}
@@ -230,110 +229,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    var waarde1 = document.getElementById("SSLP-waarde1");
-    var waarde2 = document.getElementById("SSLP-waarde2");
-    var waarde3 = document.getElementById("SSLP-waarde3");
-    var waarde4 = document.getElementById("SSLP-waarde4");
-    var population_dropdown = document.getElementById("SSLP-regio");
-
-    var options = {{ chrom_lengths | safe }}
-    ;
-    var populations = {{ populations | safe }}
-    ;
-
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
-        option.text = options[i];
-        option.value = options[i];
-        waarde1.appendChild(option);
-    }
-
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
-        option.text = options[i];
-        option.value = options[i];
-        waarde2.appendChild(option);
-    }
-
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
-        option.text = options[i];
-        option.value = options[i];
-        waarde3.appendChild(option);
-    }
-
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
-        option.text = options[i];
-        option.value = options[i];
-        waarde4.appendChild(option);
-    }
-
-    for (var i = 0; i < populations.length; i++) {
-        var population = document.createElement("option");
-        population.text = populations[i];
-        population.value = populations[i];
-        population_dropdown.appendChild(population);
-    }
-
-    // Functie om de tabelrijen te kleuren op basis van de kolom 'Incidence(%)'
-    function determineRB(d_perc) {
-        if (d_perc > 30) {
-            return 70;
-        } else if (d_perc > 20) {
-            return 90;
-        } else if (d_perc > 10) {
-            return 110;
-        } else if (d_perc > 5) {
-            return 130;
-        } else if (d_perc > 3) {
-            return 150;
-        } else if (d_perc > 1) {
-            return 170;
-        } else if (d_perc > 0.1) {
-            return 210;
-        } else {
-            return 255;
-        }
-    }
-
-    function colorRows() {
-        var table = document.getElementById('myTable');
-        var rows = table.getElementsByTagName('tr');
-
-        // Loop door elke rij, beginnend bij de tweede rij (overslaan van de kop)
-        for (var i = 1; i < rows.length; i++) {
-            var row = rows[i];
-            var cells = row.getElementsByTagName('td');
-            var probabilityCell = cells[cells.length - 3]; // Voorlaatste cel in de rij (Probability(%))
-
-            var probability = parseFloat(probabilityCell.innerText);
-
-            // Bepaal de waarde voor rood en blauw op basis van de probability
-            var rb = determineRB(probability);
-
-            // Pas de achtergrondkleur en tekstkleur van de rij aan
-            row.style.backgroundColor = 'rgb(' + rb + ', 255, ' + rb + ')';
-            row.style.color = 'white';
-        }
-    }
-
-    // Roept de functie aan wanneer het document is geladen
-    window.onload = function () {
-        colorRows();
-    };
-
-    document.getElementById('ignore_button_upload').addEventListener('click', function () {
-        var form = document.getElementById('button_form');
-        form.setAttribute('novalidate', 'true');
-    });
-
-    document.getElementById('ignore_button_export').addEventListener('click', function () {
-        var form = document.getElementById('button_form');
-        form.setAttribute('novalidate', 'true');
-    });
-
+    var options = {{ chrom_lengths | safe }};
+    var populations = {{ populations | safe }};
 </script>
+<script src={% static 'javascript/homepage.js'%}></script>
 </body>
 </html>
 
