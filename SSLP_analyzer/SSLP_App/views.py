@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import FileResponse
 from django import forms
 from .utils import xslx_parser, json_parser , export_xslx
+from django.contrib import messages
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -48,8 +49,14 @@ def haplotype_uploader(request,population):
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
-        df = xslx_parser(file_in_memory)
-        new_population = json_parser(df)
+        try:
+            df = xslx_parser(file_in_memory)
+            new_population = json_parser(df)
+        except:
+            messages.success(request, f"Invalid file format. Population not added")
+            return redirect("data_editor",population=population)
+        else:
+            messages.success(request, f"Population succesfully added.")
     new_name = request.POST.get("new_population")
     haplotypes[new_name] = loads(new_population)
     with open("haplotypes.json", "w") as newfile:
@@ -66,7 +73,6 @@ def data_editor_view(request, population):
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
-        print(request.user.is_superuser)
         if "edit" in request.POST:
             if request.user.is_superuser:
                 edit_mode = True
@@ -76,6 +82,15 @@ def data_editor_view(request, population):
                 with open("haplotypes.json","w") as file:
                     file.write(dumps(haplotypes,indent=4))
                 edit_mode = False
+        elif "delete" in request.POST:
+            if request.user.is_superuser:
+                with open("haplotypes.json","r") as file:
+                    haplos = load(file)
+                del haplos[population]
+                with open("haplotypes.json","w") as file:
+                    file.write(dumps(haplos,indent=4))
+                return redirect("data_editor",population=list(haplotypes.keys())[0])
+                
         elif "new_population" in request.POST:
             if request.user.is_superuser:
                 return haplotype_uploader(request,population)

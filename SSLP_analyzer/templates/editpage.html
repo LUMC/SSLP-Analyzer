@@ -7,8 +7,23 @@
 {% endblock head %}
 
 {% block content %}
+{% if messages %}
+        <div class="alert alert-warning border-2 text-black d-flex align-items-center" role="alert" style="font-size: 1.2rem; margin-top:10px; margin-bottom:10px; height: 4rem">
+
+            <ul class="messages">
+                {% for message in messages %}
+                <li> {{ message|safe }} </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+{% endif %}
  <!-- Include Bootstrap CSS -->
  <style>
+    .modal-backdrop {
+        z-index: 1;
+    }
+
     .upload-btn {
         border: 2px solid gray;
         color: gray;
@@ -69,10 +84,35 @@
                             <th scope="col" colspan="5" class="text-left fs-2 align-items-center p-4 " style="background-color: #283E70; text-align: left;">
                                 <div class="d-flex justify-content-between w-100">
                                     {% if edit_mode %}
-                                        <input name="new_population" type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
-                                    {% else %}
-                                        <div>{{population}}</div>
-                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                        <div  style="display: flex;">
+                                            <input name="new_population" type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
+                                            <button type="button" class="edit-button ml-4" data-bs-toggle="modal" data-bs-target="#deletionModal" data-toggle="tooltip" data-bs-placement="right" title="Delete the {{population}} population.">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                            </div>
+                                            
+                                            <div class="modal fade" id="deletionModal" tabindex="-1" aria-labelledby="deletionModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class=" modal-content" style="color: black;">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deletionModalLabel">Confirm deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                    <div class="modal-body" id="delWarn">
+                                                        Are you sure you want to delete the {{population}} population?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" name="delete" class="btn btn-danger">Delete population!</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                        {% else %}
+                                            <div>{{population}}</div>
+                                        {% endif %}
                                     <div>
                                         
                                         {% if user.is_superuser %}
@@ -102,6 +142,7 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <input name="haplo" type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}>
+                                            
                                         </div>
                                     </td>
                                     <td>
