@@ -3,9 +3,8 @@
 {% load static %}
 {% block head %}
 <script src="{% static 'javascript/haplotype.js' %}" ></script>
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/editpage.css' %}" />
 {% endblock head %}
-
 {% block content %}
 {% if messages %}
         <div class="alert alert-warning border-2 text-black d-flex align-items-center" role="alert" style="font-size: 1.2rem; margin-top:10px; margin-bottom:10px; height: 4rem">
@@ -18,64 +17,11 @@
         </div>
 
 {% endif %}
- <!-- Include Bootstrap CSS -->
- <style>
-    .modal-backdrop {
-        z-index: 1;
-    }
 
-    .upload-btn {
-        border: 2px solid gray;
-        color: gray;
-        background-color: white;
-        padding: 8px 20px;
-        border-radius: 8px;
-        font-size: 20px;
-        font-weight: bold;
-        }
-
-    .button {
-        background: #283E70;
-        border: 1px solid #283E70;
-        width: 8rem;
-        height: 4rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .button-io {
-        background: #799AE0;
-        border: 1px solid #799AE0;
-        width: 7rem;
-        height: 3rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .edit-button {
-        background: none;
-        border: none;
-        color: #fff;
-    }
-
-    .edit-button:hover {
-        color: #007cc2
-    }
-
-    .full-width {
-        width: 100%;
-    }
-    th {
-        width: 20%; /* if you have 5 columns, each taking up an equal amount of space */
-    }
-        
- </style>
  <div class="container mt-2">
     <div class="row">
         <div class="col-md-8">
-            <div style="overflow:auto; height:80vh;"> <!-- div to make table scrollable -->
+            <div style="overflow:auto; height:80vh;">
                 <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
                 {% csrf_token %}
                 <table class="table table-striped text-center">
@@ -114,7 +60,6 @@
                                             <div>{{population}}</div>
                                         {% endif %}
                                     <div>
-                                        
                                         {% if user.is_superuser %}
                                             {% if edit_mode %}
                                             <button type="submit" name="done" class="btn btn-primary" data-toggle="tooltip" data-bs-placement="top" title="Save the haplotypes of the {{population}} population.">Done</button>
@@ -210,7 +155,7 @@
                 <div class="border p-3 d-flex flex-column justify-content-center align-items-center">
                     <div style="max-height: calc(13rem + 20px); overflow-y: auto;">
                         {% for population in  population_options%}
-                            <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 button" style="width: 8rem; height: 4rem;" href={% url 'data_editor' population  %}>{{population}}</a>
+                            <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 population-button" style="width: 8rem; height: 4rem;" href={% url 'data_editor' population  %}>{{population}}</a>
                         {% endfor %}
                     </div>
                 </div>
