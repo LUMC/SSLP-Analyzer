@@ -64,7 +64,7 @@ def haplotype_saver(request, population, haplotypes):
         haplotypes[population] = save_dict
     return haplotypes, population
             
-def haplotype_uploader(request):
+def haplotype_uploader(request,population):
     """
     This function processes an XSLX file that has been uploaded by the user and 
     converts it to a JSON file by utilizing the specialized XSLX_parser and 
@@ -77,6 +77,8 @@ def haplotype_uploader(request):
         request (django.http.HttpRequest): The request object that carries all 
         the information from a client to the server. It is used in this
         particular case to access the uploaded file and any other form of data.
+        population (str): A string containing the name of the population 
+        that currently is viewed.
 
     Returns:
         django.http.HttpResponseRedirect: A redirect response object which 
@@ -165,7 +167,7 @@ def data_editor_view(request, population):
                 
         elif "new_population" in request.POST:
             if request.user.is_superuser:
-                return haplotype_uploader(request)
+                return haplotype_uploader(request,population)
         elif "Download" in request.POST:
             return haplotype_downloader(population)
     try:
