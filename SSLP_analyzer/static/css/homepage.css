@@ -1,0 +1,113 @@
+body {
+    overflow-y: hidden;
+}
+
+th {
+    color: white !important;
+}
+
+.bg-light-gray {
+    background-color: #D0CFCF;
+}
+
+.text-color-sidefield {
+    color: #283E70;
+    text-decoration: underline #283E70;
+    border: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #D0CFCF;
+    font-size: 15px;
+}
+
+.text-align-sidefield{
+    overflow: hidden;
+    margin: 0 !important;
+}
+
+.btn-dark-blue {
+    color: #fff;
+    background-color: #283E70 !important;
+    border-color: #283E70 !important;
+    width: 8rem !important;
+}
+
+.select-dark-blue:hover {
+    color: #fff;
+    background-color: #003366 !important;
+    border-color: #003366;
+}
+
+        .btn-dark-blue {
+    color: #fff;
+    background-color: #283E70 !important;
+    border-color: #283E70 !important;
+    width: 8rem !important;
+}
+
+.select-dark-blue:hover {
+    color: #fff;
+    background-color: #003366 !important;
+    border-color: #003366;
+}
+
+.select-dark-blue:invalid{
+    background-color: #283E70 !important;
+    border-color: #283E70 !important;
+    width: 8rem !important;
+
+}
+
+.select-dark-blue:valid{
+    background-color: #283E70 !important;
+    border-color: #283E70 !important;
+    width: 8rem !important;
+
+}
+
+.btn-dark-green {
+    color: #fff;
+    background-color: #10793F !important;
+    border-color: #10793F !important;
+    width: 8rem !important;
+}
+
+.btn-dark-green:hover {
+    color: #fff;
+    background-color: #146B3B !important;
+    border-color: #146B3B;
+}
+
+.height-class {
+    height: 50vh;
+}
+.scroll-sidefield{
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.width-class-sidefield {
+    width: 13rem !important;
+}
+
+.titles-text-class {
+    font-family: 'Inter', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    justify-content: flex-end;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    color: #fff;
+}
+
+.delete-button:hover {
+    color: #007cc2
+}
+
+.hovertest:hover .delete-button{
+    display: flex !important;
+}
