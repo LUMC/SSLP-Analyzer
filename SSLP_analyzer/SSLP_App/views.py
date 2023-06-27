@@ -10,7 +10,7 @@ import json
 from django.contrib import messages
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField(), HttpResponse
+    file = forms.FileField()
 
 def check_SSLP(data, new_SSLP):
     """
