@@ -20,7 +20,6 @@ from django.urls import path
 from SSLP_App.views import(
     home_view,
     data_editor_view,
-    feed_view,
 )
 
 from accounts.views import (
@@ -32,7 +31,6 @@ urlpatterns = [
     path('sslp-analyzer-admin/', admin.site.urls),
     path('', home_view, name='homepage'),
     path('data-editor/<str:population>/', data_editor_view, name="data_editor"),
-    path('feed/', feed_view, name="feed"),
     path("signin/", login_and_register_view, name="signin"),
     path("logout/", logout_view, name="logout"),
 ]
