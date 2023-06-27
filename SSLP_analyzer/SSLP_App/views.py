@@ -308,6 +308,8 @@ def get_saved_results(request):
         return combinations
 
 
+
+
 def haplotype_saver(request, population, haplotypes):
     """
     The function generates a nested dictionary for the selected population,

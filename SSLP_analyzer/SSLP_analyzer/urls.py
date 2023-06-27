@@ -23,7 +23,7 @@ from SSLP_App.views import(
 )
 
 from accounts.views import (
-    login_and_register_view,
+    login_view,
     logout_view,
 )
 
@@ -31,6 +31,6 @@ urlpatterns = [
     path('sslp-analyzer-admin/', admin.site.urls),
     path('', home_view, name='homepage'),
     path('data-editor/<str:population>/', data_editor_view, name="data_editor"),
-    path("signin/", login_and_register_view, name="signin"),
+    path("signin/", login_view, name="signin"),
     path("logout/", logout_view, name="logout"),
 ]
