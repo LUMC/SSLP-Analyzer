@@ -66,6 +66,7 @@ def export_home_view(request):
 
 
 def home_view(request):
+    table_haplotype_filled = None
     switch_title = False
     total_perc, title, saved_results, haplotype_table = "", "", [], []
     all_sslps, populations = list_of_sslps()
@@ -74,27 +75,30 @@ def home_view(request):
         return export_home_view(request)
 
     elif 'name_save' in request.POST:
-        name_result = request.POST.get("name_result")
-        last_result = request.session.get('last_result', {})
-        combinations = request.session.get('combinations', {})
-        key = list(last_result.keys())[0]
-        value = last_result[key]
-        title = f'{name_result}' 
-        if name_result in list(combinations.keys()):
-            name_result = get_new_key(combinations, name_result)
-        combinations[name_result] = value
-        request.session["combinations"] = combinations
-        table_haplotype_filled, total_perc_int = haplotype(
-            sorted(value["SSLPS"]),
-            value["Population"])
-        total_perc = f'{total_perc_int:.1f}%'
-        if table_haplotype_filled == 1 and total_perc_int == 1:
-            switch_title = True
-            total_perc = ""
-            title = "Current selection does not return results"
-        haplotype_table = table_haplotype_filled
-        total_perc = f'{total_perc_int:.1f}%'
-        title = f'{name_result}'
+        if request.POST.get("result_check"):
+            name_result = request.POST.get("name_result")
+            last_result = request.session.get('last_result', {})
+            combinations = request.session.get('combinations', {})
+            key = list(last_result.keys())[0]
+            value = last_result[key]
+            title = f'{name_result}' 
+            if name_result in list(combinations.keys()):
+                name_result = get_new_key(combinations, name_result)
+            combinations[name_result] = value
+            request.session["combinations"] = combinations
+            table_haplotype_filled, total_perc_int = haplotype(
+                sorted(value["SSLPS"]),
+                value["Population"])
+            total_perc = f'{total_perc_int:.1f}%'
+            if table_haplotype_filled == 1 and total_perc_int == 1:
+                switch_title = True
+                total_perc = ""
+                title = "Current selection does not return results"
+            haplotype_table = table_haplotype_filled
+            total_perc = f'{total_perc_int:.1f}%'
+            title = f'{name_result}'
+        else:
+            messages.warning(request,"Empty result cannot be saved.")
     
     elif 'delete_saved' in request.POST:
         combinations = request.session['combinations']
@@ -168,8 +172,6 @@ def home_view(request):
             messages.warning(request, 'File cannot be uploaded due to the wrong format.')
         except ValueError:
             messages.warning(request, 'One or more lines of file include text where numbers are expected.')
-
-
     return render(request, 'homepage.html', {
         'Title': title,
         'data': haplotype_table,
@@ -177,7 +179,8 @@ def home_view(request):
         'chrom_lengths': all_sslps,
         'populations': populations,
         'likelihood': total_perc,
-        'switch_title': switch_title
+        'switch_title': switch_title,
+        'result_check': "" if not table_haplotype_filled or table_haplotype_filled == 1 else True 
     })
 
 

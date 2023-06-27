@@ -66,13 +66,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for row in data %}
-                    <tr>
-                        {% for item in row %}
-                        <td>{{ item }}</td>
+                        {% for row in data %}
+                        <tr>
+                            {% for item in row %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
@@ -198,7 +198,7 @@
                     <div class="d-flex align-items-center justify-content-center" data-toggle="tooltip" data-bs-placement="bottom" title="Export all saved results to csv file.">
                         <input id="ignore_button_export" type="submit" class="btn btn-primary btn-dark-blue"
                                role="button"
-                               name="export_button" value="Export" >
+                               name="export_button" value="Export">
                         </input>
                     </div>
                 </div>
@@ -206,11 +206,11 @@
         </div>
     </form>
 
-    <div class="modal fade" id="results-name" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="results-name" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Give name to result</h1>
+              <h1 class="modal-title fs-5" id="resultModalLabel">Give name to result</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -219,7 +219,8 @@
                 <div class="d-flex">
                     <input type="text" class="form-control" id="saveName" name="name_result" required>
                     <button type="submit" class="btn btn-primary btn-dark-blue" name="name_save" style="margin-left: 10px;">Save</button>
-                </div>
+                    <input type="hidden" name="result_check" value={{result_check}}>
+
               </form>
             </div>
           </div>
@@ -232,7 +233,7 @@
     var options = {{ chrom_lengths | safe }};
     var populations = {{ populations | safe }};
 </script>
-<script src={% static 'javascript/homepage.js'%}></script>
+<script src={% static 'javascript/homepage.js' %}></script>
 </body>
 </html>
 
