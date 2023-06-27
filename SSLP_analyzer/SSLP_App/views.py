@@ -1,18 +1,12 @@
 from django.shortcuts import render,redirect,HttpResponse
 from json import load, loads, dumps
-from django.urls import reverse
 from django.http import FileResponse
 from django import forms
 from .utils import xslx_parser, json_parser , export_xslx
 from django.contrib import messages
-from pathlib import Path
 import os.path
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
-import mimetypes
 from .utils import haplotype
 import json
-import re
 from django.contrib import messages
 
 class UploadFileForm(forms.Form):
