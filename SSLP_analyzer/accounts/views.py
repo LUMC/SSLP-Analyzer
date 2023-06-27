@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 
 
-def login_and_register_view(request):
+def login_view(request):
     """
     Returns:
         HttpResponse: The HTTP response containing the rendered login page or a redirection to the homepage.
