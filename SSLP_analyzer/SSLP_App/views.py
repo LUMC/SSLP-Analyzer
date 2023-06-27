@@ -245,6 +245,11 @@ def home_view(request):
                 combinations[id] = {'Population': population_fromfile,
                                     'SSLPS': sslps}
             request.session["combinations"] = combinations
+            SSLPs = combinations[list(combinations.keys())[0]]['SSLPS']
+
+            SSLPs = sorted([int(i) for i in SSLPs])
+            table_haplotype_filled, total_perc_int = haplotype(SSLPs,
+                                                               population_fromfile)
             if table_haplotype_filled != 1:
                 haplotype_table = table_haplotype_filled
                 total_perc = f'{total_perc_int:.1f}%'
