@@ -4,6 +4,15 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 def login_and_register_view(request):
+    """
+    Returns:
+        HttpResponse: The HTTP response containing the rendered login page or a redirection to the homepage.
+    Summary:
+        This view function handles the login and registration process for users. If the request method is 'POST', it checks
+        if the login form is submitted. If the form is valid, it logs in the user and redirects them to the homepage. If the
+        form is not valid, it renders the login page with the error messages.
+        If the request method is not 'POST', it simply renders the login page with an empty login form.
+    """
     if request.method == 'POST':
         login_form = AuthenticationForm(request, data=request.POST)
         if 'login_form' in request.POST:
@@ -27,6 +36,12 @@ def login_and_register_view(request):
         return render(request, "accounts/signin.html", context)
     
 def get_error_message(form):
+    """
+    Returns:
+        str: A formatted string containing error messages for the form fields.
+    Summary:
+        Retrieve error messages from a Django form object.
+    """
     error_msg_str = ""
     for field_name, errors in form.errors.items():
         for error_msg in errors:
@@ -34,9 +49,13 @@ def get_error_message(form):
     return error_msg_str
     
 def logout_view(request):
-    """logout
-    Deze view logt de gebruiker uit en stuurt de gebruiker vervolgens naar de homepage. 
-    Omdat je voor de homepage ingelogt moet zijn wordt je daarna weer naar de loginpagina gestuurd.
+    """
+    Returns:
+        HttpResponseRedirect: Redirects the user to the homepage.
+    Summary:
+        This view logs out the user and then redirects them to the homepage.
+        Since being logged in is required to access the homepage, the user is
+        redirected back to the login page after logging out.
     """
     logout(request)
     return redirect("/")
