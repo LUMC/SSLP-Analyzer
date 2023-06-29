@@ -29,8 +29,11 @@ def test_generate_all_combinations_empty_chr_list_returns_empty_values():
     assert len(perm) == 0
 
 def test_generate_all_combinations_valid_input_returns_valid_results():
-    chr4,chr10 = extract_sslps([161,162,163,164],read_haplotypes("European"))
-    perm,total_perm = generate_all_combinations([161,162,163,164],chr4,chr10)
+    try:
+        chr4,chr10 = extract_sslps([161,162,163,164],read_haplotypes("European"))
+        perm,total_perm = generate_all_combinations([161,162,163,164],chr4,chr10)
+    except Exception as e:
+        pytest.fail(f"Exception raised when not expected {e}")
     assert isinstance(total_perm,float)
     assert isinstance(perm,list)
     assert isinstance(perm[0],list)
