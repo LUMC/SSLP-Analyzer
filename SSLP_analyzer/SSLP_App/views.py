@@ -91,7 +91,7 @@ def haplotype_uploader(request,population):
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
         try:
-            df = xlsx_parser(file_in_memory)
+            df = xlsx_parser(file_in_memory,request)
             new_population = json_parser(df)
             new_name = request.POST.get("new_population")
         except:

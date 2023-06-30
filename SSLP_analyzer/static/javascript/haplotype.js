@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
   
 
-// console.log(table.rows.length)
 
 function add_inputs(el) {
     let haplo_row_new = haplo_row_clone.cloneNode(true)

@@ -3,21 +3,28 @@ import numpy as np
 import re
 import json
 import os
+from django.contrib import messages
 
 
-def haplo_parser(haplotype):
+def haplo_parser(haplotype,request):
     """haplo_parser
     Parses the haplotype string and extracts the chromosome value and the sslp
     It does this by extracting the first two ints.
 
     :param haplotype: haplotype string
+    request (django.http.HttpRequest): The request object that carries all 
+    the information from a client to the server.
     :return: (str,int,int) haplotype_string, chromosome , sslp
     """
-    chromosome, sslp = [int(num) for num in re.findall('\d+', haplotype)][0:2]
-    haplo_string = re.sub("^\d+", '', haplotype)
-    return haplo_string,chromosome,sslp
+    try:
+        chromosome, sslp = [int(num) for num in re.findall('\d+', haplotype)][0:2]
+        haplo_string = re.sub("^\d+", '', haplotype)
+    except:
+        messages.warning(request,"Invalid haplotype format present in file")
+    else:
+        return haplo_string,chromosome,sslp
 
-def xlsx_parser(filename):
+def xlsx_parser(filename,request):
     """xlsx_parser
     Reads the supplied xlsx file and parses it so it can be saved to haplotypes.json.
     It returns a pandas dataframe which contains the data.
@@ -32,7 +39,7 @@ def xlsx_parser(filename):
     for dfs in df_list:
         for row in dfs.values.tolist():
             raw_haplo, percent, permissive = row
-            haplotype, chromosome, sslp = haplo_parser(raw_haplo)
+            haplotype, chromosome, sslp = haplo_parser(raw_haplo,request)
             chr_dict["haplotype"].append(haplotype)
             chr_dict["chr"].append(chromosome)
             chr_dict["SSLP"].append(sslp)
