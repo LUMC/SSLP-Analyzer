@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 import json
+import os
 
 
 def haplo_parser(haplotype):
@@ -16,9 +17,9 @@ def haplo_parser(haplotype):
     haplo_string = re.sub("^\d+", '', haplotype)
     return haplo_string,chromosome,sslp
 
-def xslx_parser(filename):
-    """xslx_parser
-    Reads the supplied xslx file and parses it so it can be saved to haplotypes.json.
+def xlsx_parser(filename):
+    """xlsx_parser
+    Reads the supplied xlsx file and parses it so it can be saved to haplotypes.json.
     It returns a pandas dataframe which contains the data.
     :param filename: (str) the name of the file to save it as
     :return: df (pd.DataFrame) dataframe with all read in data.
@@ -63,8 +64,8 @@ def json_parser(df):
         result_dict[chromosome][sslp].append({"haplotype":haplo,"%":"{:0.1f}".format(percent),"permissive":str(perm)})
     return json.dumps(result_dict,indent=4)
 
-def export_xslx(population):
-    """export_xslx
+def export_xlsx(population):
+    """export_xlsx
     Reads the selected population from a file and 
     saves this data to result.xlsx. This is then saved to result.xlsx so it can later be served to the user.
 

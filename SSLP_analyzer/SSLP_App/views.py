@@ -3,7 +3,7 @@ from json import load, loads, dumps
 from django.urls import reverse
 from django.http import FileResponse
 from django import forms
-from .utils import xslx_parser, json_parser , export_xslx
+from .utils import xlsx_parser, json_parser , export_xlsx
 from django.contrib import messages
 import os
 
@@ -91,7 +91,7 @@ def haplotype_uploader(request,population):
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
         try:
-            df = xslx_parser(file_in_memory)
+            df = xlsx_parser(file_in_memory)
             new_population = json_parser(df)
             new_name = request.POST.get("new_population")
         except:
@@ -108,7 +108,7 @@ def haplotype_uploader(request,population):
 def haplotype_downloader(population):
     """
     Download the selected haplotype file from the chosen population. 
-    It uses the export_xslx to convert it to the appropriate excel format.
+    It uses the export_xlsx to convert it to the appropriate excel format.
 
     Args:
         population (str): A string containing the name of the population that 
@@ -116,9 +116,9 @@ def haplotype_downloader(population):
 
     Returns:
         django.http.FileResponse: A FileResponse object which serves the content of the requested 
-            file ("result.xslx") to the client for download.
+            file ("result.xlsx") to the client for download.
     """
-    export_xslx(population)
+    export_xlsx(population)
     return FileResponse(open("result.xlsx", "rb"), filename=f"{population}.xlsx", as_attachment=True)
 
 def data_editor_view(request, population):
