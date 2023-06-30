@@ -52,8 +52,7 @@ def get_error_message(form):
     
 def logout_view(request):
     """logout
-    Deze view logt de gebruiker uit en stuurt de gebruiker vervolgens naar de homepage. 
-    Omdat je voor de homepage ingelogt moet zijn wordt je daarna weer naar de loginpagina gestuurd.
+    This view logs the user out and redirects the user to the homepage. 
     """
     logout(request)
     return redirect("/")
