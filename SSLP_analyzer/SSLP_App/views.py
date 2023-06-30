@@ -5,6 +5,7 @@ from django.http import FileResponse
 from django import forms
 from .utils import xslx_parser, json_parser , export_xslx
 from django.contrib import messages
+import os
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -84,7 +85,7 @@ def haplotype_uploader(request,population):
         django.http.HttpResponseRedirect: A redirect response object which 
         can be used to redirect the user to another page.
     """
-    with open("haplotypes.json","r") as file:
+    with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
         haplotypes = load(file)
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
@@ -99,7 +100,7 @@ def haplotype_uploader(request,population):
         else:
             messages.success(request, f"Population {new_name} succesfully added.")
     haplotypes[new_name] = loads(new_population)
-    with open("haplotypes.json", "w") as newfile:
+    with open(os.environ.get("DATABASE_JSON_FILE"), "w") as newfile:
         newfile.write(dumps(haplotypes, indent=4))
     return redirect("data_editor",population=new_name)
 
@@ -143,7 +144,7 @@ def data_editor_view(request, population):
          If the population does not exist, it will return to the default value.
          In our case, the first population in the "haplotypes.json" file.
     """
-    with open("haplotypes.json","r") as file:
+    with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
@@ -153,15 +154,15 @@ def data_editor_view(request, population):
         elif "done" in request.POST:
             if request.user.is_superuser:
                 haplotypes, population = haplotype_saver(request, population, haplotypes)
-                with open("haplotypes.json","w") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"w") as file:
                     file.write(dumps(haplotypes,indent=4))
                 edit_mode = False
         elif "delete" in request.POST:
             if request.user.is_superuser:
-                with open("haplotypes.json","r") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
                     haplos = load(file)
                 del haplos[population]
-                with open("haplotypes.json","w") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"w") as file:
                     file.write(dumps(haplos,indent=4))
                 messages.success(request,f"Population: {population} succesfully deleted.")
                 return redirect("data_editor",population=list(haplotypes.keys())[0])

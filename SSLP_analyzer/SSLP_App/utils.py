@@ -70,7 +70,7 @@ def export_xslx(population):
 
     :param population: (str) the selected population
     """
-    with open("haplotypes.json","r") as file:
+    with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
         haplotypes = json.load(file)
     save_list = []
     selected_pop = haplotypes[population]
