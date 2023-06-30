@@ -86,18 +86,6 @@ def export_xslx(population):
     
                 
 
-            
-            
         
-def main(filename):
-    df = xslx_parser(filename)
-    json_string = json_parser(df)
-    print(df)
-     
-        
-    
-    
-if __name__ == "__main__":
-    export_xslx("European")
-    # main("india.xlsx")
+
     
