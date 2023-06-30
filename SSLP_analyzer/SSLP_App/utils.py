@@ -6,7 +6,7 @@ import os
 
 
 def haplo_parser(haplotype):
-    """halpo_parser
+    """haplo_parser
     Parses the haplotype string and extracts the chromosome value and the sslp
     It does this by extracting the first two ints.
 
