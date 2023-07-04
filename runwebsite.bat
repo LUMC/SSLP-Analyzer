@@ -22,6 +22,13 @@ REM Change directory to Django project
 echo Changing directory to Django project...
 cd SSLP_analyzer
 
+REM Creating migrations
+echo Creating migrations
+python manage.py makemigrations
+
+REM Applying migrations
+echo Applying migrations
+python manage.py migrate
 
 REM Run Django server
 echo Starting Django server...

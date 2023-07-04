@@ -18,6 +18,14 @@ REM Creating .env file
 echo Creating .env file
 python create_dot_env.py
 
+REM Creating migrations
+echo Creating migrations
+python manage.py makemigrations
+
+REM Applying migrations
+echo Applying migrations
+python manage.py migrate
+
 REM Deactivate the virtual environment
 echo Deactivating Python virtual environment...
 call sslp_env\Scripts\deactivate.bat
