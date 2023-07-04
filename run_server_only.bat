@@ -10,6 +10,8 @@ REM Run Django server
 echo Starting Django server...
 start /min python manage.py runserver
 
+
+
 REM Open Chrome to Django URL
 echo Opening Django URL in Chrome...
 start chrome http://127.0.0.1:8000/

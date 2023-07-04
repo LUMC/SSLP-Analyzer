@@ -14,6 +14,10 @@ REM Install packages from requirements.txt
 echo Installing required Python packages...
 pip install -r requirements.txt
 
+REM Creating .env file
+echo Creating .env file
+python create_dot_env.py
+
 REM Deactivate the virtual environment
 echo Deactivating Python virtual environment...
 call sslp_env\Scripts\deactivate.bat

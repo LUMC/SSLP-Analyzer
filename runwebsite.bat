@@ -14,9 +14,14 @@ REM Install packages from requirements.txt
 echo Installing required Python packages...
 pip install -r requirements.txt
 
+REM Creating .env file
+echo Creating .env file
+python create_dot_env.py
+
 REM Change directory to Django project
 echo Changing directory to Django project...
 cd SSLP_analyzer
+
 
 REM Run Django server
 echo Starting Django server...
