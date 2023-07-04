@@ -283,7 +283,7 @@ def list_of_sslps():
             Two lists: all_sslps and populations.
     """
     file_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "haplotypes.json")
+        os.path.dirname(os.path.dirname(__file__)), os.environ.get("DATABASE_JSON_FILE"))
     all_sslps, populations = [], []
     with open(file_path, "r") as file:
         haplotype_file = json.load(file)

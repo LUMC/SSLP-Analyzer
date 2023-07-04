@@ -1,47 +1,47 @@
-var waarde1 = document.getElementById("SSLP-waarde1");
-    var waarde2 = document.getElementById("SSLP-waarde2");
-    var waarde3 = document.getElementById("SSLP-waarde3");
-    var waarde4 = document.getElementById("SSLP-waarde4");
-    var population_dropdown = document.getElementById("SSLP-regio");
+let sslp_value1 = document.getElementById("sslp_value1");
+let sslp_value2 = document.getElementById("sslp_value2");
+let sslp_value3 = document.getElementById("sslp_value3");
+let sslp_value4 = document.getElementById("sslp_value4");
+let population_dropdown = document.getElementById("SSLP-regio");
 
 
 
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
+    for (let i = 0; i < options.length; i++) {
+        let option = document.createElement("option");
         option.text = options[i];
         option.value = options[i];
-        waarde1.appendChild(option);
+        sslp_value1.appendChild(option);
     }
 
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
+    for (let i = 0; i < options.length; i++) {
+        let option = document.createElement("option");
         option.text = options[i];
         option.value = options[i];
-        waarde2.appendChild(option);
+        sslp_value2.appendChild(option);
     }
 
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
+    for (let i = 0; i < options.length; i++) {
+        let option = document.createElement("option");
         option.text = options[i];
         option.value = options[i];
-        waarde3.appendChild(option);
+        sslp_value3.appendChild(option);
     }
 
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
+    for (let i = 0; i < options.length; i++) {
+        let option = document.createElement("option");
         option.text = options[i];
         option.value = options[i];
-        waarde4.appendChild(option);
+        sslp_value4.appendChild(option);
     }
 
-    for (var i = 0; i < populations.length; i++) {
-        var population = document.createElement("option");
+    for (let i = 0; i < populations.length; i++) {
+        let population = document.createElement("option");
         population.text = populations[i];
         population.value = populations[i];
         population_dropdown.appendChild(population);
     }
 
-    // Functie om de tabelrijen te kleuren op basis van de kolom 'Incidence(%)'
+    // Function to color the rows of the table based on the column 'Incidence(%)'
     function determineRB(d_perc) {
         if (d_perc > 30) {
             return 70;
@@ -63,36 +63,36 @@ var waarde1 = document.getElementById("SSLP-waarde1");
     }
 
     function colorRows() {
-        var table = document.getElementById('myTable');
-        var rows = table.getElementsByTagName('tr');
+        let table = document.getElementById('myTable');
+        let rows = table.getElementsByTagName('tr');
 
-        // Loop door elke rij, beginnend bij de tweede rij (overslaan van de kop)
-        for (var i = 1; i < rows.length; i++) {
-            var row = rows[i];
-            var cells = row.getElementsByTagName('td');
-            var probabilityCell = cells[cells.length - 3]; // Voorlaatste cel in de rij (Probability(%))
+        // Loop through each row starting at the second row (skipping the header)
+        for (let i = 1; i < rows.length; i++) {
+            let row = rows[i];
+            let cells = row.getElementsByTagName('td');
+            let probabilityCell = cells[cells.length - 3]; // Probability kolumn (Probability(%))
 
-            var probability = parseFloat(probabilityCell.innerText);
+            let probability = parseFloat(probabilityCell.innerText);
 
-            // Bepaal de waarde voor rood en blauw op basis van de probability
-            var rb = determineRB(probability);
+            // Define the red and blue values based on the probability.
+            let rb = determineRB(probability);
 
-            // Pas de achtergrondkleur en tekstkleur van de rij aan
+            // Alter the background color of the row.
             row.style.backgroundColor = 'rgb(' + rb + ', 255, ' + rb + ')';
         }
     }
 
-    // Roept de functie aan wanneer het document is geladen
+    // Call the function when the window has finished loading.
     window.onload = function () {
         colorRows();
     };
 
     document.getElementById('ignore_button_upload').addEventListener('click', function () {
-        var form = document.getElementById('button_form');
+        let form = document.getElementById('button_form');
         form.setAttribute('novalidate', 'true');
     });
 
     document.getElementById('ignore_button_export').addEventListener('click', function () {
-        var form = document.getElementById('button_form');
+        let form = document.getElementById('button_form');
         form.setAttribute('novalidate', 'true');
     });

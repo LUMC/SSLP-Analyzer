@@ -10,7 +10,7 @@ import json
 
 def read_haplotypes(population):
     """read_haplotypes
-    This function reads the haplotypes.json file and extracts the haplotypes of the supplied population.
+    This function reads the JSON database file file and extracts the haplotypes of the supplied population.
     This is then returned as a dictionary.
 
     :param population: (str) the selected population.
@@ -18,7 +18,7 @@ def read_haplotypes(population):
     """
     file_path = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),  
-    "haplotypes.json")
+    os.environ.get("DATABASE_JSON_FILE"))
     with open(file_path, "r") as f:
         haplotypes = json.load(f)
         haplotypes = haplotypes[population]
