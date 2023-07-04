@@ -173,4 +173,4 @@ cython_debug/
 *.vsix
 
 result.xlsx
-
+sslp_env/
