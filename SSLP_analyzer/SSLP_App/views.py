@@ -2,12 +2,13 @@ from django.shortcuts import render,redirect,HttpResponse
 from json import load, loads, dumps
 from django.http import FileResponse
 from django import forms
-from .utils import xslx_parser, json_parser , export_xslx
+from .utils import xlsx_parser, json_parser , export_xlsx
 from django.contrib import messages
 import os.path
 from .utils import haplotype
 import json
 from django.contrib import messages
+import os
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -380,13 +381,13 @@ def haplotype_uploader(request,population):
         django.http.HttpResponseRedirect: A redirect response object which 
         can be used to redirect the user to another page.
     """
-    with open("haplotypes.json","r") as file:
+    with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
         haplotypes = load(file)
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         file_in_memory = request.FILES['file'].read()
         try:
-            df = xslx_parser(file_in_memory)
+            df = xlsx_parser(file_in_memory,request)
             new_population = json_parser(df)
             new_name = request.POST.get("new_population")
         except:
@@ -395,7 +396,7 @@ def haplotype_uploader(request,population):
         else:
             messages.success(request, f"Population {new_name} succesfully added.")
     haplotypes[new_name] = loads(new_population)
-    with open("haplotypes.json", "w") as newfile:
+    with open(os.environ.get("DATABASE_JSON_FILE"), "w") as newfile:
         newfile.write(dumps(haplotypes, indent=4))
     return redirect("data_editor",population=new_name)
 
@@ -403,7 +404,7 @@ def haplotype_uploader(request,population):
 def haplotype_downloader(population):
     """
     Download the selected haplotype file from the chosen population. 
-    It uses the export_xslx to convert it to the appropriate excel format.
+    It uses the export_xlsx to convert it to the appropriate excel format.
 
     Args:
         population (str): A string containing the name of the population that 
@@ -411,9 +412,9 @@ def haplotype_downloader(population):
 
     Returns:
         django.http.FileResponse: A FileResponse object which serves the content of the requested 
-            file ("result.xslx") to the client for download.
+            file ("result.xlsx") to the client for download.
     """
-    export_xslx(population)
+    export_xlsx(population)
     return FileResponse(open("result.xlsx", "rb"), filename=f"{population}.xlsx", as_attachment=True)
 
 def data_editor_view(request, population):
@@ -439,7 +440,7 @@ def data_editor_view(request, population):
          If the population does not exist, it will return to the default value.
          In our case, the first population in the "haplotypes.json" file.
     """
-    with open("haplotypes.json","r") as file:
+    with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
         haplotypes = load(file)
     edit_mode = False
     if request.method == "POST":
@@ -449,15 +450,15 @@ def data_editor_view(request, population):
         elif "done" in request.POST:
             if request.user.is_superuser:
                 haplotypes, population = haplotype_saver(request, population, haplotypes)
-                with open("haplotypes.json","w") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"w") as file:
                     file.write(dumps(haplotypes,indent=4))
                 edit_mode = False
         elif "delete" in request.POST:
             if request.user.is_superuser:
-                with open("haplotypes.json","r") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"r") as file:
                     haplos = load(file)
                 del haplos[population]
-                with open("haplotypes.json","w") as file:
+                with open(os.environ.get("DATABASE_JSON_FILE"),"w") as file:
                     file.write(dumps(haplos,indent=4))
                 messages.success(request,f"Population: {population} succesfully deleted.")
                 return redirect("data_editor",population=list(haplotypes.keys())[0])

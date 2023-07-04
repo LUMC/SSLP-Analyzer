@@ -10,6 +10,152 @@
 {% endblock head %}
 
 {% block content %}
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        margin-top: 0rem;
+    }
+
+    .login-container {
+        background: #799AE0;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        width: 342px;
+        padding: 2rem;
+        height: 400px;
+        text-align: center;
+    }
+
+    .login-container h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: 30px;
+        text-align: center;
+        color: rgb(0, 0, 0);
+        font-weight: 700;
+    }
+
+    .register-container {
+        background: #283E70;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        width: 342px;
+        padding: 2rem;
+        margin-left: -2rem;
+        height: 365px;
+        text-align: center;
+
+    }
+
+    .register-container h1 {
+        font-family: 'Inter', sans-serif;
+        font-size: 30px;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        font-weight: 700;
+    }
+
+    form {
+        text-align: center;
+        height: 100%;
+    }
+
+    .input1 {
+        width: 240px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #000000;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 10px 0;
+        transition: border 0.5s;
+        outline: none;
+        color: #fff;
+        font-style: italic;
+    }
+
+    .input1::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .input2 {
+        width: 240px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #ffffff;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 10px 0;
+        transition: border 0.5s;
+        outline: none;
+        color: #fff;
+        font-style: italic;
+
+    }
+    .input2::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .buton-login {
+    border-radius: 5px;
+    background: #283E70;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    width: 95px;
+    height: 38px;
+    }
+
+    .buton-register {
+    border-radius: 5px;
+    background: #799AE0;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    width: 95px;
+    height: 38px;
+    }
+
+
+
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        height: 100%;
+    }
+
+    .flex-container-register {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        height: 100%;
+    }
+
+    .flex-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 1rem;
+
+    }
+
+    .input-field-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
 
 <div class="container">
     <div class="login-container">

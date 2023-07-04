@@ -17,6 +17,27 @@
 </div>
 {% endif %}
 
+<form action={% url 'data_editor' population=population %} method="post" class="ml-3">
+    {% csrf_token %}                                         
+<div class="modal fade" id="deletionModal" tabindex="-1" aria-labelledby="deletionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class=" modal-content" style="color: black;">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deletionModalLabel">Confirm deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+        <div class="modal-body" id="delWarn">
+            Are you sure you want to delete the {{population}} population?
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" name="delete" class="btn btn-danger">Delete population!</button>
+    </div>
+</div>
+</div>
+</div>
+</form>
+
  <div class="container mt-2">
     <div class="row">
         <div class="col-md-8">
@@ -36,24 +57,7 @@
                                                 <i class="fa-regular fa-trash-can"></i>
                                             </button>
                                             </div>
-                                            
-                                            <div class="modal fade" id="deletionModal" tabindex="-1" aria-labelledby="deletionModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class=" modal-content" style="color: black;">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deletionModalLabel">Confirm deletion</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                    <div class="modal-body" id="delWarn">
-                                                        Are you sure you want to delete the {{population}} population?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="delete" class="btn btn-danger">Delete population!</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 {% endif %}
                                         {% else %}
                                             <div>{{population}}</div>
