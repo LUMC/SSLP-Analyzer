@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static '/css/signin.css' %}">
+<script src="https://kit.fontawesome.com/c2c6ce3227.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+{% endblock head %}
+
+{% block content %}
+
+<div class="container">
+    <div class="login-container">
+        <form action="" method="POST">{% csrf_token %}
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h1>Login</h1>
+                </div>
+                <div class = "flex-item input-field-container">
+                    {% render_field login_form.username class="input1" placeholder="Username" %}
+                    {% render_field login_form.password class="input1" placeholder="Password" %}
+                </div>
+                <div class="flex-item">
+                    <button type="submit" name="login_form" class="buton-login">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if messagesl %}
+    <div class="alert alert-danger" role="alert">
+        <ul>
+            <li>{{ messagesl }}</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

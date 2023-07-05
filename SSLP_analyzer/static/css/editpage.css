@@ -1,0 +1,54 @@
+.modal-backdrop {
+    z-index: 1;
+}
+
+.upload-btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    }
+
+.population-button {
+    background: #283E70;
+    border: 1px solid #283E70;
+    width: 8rem;
+    height: 4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.button-io {
+    background: #799AE0;
+    border: 1px solid #799AE0;
+    width: 7rem;
+    height: 3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.edit-button {
+    background: none;
+    border: none;
+    color: #fff;
+}
+
+.edit-button:hover {
+    color: #007cc2
+}
+
+.trashcan-button:hover {
+    color: #fe2e2e;
+
+}
+.full-width {
+    width: 100%;
+}
+th {
+    width: 20%; /* if you have 5 columns, each taking up an equal amount of space */
+}

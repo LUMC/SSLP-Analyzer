@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block head %}
+<script src="{% static 'javascript/haplotype.js' %}" ></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/editpage.css' %}" />
+{% endblock head %}
+{% block content %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div role="alert" {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show"{% endif %}>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form action={% url 'data_editor' population=population %} method="post" class="ml-3">
+    {% csrf_token %}                                         
+<div class="modal fade" id="deletionModal" tabindex="-1" aria-labelledby="deletionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class=" modal-content" style="color: black;">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deletionModalLabel">Confirm deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+        <div class="modal-body" id="delWarn">
+            Are you sure you want to delete the {{population}} population?
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" name="delete" class="btn btn-danger">Delete population!</button>
+    </div>
+</div>
+</div>
+</div>
+</form>
+
+ <div class="container mt-2">
+    <div class="row">
+        <div class="col-md-8">
+            <div style="overflow:auto; height:80vh;">
+                <form action={% url 'data_editor' population=population %} method="post" class="ml-3">
+                {% csrf_token %}
+                <table class="table table-striped text-center">
+                    <thead class="bg-primary text-white sticky-top" style="background-color: #283E70 !important; top:0; z-index: 100;">
+                        <tr>
+                            <th scope="col" colspan="5" class="text-left fs-2 align-items-center p-4 " style="background-color: #283E70; text-align: left;">
+                                <div class="d-flex justify-content-between w-100">
+                                    {% if edit_mode %}
+                                    {% if user.is_superuser %}
+                                        <div  style="display: flex;">
+                                            <input name="new_population" type="text" class="form-control text-left fs-2 fw-bold" style="width: 15rem;" value={{population}}>
+                                            <button type="button" class="edit-button trashcan-button ml-4" data-bs-toggle="modal" data-bs-target="#deletionModal" data-toggle="tooltip" data-bs-placement="right" title="Delete the {{population}} population.">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                            </div>
+
+                                {% endif %}
+                                        {% else %}
+                                            <div>{{population}}</div>
+                                        {% endif %}
+                                    <div>
+                                        {% if user.is_superuser %}
+                                            {% if edit_mode %}
+                                            <button type="submit" name="done" class="btn btn-primary" data-toggle="tooltip" data-bs-placement="top" title="Save the haplotypes of the {{population}} population.">Done</button>
+                                            {% else %}
+                                            <button type="submit" name="edit" class="edit-button" data-toggle="tooltip" data-bs-placement="top" title="Edit the haplotypes of the {{population}} population."><i class="fa-regular fa-pen-to-square"></i></button>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>                                               
+                        <tr>
+                            <th scope="col">Haplotype</th>
+                            <th scope="col">Chromosome</th>
+                            <th scope="col">SSLP</th>
+                            <th scope="col">%</th>
+                            <th scope="col">Permissive</th>
+                        </tr>
+                    </thead>
+                    <tbody id="haplotable">
+                        {% for row in table_data %}
+                            {% if edit_mode %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input name="haplo" type="text" class="form-control text-center" style="width: 6rem;" value={{row.haplo}}>
+                                            
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <select name="chr" class="form-select text-center" aria-label="chr">
+                                                {% if row.chr == "chr4" %}
+                                                <option value="chr4" selected>chr4</option>
+                                                <option value="chr10">chr10</option>
+                                                {% elif row.chr == "chr10" %}
+                                                <option value="chr4" >chr4</option>
+                                                <option value="chr10" selected>chr10</option>
+
+                                                {% else %}
+                                                <option value="" selected>Select Value</option>
+                                                <option value="chr4" >chr4</option>
+                                                <option value="chr10" >chr10</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input name="SSLP" type="text" class="form-control text-center" style="width: 6rem;" value={{row.SSLP}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <input name="percent" type="text" class="form-control text-center" style="width: 6rem;" value={{row.percent}}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <select name="perm" class="form-select text-center" aria-label="Permissive">
+                                                {% if row.perm == '1' %}
+                                                    <option value="1" selected>True</option>
+                                                    <option value="0">False</option>
+                                                {% elif row.perm == '0' %}
+                                                    <option value="1">True</option>
+                                                    <option value="0" selected>False</option>
+                                                {% else %}
+                                                    <option value="" selected>Select Value</option>
+                                                    <option value="1">True</option>
+                                                    <option value="0" >False</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{row.haplo}}</td>
+                                    <td>{{row.chr}}</td>
+                                    <td>{{row.SSLP}}</td>
+                                    <td>{{row.percent}}%</td>
+                                    <td>{% if row.perm == "1" %}True{% else %}False{% endif %}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>                    
+                </table>
+                </form>
+            </div>
+        </div>
+            <div class="col-md-4">
+                <div class="border p-3 d-flex flex-column justify-content-center align-items-center">
+                    <div style="max-height: calc(13rem + 20px); overflow-y: auto;">
+                        {% for population in  population_options%}
+                            <a type="button" data-toggle="tooltip" data-bs-placement="right" title="View the haplotypes of the {{population}} population." class="btn btn-primary mt-2 population-button" style="width: 8rem; height: 4rem;" href={% url 'data_editor' population  %}>{{population}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="border p-3 mt-2 d-flex flex-column justify-content-center align-items-center">
+                        {% render_field form.file class="upload-btn" id="hiddenUploadBtn" style="display: none;" onclick="this.value = null;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" %}
+                        {% if user.is_superuser %}
+                        <button name="Upload" type="button" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Upload an excel sheet to add a new population." onclick="document.getElementById('hiddenUploadBtn').click();">Upload</button>
+                        {% endif %}
+                        
+                        <script>
+                            function submit_file() {
+                                let inp_el = document.getElementById('hiddenUploadBtn')
+                                let filename = inp_el.value.split('\\').pop()
+                                document.getElementById('fileModelLabel').innerText = `File selected: ${filename}`;
+                                document.getElementById("triggerModalBtn").click();
+                            }
+                            document.getElementById("hiddenUploadBtn").addEventListener('input', submit_file)
+                        </script>
+                        <button type="button" id="triggerModalBtn" style="display: none;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileUploadModal" >
+                            This should not be visible 
+                        </button>
+                        <div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileModelLabel" aria-hidden="true" >
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="fileModelLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">Population Name</span>
+                                        <input required name="new_population" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                      </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form action="" method="post" enctype="multipart/form-data"> 
+                        {% csrf_token %}
+                        <button name="Download" type="submit" class="btn btn-primary mt-2 button-io" data-toggle="tooltip" data-bs-placement="right" title="Download the haplotypes of the {{population}} population.">Download</button>
+                    </form>
+                    </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}
