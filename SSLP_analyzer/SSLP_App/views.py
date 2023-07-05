@@ -2,10 +2,8 @@ from django.shortcuts import render,redirect,HttpResponse
 from json import load, loads, dumps
 from django.http import FileResponse
 from django import forms
-from .utils import xlsx_parser, json_parser , export_xlsx
+from .utils import haplotype, xlsx_parser, json_parser, export_xlsx
 from django.contrib import messages
-import os.path
-from .utils import haplotype
 import json
 from django.contrib import messages
 import os
