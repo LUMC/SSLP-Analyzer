@@ -6,6 +6,7 @@ import pytest
 
 
 def test_predict_valid_input_European_result1():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 162, 163, 164], "European") == (
             [
@@ -25,6 +26,7 @@ def test_predict_valid_input_European_result1():
 
 
 def test_predict_valid_input_European_result2():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 161, 161, 164], "European") == (
             [
@@ -41,6 +43,7 @@ def test_predict_valid_input_European_result2():
 
 
 def test_predict_valid_input_European_no_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 174, 174, 174], "European") == (1, 1)
     except AssertionError:
@@ -50,6 +53,7 @@ def test_predict_valid_input_European_no_result():
 
 
 def test_predict_valid_input_Asian_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 163, 166, 170], "Asian") == (
             [
@@ -67,6 +71,7 @@ def test_predict_valid_input_Asian_result():
 
 
 def test_predict_valid_input_Asian_no_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 162, 163, 164], "Asian") == (1, 1)
     except AssertionError:
@@ -76,6 +81,7 @@ def test_predict_valid_input_Asian_no_result():
 
 
 def test_predict_valid_input_African_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([157, 166, 166, 166], "African") == (
             [
@@ -101,6 +107,7 @@ def test_predict_valid_input_African_result():
 
 
 def test_predict_valid_input_African_no_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([157, 159, 161, 163], "African") == (1, 1)
     except AssertionError:
