@@ -50,19 +50,19 @@ form {
 }
 
 .input1 {
-width: 240px;
-text-align: center;
-background: transparent;
-border: none;
-border-bottom: 2px solid #000000;
-font-family: "Inter", sans-serif;
-font-size: 16px;
-font-weight: 400;
-padding: 10px 0;
-transition: border 0.5s;
-outline: none;
-color: #fff;
-font-style: italic;
+    width: 240px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #000000;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 10px 0;
+    transition: border 0.5s;
+    outline: none;
+    color: #fff;
+    font-style: italic;
 }
 
 .input1::placeholder {
@@ -90,15 +90,15 @@ font-style: italic;
 }
 
 .buton-login {
-border-radius: 5px;
-background: #283E70;
-color: #fff;
-font-size: 16px;
-font-weight: bold;
-font-family: 'Inter', sans-serif;
-border: none;
-width: 95px;
-height: 38px;
+    border-radius: 5px;
+    background: #283E70;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    width: 95px;
+    height: 38px;
 }
 
 .flex-container {
