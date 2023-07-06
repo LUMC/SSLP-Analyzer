@@ -1,17 +1,16 @@
 from SSLP_App.utils import predict
 import pytest
 import os 
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 
 
 def test_predict_no_selection_returns_tuple_with_ints():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     population = "European"
     selection = [161,162,163,164]
     assert predict([],population) == (1,1)
     
 def test_predict_no_population_raises_KeyError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     population = "European"
     selection = [161,162,163,164]
     try:
@@ -22,7 +21,6 @@ def test_predict_no_population_raises_KeyError():
         pytest.fail("Exception not raised when expected")
         
 def test_predict_valid_input_returns_valid_output():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     population = "European"
     selection = [161,162,163,164]
     try:

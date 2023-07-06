@@ -1,9 +1,9 @@
 from SSLP_App.utils import read_haplotypes,extract_sslps,generate_all_combinations,combine_identical_genotypes
 import pytest
 import os 
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 def check_unique(chances):
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     for i,value in enumerate(chances):
         chances[i][1] = sorted(value[1])
     for i1,chance1 in enumerate(chances):
@@ -16,7 +16,6 @@ def check_unique(chances):
         
 
 def test_combine_identical_genotypes_empty_input_raises_IndexError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         combine_identical_genotypes([])
     except Exception as e:
@@ -25,7 +24,6 @@ def test_combine_identical_genotypes_empty_input_raises_IndexError():
         pytest.fail("Error not raised when expected")
         
 def test_combine_identical_genotypes_wrong_input_type_raises_TypeError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         combine_identical_genotypes("Wrong input type")
     except Exception as e:
@@ -34,7 +32,6 @@ def test_combine_identical_genotypes_wrong_input_type_raises_TypeError():
         pytest.fail("Error not raised when expected")
         
 def test_combine_identical_genotypes_list_too_short_raises_UnboundLocalError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         combine_identical_genotypes([0])
     except Exception as e:
@@ -43,7 +40,6 @@ def test_combine_identical_genotypes_list_too_short_raises_UnboundLocalError():
         pytest.fail("Error not raised when expected")
         
 def test_combine_identical_genotypes_valid_input_returns_expected_values():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     population = "European"
     selection = [161,162,163,164]
     try:
@@ -64,7 +60,6 @@ def test_combine_identical_genotypes_valid_input_returns_expected_values():
         assert check_unique(sorted_by_chance)
         
 def test_combine_identical_genotypes_input_not_sorted_returns_invalid_values():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     population = "European"
     selection = [161,162,163,164]
     try:

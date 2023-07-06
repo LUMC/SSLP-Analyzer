@@ -1,10 +1,10 @@
 from SSLP_App.utils import read_haplotypes
 import os
 import pytest
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 
 def test_read_haplotypes_valid_input_return_haplotypes():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         haplotypes = read_haplotypes("European")
     except Exception as e:
@@ -21,7 +21,6 @@ def test_read_haplotypes_valid_input_return_haplotypes():
         assert "permissive" in sslp
         
 def test_read_haplotypes_file_not_present_raises_FileNotFoundError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     os.rename("haplotypes.json","temp.json")
     try:
         read_haplotypes("European")
@@ -32,7 +31,6 @@ def test_read_haplotypes_file_not_present_raises_FileNotFoundError():
     os.rename("temp.json","haplotypes.json")
     
 def test_read_haplotypes_invalid_population_raises_KeyError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         read_haplotypes("abc")
     except Exception as e:
@@ -41,7 +39,6 @@ def test_read_haplotypes_invalid_population_raises_KeyError():
         pytest.fail("Population should not be present in file!")
     
 def test_read_haplotypes_wrong_input_type_raises_TypeError():
-    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         read_haplotypes(["European"])
     except Exception as e:
