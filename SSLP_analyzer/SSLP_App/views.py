@@ -241,7 +241,7 @@ def home_view(request):
                 split_line =line.split(';')
                 items = split_line[:-1]
                 population_per_row = split_line[-1]
-                if not population_per_row:
+                if not population_per_row or population_per_row not in populations:
                     population_warning = True
                     population_per_row = population_fromfile
                 id = items[0]
@@ -249,7 +249,7 @@ def home_view(request):
                 combinations[id] = {'Population': population_per_row,
                                     'SSLPS': sslps}
             if population_warning:
-                messages.info(request,f"Some rows did not contain population data. For these the population of the first row was used. This is the {population_fromfile} population.")
+                messages.info(request,f"Some rows did not contain valid population data. For these the population of the first row was used. This is the {population_fromfile} population.")
             request.session["combinations"] = combinations
             SSLPs = combinations[list(combinations.keys())[0]]['SSLPS']
 
