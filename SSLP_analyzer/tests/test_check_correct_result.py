@@ -1,7 +1,7 @@
 from SSLP_App.utils import predict
 import os
 import pytest
-
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 # These tests are designed for the default dataset.
 
 
@@ -67,6 +67,7 @@ def test_predict_valid_input_Asian_result():
 
 
 def test_predict_valid_input_Asian_no_result():
+    os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
     try:
         assert predict([161, 162, 163, 164], "Asian") == (1, 1)
     except AssertionError:

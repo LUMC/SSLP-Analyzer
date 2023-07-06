@@ -1,5 +1,9 @@
 from SSLP_App.utils import predict
 import pytest
+import os 
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
+
+
 
 def test_predict_no_selection_returns_tuple_with_ints():
     population = "European"
