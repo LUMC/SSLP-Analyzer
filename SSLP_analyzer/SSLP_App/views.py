@@ -224,6 +224,7 @@ def home_view(request):
         the data to the saved results. After the loop the first entry gets
         shown on screen.
         """
+        population_warning = False
         input_data_file = str(request.FILES['upload'].read())
         try:
             input_data_list = input_data_file.split("\\r\\n")
@@ -236,13 +237,19 @@ def home_view(request):
                 messages.info(request, f"Population found in file is not currently in database, the default value {population_fromfile} was used instead.")
             combinations = {}
             request.session["combinations"] = {}
-
             for line in input_data_list[1:-1]:
-                items = line.split(';')[:-1]
+                split_line =line.split(';')
+                items = split_line[:-1]
+                population_per_row = split_line[-1]
+                if not population_per_row:
+                    population_warning = True
+                    population_per_row = population_fromfile
                 id = items[0]
                 sslps = [int(x) for x in items[1:]]
-                combinations[id] = {'Population': population_fromfile,
+                combinations[id] = {'Population': population_per_row,
                                     'SSLPS': sslps}
+            if population_warning:
+                messages.info(request,f"Some rows did not contain population data. For these the population of the first row was used. This is the {population_fromfile} population.")
             request.session["combinations"] = combinations
             SSLPs = combinations[list(combinations.keys())[0]]['SSLPS']
 
