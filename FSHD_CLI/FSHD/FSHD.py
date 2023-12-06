@@ -286,7 +286,7 @@ _
                         help="Use this argument independently to add new haplotype files to the database. Example usage: -A ./new_haplotypes.json.")
     group2.add_argument("-o", "--output", type=str, metavar="OUTPUT FILE",
                         help="Specify the path to an output file where the results will be written.\nIf not specified, results will be printed to the console.")
-    group2.add_argument("-sep", "--separator", type=str, choices=[",", "t", "|", ";", " "], default=",", metavar="SEPARATOR",
+    group2.add_argument("--separator", type=str, choices=[",", "t", "|", ";", " "], default=",", metavar="SEPARATOR",
                         help="Choose a separator for the output file.\nOptions include comma (,), tab (t), pipe (|), semicolon (;), or space ( ). Default is comma ','.")
     group2.add_argument("-l", "--list_datasets", action="store_true",
                         help="Shows a list of all populations which have a haplotype dataset")

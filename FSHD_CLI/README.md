@@ -73,7 +73,7 @@ python FSHD.py -s <SSLP1 SSLP2 SSLP3 SSLP4> -p <population>
   Specify a json file containing haplotypes which will be added to the database.
 - **-o/--output**:
   Specify the output file where the results will be written.
-- **-sep/--separator**:
+- **--separator**:
   Choose a separator for the output file.
   For a tab, enter `t`.
   Default is comma (`,`).
