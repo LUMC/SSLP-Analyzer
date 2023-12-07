@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'version' => '0.1.0',
+    'FSHD-path' => base_path() . '/../FSHD_CLI/FSHD/',
 
     /*
     |--------------------------------------------------------------------------
