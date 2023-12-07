@@ -1,5 +1,7 @@
 from SSLP_App.utils import read_haplotypes,extract_sslps
 import pytest
+import os
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 def test_extract_sslps_empty_selection_empty_result():
     returnvalue = extract_sslps([],read_haplotypes("European"))

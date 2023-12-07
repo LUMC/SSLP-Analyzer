@@ -1,5 +1,7 @@
 from SSLP_App.utils import read_haplotypes,extract_sslps,generate_all_combinations
 import pytest
+import os
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 def test_generate_all_combinations_empty_input_returns_empty_values():
     perm,total_perm = generate_all_combinations([],[],[])

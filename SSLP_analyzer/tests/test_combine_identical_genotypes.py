@@ -1,5 +1,7 @@
 from SSLP_App.utils import read_haplotypes,extract_sslps,generate_all_combinations,combine_identical_genotypes
 import pytest
+import os 
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 def check_unique(chances):
     for i,value in enumerate(chances):

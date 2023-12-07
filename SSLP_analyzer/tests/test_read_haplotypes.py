@@ -1,6 +1,7 @@
 from SSLP_App.utils import read_haplotypes
 import os
 import pytest
+os.environ["DATABASE_JSON_FILE"] = "haplotypes.json"
 
 
 def test_read_haplotypes_valid_input_return_haplotypes():
@@ -18,7 +19,6 @@ def test_read_haplotypes_valid_input_return_haplotypes():
         assert "haplotype" in sslp
         assert "%" in sslp
         assert "permissive" in sslp
-        
         
 def test_read_haplotypes_file_not_present_raises_FileNotFoundError():
     os.rename("haplotypes.json","temp.json")
