@@ -13,9 +13,9 @@
                                 <div class="py-2 sm:px-1 md:px-2 first:pl-0 last:pr-0">
                                     <select name="SSLP{{ $i }}" id="SSLP{{ $i }}" wire:model.defer="nSSLP{{ $i }}" class="rounded-md p-2 sm:px-2 md:px-4 bg-sky-100 shadow-sm ring-1 ring-inset ring-sky-300 sm:text-sm md:text-base @error('nSSLP' . $i) bg-rose-300 ring-red-600 @enderror">
                                         <option value="">(SSLP size)</option>
-                                        @foreach($this->aSSLPs as $nSSLP)
-                                            <option value="{{ $nSSLP }}">{{ $nSSLP }}</option>
-                                        @endforeach
+@foreach($this->aSSLPs as $nSSLP)
+                                        <option value="{{ $nSSLP }}">{{ $nSSLP }}</option>
+@endforeach
                                     </select>
                                 </div>
 @endfor
