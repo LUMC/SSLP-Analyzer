@@ -90,6 +90,7 @@ class AnalysisForm extends Component
 
         if ($nResult) {
             // Something went wrong.
+            $this->emit('setResults', 'The SSLP analyzer script returned an error. Please try different settings.');
         } elseif (!$nResult && preg_match('/^No results found/', $aOutput[0])) {
             // No results.
             // $this->emitTo('AnalysisResults', 'setResults', []); // Doesn't work.
