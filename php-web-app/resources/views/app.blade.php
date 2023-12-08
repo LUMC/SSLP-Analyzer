@@ -6,9 +6,7 @@
 
     <title>{{ env('APP_NAME') . ' v' . config('app.version') }}</title>
 
-    <!-- Temporary solution to be able to use all of Tailwind without having to recompile it all the time -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     @livewireStyles
 </head>
