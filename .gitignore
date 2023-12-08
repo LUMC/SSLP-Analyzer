@@ -175,3 +175,6 @@ cython_debug/
 
 result.xlsx
 sslp_env/
+
+# PHP environment
+.idea
