@@ -22,8 +22,9 @@
                                 <tbody>
 @foreach(array_slice($this->aResults, 1, count($this->aResults) - 2) as $aRow)
 @php($nGreen = (round((int) $aRow[4] / 14) * 100))
+@php($nGreenHover = min(((!$nGreen? -50 : $nGreen) + 100), 900))
 @php($sTextColor = ($nGreen > 500? 'white' : 'black'))
-                                    <tr class="border-b last:border-b-0 hover:bg-neutral-100 bg-green-{{ $nGreen }} text-{{ $sTextColor }}">
+                                    <tr class="border-b last:border-b-0 bg-green-{{ $nGreen }} text-{{ $sTextColor }} hover:bg-green-{{ $nGreenHover }}">
 @foreach($aRow as $nRow => $sField)
                                         <td class="px-6 py-4">
                                             {{ $sField }}
