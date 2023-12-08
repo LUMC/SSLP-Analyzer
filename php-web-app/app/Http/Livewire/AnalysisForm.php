@@ -6,6 +6,7 @@ use Livewire\Component;
 
 class AnalysisForm extends Component
 {
+    private $aData = [];
     private $aPopulations = [];
     private $aSSLPs = [];
 
@@ -24,28 +25,49 @@ class AnalysisForm extends Component
         // FIXME: I'm currently unclear how to throw nice custom exceptions or so.
         //  Deliberately doing no checking at all.
         $sJSONFile = config('app.FSHD-path') . 'haplotypes.json';
-        $aData = json_decode(file_get_contents($sJSONFile), true);
+        $this->aData = json_decode(file_get_contents($sJSONFile), true);
 
         // Fill in the list of populations.
-        $this->aPopulations = array_keys($aData);
+        $this->aPopulations = array_keys($this->aData);
+    }
 
-        // Fill in the list of SSLPs.
-        foreach ($aData as $sPop => $aChromosomes) {
-            foreach ($aChromosomes as $sChromosome => $aSizes) {
+
+
+    public function render()
+    {
+        // Render the component.
+
+        // This wouldn't work in the __construct(), so I'll have to do it here.
+        // When a population was selected in the form, we'd have that info now.
+        $this->selectSSLPs();
+
+        return view('livewire.analysis-form');
+    }
+
+
+
+    private function selectSSLPs()
+    {
+        // Fill in the list of SSLPs. We do this here because we may need to reload when a population has been selected.
+
+        // When a population was selected in the form, select that one only and fetch population-specific lengths only.
+        if ($this->sPopulation && isset($this->aData[$this->sPopulation])) {
+            $this->aData = [$this->sPopulation => $this->aData[$this->sPopulation]];
+        }
+        foreach ($this->aData as $aChromosomes) {
+            foreach ($aChromosomes as $aSizes) {
                 $this->aSSLPs = array_unique(array_merge($this->aSSLPs, array_keys($aSizes)));
             }
         }
     }
 
-    public function render()
-    {
-        return view('livewire.analysis-form');
-    }
+
 
     public function predict()
     {
         // Receives the data and runs a prediction.
 
+        $this->selectSSLPs();
         $this->validate([
             'nSSLP1' => ['required', 'integer', Rule::in($this->aSSLPs)],
             'nSSLP2' => ['required', 'integer', Rule::in($this->aSSLPs)],
