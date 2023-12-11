@@ -57,6 +57,7 @@ class AnalysisForm extends Component
         foreach ($this->aData as $aChromosomes) {
             foreach ($aChromosomes as $aSizes) {
                 $this->aSSLPs = array_unique(array_merge($this->aSSLPs, array_keys($aSizes)));
+                sort($this->aSSLPs);
             }
         }
     }
