@@ -2,7 +2,7 @@
                     <form wire:submit.prevent="predict">
                         <div class="flex justify-between">
                             <div class="py-2 sm:px-1 md:px-2 first:pl-0 last:pr-0">
-                                <select name="population" id="population" wire:model.lazy="sPopulation" class="rounded-md p-2 sm:px-2 md:px-4 bg-blue-100 shadow-sm ring-1 ring-inset ring-blue-300 sm:text-sm md:text-base @error('sPopulation') bg-red-300 ring-red-600 @enderror">
+                                <select name="population" id="population" wire:model.lazy="sPopulation" class="rounded-md p-2 sm:px-2 md:px-4 shadow-sm ring-1 ring-inset sm:text-sm md:text-base @error('sPopulation') bg-red-300 ring-red-600 @else bg-blue-100 ring-blue-300 @enderror">
                                     <option value="">(Population)</option>
 @foreach($this->aPopulations as $sPopulation)
                                         <option value="{{ $sPopulation }}">{{ $sPopulation }}</option>
@@ -11,7 +11,7 @@
                             </div>
 @for ($i = 1; $i <= 4; $i++)
                                 <div class="py-2 sm:px-1 md:px-2 first:pl-0 last:pr-0">
-                                    <select name="SSLP{{ $i }}" id="SSLP{{ $i }}" wire:model.defer="nSSLP{{ $i }}" class="rounded-md p-2 sm:px-2 md:px-4 bg-blue-100 shadow-sm ring-1 ring-inset ring-blue-300 sm:text-sm md:text-base @error('nSSLP' . $i) bg-red-300 ring-red-600 @enderror">
+                                    <select name="SSLP{{ $i }}" id="SSLP{{ $i }}" wire:model.defer="nSSLP{{ $i }}" class="rounded-md p-2 sm:px-2 md:px-4 shadow-sm ring-1 ring-inset sm:text-sm md:text-base @error('nSSLP' . $i) bg-red-300 ring-red-600 @else bg-blue-100 ring-blue-300 @enderror">
                                         <option value="">(SSLP size)</option>
 @foreach($this->aSSLPs as $nSSLP)
                                         <option value="{{ $nSSLP }}">{{ $nSSLP }}</option>
