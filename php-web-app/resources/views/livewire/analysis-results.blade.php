@@ -36,7 +36,7 @@
                             </table>
                         </div>
                         <div class="mt-2 text-sm text-green-800">
-                            {{ implode(' ', $this->aResults[array_key_last($this->aResults)]) }}
+                            {{ implode(' ', $this->aResults[array_key_last($this->aResults)]) . '%' }}
                         </div>
                     </div>
 @endif

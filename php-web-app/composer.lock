@@ -2423,7 +2423,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4.0"
+                "php": ">=7.3.0"
             },
             "type": "library",
             "autoload": {
@@ -7935,7 +7935,7 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.4.33"
+        "php": "7.3.31"
     },
     "plugin-api-version": "2.6.0"
 }

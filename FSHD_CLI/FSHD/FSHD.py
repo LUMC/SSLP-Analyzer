@@ -170,7 +170,7 @@ def print_header():
     """Print the header of the table to the standard output
     
     """
-    print(f"{'chr4_1':<10}{'chr4_1':<10}{'chr10_1':<10}{'chr10_2':<10}{'Probability(%)':<15}{'Permissive':<15}{'Incidence(%)':<15}")
+    print(f"{'chr4_1':<10}{'chr4_2':<10}{'chr10_1':<10}{'chr10_2':<10}{'Probability(%)':<15}{'Permissive':<15}{'Incidence(%)':<15}")
 
 
 def result_table(result, totaalkans, amount, separator, write=False, filename=None):
@@ -184,7 +184,7 @@ def result_table(result, totaalkans, amount, separator, write=False, filename=No
     :param filename: _description_, defaults to None
     """
     if write:
-        header = ['chr4_1', 'chr4_1', 'chr10_1', 'chr10_2',
+        header = ['chr4_1', 'chr4_2', 'chr10_1', 'chr10_2',
                   'Probability(%)', 'Permissive', 'Incidence(%)']
         with open(filename, 'w') as outfile:
             outfile.write(f"{separator.join(header)}\n")
@@ -315,9 +315,9 @@ def run(args):
                 result), separator, output, filename)
         if output:
             with open(args.output, 'a') as output_file:
-                output_file.write(f"Total Likelihood: {sum(tot_perm):.1f}")
+                output_file.write(f"Total likelihood permissive alleles: {sum(tot_perm):.1f}")
         else:
-            print(f"Total Likelihood: {sum(tot_perm):.1f}")
+            print(f"Total likelihood permissive alleles: {sum(tot_perm):.1f}")
     else:
         print(f"No results found for this selection {' '.join(str(i) for i in args.selection)} for population {args.population}!\n"
               f"For more information use the -h flag.")
