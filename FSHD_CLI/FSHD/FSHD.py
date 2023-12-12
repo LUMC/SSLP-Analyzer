@@ -315,9 +315,9 @@ def run(args):
                 result), separator, output, filename)
         if output:
             with open(args.output, 'a') as output_file:
-                output_file.write(f"Total Likelihood: {sum(tot_perm):.1f}")
+                output_file.write(f"Total likelihood permissive alleles: {sum(tot_perm):.1f}")
         else:
-            print(f"Total Likelihood: {sum(tot_perm):.1f}")
+            print(f"Total likelihood permissive alleles: {sum(tot_perm):.1f}")
     else:
         print(f"No results found for this selection {' '.join(str(i) for i in args.selection)} for population {args.population}!\n"
               f"For more information use the -h flag.")
